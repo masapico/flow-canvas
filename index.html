@@ -29,8 +29,8 @@
       .floating-buttons {
         position: fixed;
         bottom: 20px;
-        left: 20px; /* Changed from right to left */
-        right: auto; /* Added to ensure left positioning overrides right */
+        left: 20px;
+        right: auto;
         z-index: 100;
         background-color: #f0f0f0; /* Light grey background for the container */
         padding: 8px;
@@ -40,25 +40,24 @@
         gap: 8px; /* Spacing between buttons */
       }
       .floating-buttons .btn {
-        font-size: 1.2rem; /* Kept for potential future use, though SVG size is fixed */
-        width: 40px; /* Fixed width for square-ish buttons */
-        height: 40px; /* Fixed height for square-ish buttons */
-        padding: 0; /* Remove default bootstrap padding */
+        font-size: 1.2rem;
+        width: 40px;
+        height: 40px;
+        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #ccc; /* Subtle border for buttons */
-        background-color: #fff; /* White background for buttons */
-        color: #333; /* Icon color, will be inherited by SVG fill="currentColor" */
-        border-radius: 6px; /* Slightly rounded corners for buttons */
+        border: 1px solid #ccc;
+        background-color: #fff;
+        color: #333;
+        border-radius: 6px;
       }
       .floating-buttons .btn:hover {
-        background-color: #e9e9e9; /* Hover effect */
+        background-color: #e9e9e9;
         border-color: #bbb;
       }
 
       .floating-buttons .btn svg {
-        /* Style for SVGs within buttons */
         width: 20px;
         height: 20px;
       }
@@ -69,13 +68,19 @@
         top: 20px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: rgba(255, 0, 0, 0.8);
+        background-color: rgba(
+          220,
+          53,
+          69,
+          0.9
+        ); /* Bootstrap danger color with opacity */
         color: white;
         padding: 10px 20px;
         border-radius: 5px;
         z-index: 2000;
         display: none;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        font-size: 0.9rem;
       }
       #error-message .close-error {
         color: white;
@@ -83,9 +88,12 @@
         margin-left: 15px;
         font-weight: bold;
         cursor: pointer;
+        float: right; /* 右寄せ */
+        line-height: 1; /* 行の高さを調整 */
+        padding: 0 5px;
       }
 
-      /* --- パンくずリストのスタイル調整 --- */
+      /* パンくずリストのスタイル調整 */
       #bpmn-container .bjs-breadcrumbs {
         display: block !important;
         position: absolute;
@@ -101,6 +109,7 @@
         box-sizing: border-box;
         font-size: 13px;
         line-height: 1.4;
+        text-align: center; /* 中央揃え */
       }
 
       #bpmn-container .bjs-breadcrumbs li {
@@ -123,34 +132,37 @@
         color: #155cb5;
         text-decoration: underline;
       }
+      #bpmn-container .bjs-breadcrumbs .bjs-crumb {
+        /* パンくずリストのフォントサイズ調整 */
+        font-size: 1rem;
+      }
 
-      /* --- エディタ背景のグリッドスタイル --- */
+      /* エディタ背景のグリッドスタイル */
       #bpmn-container .djs-container .layer-djs-grid rect {
-        /* fill: url(#djs-grid-pattern-dots); */ /* SVGパターンを使う場合 */
-        fill: none; /* デフォルトのグリッドパターンを無効化する場合 */
+        fill: none;
       }
       #bpmn-container .djs-container {
-        /* CSSでグリッド背景を生成 */
         background-image: linear-gradient(
             to right,
             #e0e0e0 1px,
             transparent 1px
           ),
           linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
-        background-size: 20px 20px; /* グリッドの間隔 */
+        background-size: 20px 20px;
       }
 
-      .bjs-breadcrumbs {
-        text-align: center;
-      }
-      .bjs-crumb {
-        font-size: 1rem;
-      }
       .djs-palette {
-        top: 50px;
+        top: 50px; /* パンくずリストとかぶらないように調整 */
       }
       .bjs-powered-by {
-        display: none;
+        display: none !important; /* bpmn.ioのロゴを非表示 */
+      }
+
+      /* ドラッグアンドドロップ時のフィードバック */
+      .drop-active {
+        outline: 2px dashed #007bff;
+        outline-offset: -10px;
+        background-color: rgba(0, 123, 255, 0.1);
       }
     </style>
   </head>
@@ -234,6 +246,23 @@
           />
         </svg>
       </button>
+      <button id="btn-learn-bpmn" class="btn" title="BPMN学習コンテンツを開く">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-question-circle"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+          />
+          <path
+            d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"
+          />
+        </svg>
+      </button>
       <input
         type="file"
         id="file-input-bpmn"
@@ -244,7 +273,7 @@
 
     <div id="error-message">
       <span id="error-text"></span>
-      <a class="close-error" id="close-error-btn">&times; 閉じる</a>
+      <a class="close-error" id="close-error-btn">&times;</a>
     </div>
 
     <script src="./lib/bpmn-modeler.development.js"></script>
@@ -275,6 +304,7 @@
       const fileInputBpmn = document.getElementById("file-input-bpmn");
       const btnShowSvg = document.getElementById("btn-show-svg");
       const btnExportSvg = document.getElementById("btn-export-svg");
+      const btnLearnBpmn = document.getElementById("btn-learn-bpmn");
 
       const errorMessageDiv = document.getElementById("error-message");
       const errorTextSpan = document.getElementById("error-text");
@@ -329,6 +359,19 @@
       function fitViewportWithDelay(delay = 250) {
         console.log(`ビューポート調整を ${delay}ms 遅延実行します。`);
         setTimeout(fitViewport, delay);
+      }
+
+      async function importBPMN(xml) {
+        clearError();
+        if (!modeler) return;
+        try {
+          await modeler.importXML(xml);
+          console.log("BPMN XMLが正常にインポートされました。");
+          fitViewport();
+          breadcrumbsShownProcessed = false;
+        } catch (err) {
+          showError(`BPMNファイルのインポートに失敗: ${err.message || err}`);
+        }
       }
 
       function initializeModeler() {
@@ -416,20 +459,42 @@
           fitViewportWithDelay();
         });
 
-        const breadcrumbsModule = modeler.get("breadcrumbs", false);
-        if (breadcrumbsModule) {
-          breadcrumbsModule.on("changed", ({ active }) => {
-            console.log(
-              "パンくずリスト(モジュール)の状態が変更されました。アクティブ:",
-              active
-            );
-            if (!active) {
-              breadcrumbsShownProcessed = false;
+        // パレットの列数制御のためのリサイズイベントリスナー
+        window.addEventListener("resize", function () {
+          if (modeler) {
+            const canvas = modeler.get("canvas");
+            if (canvas) {
+              canvas.resized(); // bpmn-js にリサイズを通知
+              console.log(
+                "ウィンドウリサイズイベント: canvas.resized() を呼び出しました。"
+              );
             }
+          }
+        });
+
+        // breadcrumbsモジュールの取得とイベントリスナー設定
+        const breadcrumbsModule = modeler.get("drilldownBreadcrumbs", false);
+        const eventBusInstance = modeler.get("eventBus"); // イベントバスを取得
+
+        if (breadcrumbsModule && eventBusInstance) {
+          // breadcrumbsModule.on(...) ではなく eventBusInstance.on(...) を使用
+          eventBusInstance.on("breadcrumbs.updated", function (event) {
+            console.log(
+              "パンくずリスト(モジュール)が更新されました。イベント:", // イベントオブジェクト全体をログに出力
+              event
+            );
+            // パンくずリストの更新時にビューポートを調整
             fitViewportWithDelay();
           });
+        } else if (!breadcrumbsModule) {
+          console.warn(
+            "drilldownBreadcrumbsモジュールが見つかりませんでした。"
+          );
         } else {
-          console.warn("Breadcrumbsモジュールが見つかりませんでした。");
+          // breadcrumbsModule は存在するが eventBus がない場合 (通常は発生しないはず)
+          console.warn(
+            "eventBusが見つからず、breadcrumbs.updatedイベントを購読できません。"
+          );
         }
       }
 
@@ -438,9 +503,12 @@
         if (!modeler) return;
         try {
           const newDiagramXML = initialDiagramXML
-            .replace('id="Process_1"', 'id="Process_New"')
-            .replace('name="MyProcess"', 'name="新規プロセス"')
-            .replace('id="StartEvent_1"', 'id="StartEvent_New"')
+            .replace('id="Process_1"', `id="Process_${new Date().getTime()}"`)
+            .replace('name="Main"', 'name="新規プロセス"')
+            .replace(
+              'id="StartEvent_1"',
+              `id="StartEvent_${new Date().getTime()}"`
+            )
             .replace('name="開始"', 'name="新しい開始"');
           await modeler.importXML(newDiagramXML);
           console.log("新しいダイアグラムが作成されました。");
@@ -493,17 +561,7 @@
         if (file && modeler) {
           const reader = new FileReader();
           reader.onload = async (e) => {
-            const xml = e.target.result;
-            try {
-              await modeler.importXML(xml);
-              console.log("BPMN XMLが正常にインポートされました。");
-              fitViewport();
-              breadcrumbsShownProcessed = false;
-            } catch (err) {
-              showError(
-                `BPMNファイルのインポートに失敗: ${err.message || err}`
-              );
-            }
+            importBPMN(e.target.result);
           };
           reader.onerror = (e) => {
             showError(`ファイルの読み込みに失敗しました。`);
@@ -559,6 +617,55 @@
           console.log(`SVGが ${finalFilename} としてエクスポートされました。`);
         } catch (err) {
           showError(`SVGのエクスポートに失敗: ${err.message || err}`);
+        }
+      });
+
+      btnLearnBpmn.addEventListener("click", () => {
+        window.open("learn-bpmn.html", "_blank");
+      });
+
+      const dropContainer = document.getElementById("bpmn-container");
+
+      dropContainer.addEventListener("dragover", function (event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+        dropContainer.classList.add("drop-active");
+        console.log("dragover event");
+      });
+
+      dropContainer.addEventListener("dragleave", function (event) {
+        dropContainer.classList.remove("drop-active");
+        console.log("dragleave event");
+      });
+
+      dropContainer.addEventListener("drop", function (event) {
+        event.preventDefault();
+        dropContainer.classList.remove("drop-active");
+        clearError();
+        console.log("drop event");
+
+        const files = event.dataTransfer.files;
+
+        if (files.length === 1) {
+          const file = files[0];
+          if (file.name.endsWith(".bpmn") || file.name.endsWith(".xml")) {
+            if (modeler) {
+              const reader = new FileReader();
+              reader.onload = async function (e) {
+                importBPMN(e.target.result);
+              };
+              reader.onerror = function (e) {
+                showError("ファイルの読み込みに失敗しました。");
+              };
+              reader.readAsText(file);
+            }
+          } else {
+            showError(
+              "BPMNファイル(.bpmn または .xml)をドロップしてください。"
+            );
+          }
+        } else {
+          showError("ファイルを1つだけドロップしてください。");
         }
       });
 

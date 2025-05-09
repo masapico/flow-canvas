@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BPMN 2.0 学習コンテンツ</title>
+    <link rel="stylesheet" href="./lib/bootstrap.min.css" />
+    <style>
+      body {
+        font-family: sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      p {
+        margin-bottom: 15px;
+      }
+      ul {
+        margin-bottom: 15px;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      strong {
+        color: #0056b3;
+      }
+      .element-section {
+        margin-bottom: 25px;
+        padding: 15px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+      }
+      .element-section h3 {
+        margin-top: 0;
+        border-bottom: 1px solid #ccc;
+        font-size: 1.5em;
+      }
+      .example {
+        font-style: italic;
+        color: #555;
+        margin-top: 5px;
+      }
+      .badge-element {
+        display: inline-block;
+        padding: 0.25em 0.6em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+        color: #fff;
+        background-color: #007bff;
+        margin-right: 5px;
+      }
+      .img-placeholder {
+        display: block;
+        width: 100%;
+        max-width: 300px; /* 画像が大きくなりすぎないように */
+        height: auto;
+        background-color: #ddd;
+        text-align: center;
+        padding: 20px;
+        margin: 10px auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-style: italic;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>BPMN 2.0 クイックガイド</h1>
+
+      <section>
+        <h2>BPMNとは？</h2>
+        <p>
+          BPMN (Business Process Model and Notation)
+          は、ビジネスプロセスを視覚的に表現するための標準記法です。業務の流れを明確にし、関係者間での共通理解を促進することを目的としています。
+        </p>
+        <p>
+          このガイドでは、BPMN図を作成する上で基本となる要素とその意味について説明します。
+        </p>
+      </section>
+
+      <section>
+        <h2>主要な要素</h2>
+
+        <div class="element-section">
+          <h3>1. フローオブジェクト (Flow Objects)</h3>
+          <p>プロセスの振る舞いを定義する主要なグラフィカル要素です。</p>
+          <ul>
+            <li>
+              <span class="badge-element">イベント (Events)</span>
+              <strong>意味:</strong>
+              プロセスの中で「何かが起こる」ことを示します。プロセスの開始、終了、またはプロセス中に発生する事象を表します。
+              <ul>
+                <li>
+                  <strong>開始イベント (Start Event):</strong>
+                  プロセスの開始点。通常は細い線の円で表現されます。
+                </li>
+                <li>
+                  <strong>中間イベント (Intermediate Event):</strong>
+                  プロセス中に発生するイベント。二重線の円で表現され、境界に配置されることもあります。
+                </li>
+                <li>
+                  <strong>終了イベント (End Event):</strong>
+                  プロセスの終了点。太い線の円で表現されます。
+                </li>
+              </ul>
+              <p class="example">
+                例:
+                「顧客からの注文受付」（開始イベント）、「承認通知受信」（中間イベント）、「処理完了」（終了イベント）
+              </p>
+              <div class="img-placeholder">[イベントの記号のイメージ]</div>
+            </li>
+            <li>
+              <span class="badge-element">アクティビティ (Activities)</span>
+              <strong>意味:</strong>
+              プロセスの中で行われる「作業」や「仕事」を表します。
+              <ul>
+                <li>
+                  <strong>タスク (Task):</strong>
+                  それ以上分割できない基本的な作業単位。角丸の長方形で表現されます。様々な種類（ユーザータスク、サービスタスクなど）があります。
+                </li>
+                <li>
+                  <strong>サブプロセス (Sub-Process):</strong>
+                  より詳細なプロセスフローを含む複合的なアクティビティ。角丸の長方形の中に「+」マーク（折り畳み時）や詳細なフローが描かれます。
+                </li>
+              </ul>
+              <p class="example">
+                例: 「見積書作成」（タスク）、「承認プロセス」（サブプロセス）
+              </p>
+              <div class="img-placeholder">
+                [アクティビティの記号のイメージ]
+              </div>
+            </li>
+            <li>
+              <span class="badge-element">ゲートウェイ (Gateways)</span>
+              <strong>意味:</strong>
+              プロセスの流れを制御し、分岐させたり合流させたりするポイントを示します。ひし形で表現されます。
+              <ul>
+                <li>
+                  <strong
+                    >エクスクルーシブゲートウェイ (Exclusive Gateway):</strong
+                  >
+                  条件に基づいて、複数の経路のうち1つだけを選択します。「X」マークで示されることが多いです。
+                </li>
+                <li>
+                  <strong>パラレルゲートウェイ (Parallel Gateway):</strong>
+                  複数の経路を同時に実行（分岐）、または複数の経路の完了を待ってから次に進みます（合流）。「+」マークで示されます。
+                </li>
+                <li>
+                  <strong
+                    >インクルーシブゲートウェイ (Inclusive Gateway):</strong
+                  >
+                  条件に基づいて、1つ以上の経路を選択します。「O」マークで示されます。
+                </li>
+              </ul>
+              <p class="example">
+                例:
+                「金額が10万円以上か？」（エクスクルーシブゲートウェイでの分岐）、「書類Aと書類Bの両方が揃ったら次に進む」（パラレルゲートウェイでの合流）
+              </p>
+              <div class="img-placeholder">[ゲートウェイの記号のイメージ]</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="element-section">
+          <h3>2. 接続オブジェクト (Connecting Objects)</h3>
+          <p>
+            フローオブジェクト同士を接続し、プロセスの順序や関係性を示します。
+          </p>
+          <ul>
+            <li>
+              <span class="badge-element"
+                >シーケンスフロー (Sequence Flow)</span
+              >
+              <strong>意味:</strong>
+              プロセス内のアクティビティが実行される順序を示します。実線の矢印で表現されます。
+              <p class="example">例: 「タスクA」→「タスクB」</p>
+              <div class="img-placeholder">
+                [シーケンスフローの記号のイメージ]
+              </div>
+            </li>
+            <li>
+              <span class="badge-element">メッセージフロー (Message Flow)</span>
+              <strong>意味:</strong>
+              異なるプール（参加者）間のメッセージのやり取りを示します。破線の矢印で、始点に白丸、終点に白抜きの矢印がつくことが多いです。
+              <p class="example">
+                例:
+                「顧客プール」から「自社プロセスプール」への「注文メッセージ」
+              </p>
+              <div class="img-placeholder">
+                [メッセージフローの記号のイメージ]
+              </div>
+            </li>
+            <li>
+              <span class="badge-element">関連 (Association)</span>
+              <strong>意味:</strong>
+              フローオブジェクトと成果物（テキスト注釈やデータオブジェクトなど）を関連付けます。点線で表現されます。
+              <p class="example">
+                例: 「タスクA」と「補足説明のテキスト注釈」を関連付ける
+              </p>
+              <div class="img-placeholder">[関連の記号のイメージ]</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="element-section">
+          <h3>3. スイムレーン (Swimlanes)</h3>
+          <p>
+            プロセス内のアクティビティの責任範囲や役割分担を明確にするための視覚的な区画です。
+          </p>
+          <ul>
+            <li>
+              <span class="badge-element">プール (Pool)</span>
+              <strong>意味:</strong> プロセス全体の参加者（例:
+              企業、組織、システム）を表します。通常、大きな長方形で表現されます。
+              <p class="example">例: 「顧客」、「営業部」、「経理部」</p>
+              <div class="img-placeholder">[プールの記号のイメージ]</div>
+            </li>
+            <li>
+              <span class="badge-element">レーン (Lane)</span>
+              <strong>意味:</strong>
+              プール内の特定の役割や担当者を表します。プールを水平または垂直に分割する形で表現されます。
+              <p class="example">
+                例: 「営業部」プール内の「担当者レーン」と「上長レーン」
+              </p>
+              <div class="img-placeholder">[レーンの記号のイメージ]</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="element-section">
+          <h3>4. データ (Data)</h3>
+          <p>プロセスで使用される情報や成果物を表します。</p>
+          <ul>
+            <li>
+              <span class="badge-element"
+                >データオブジェクト (Data Object)</span
+              >
+              <strong>意味:</strong>
+              プロセス中で作成、使用、更新されるデータを示します。書類のような形のアイコンで表現されます。
+              <p class="example">例: 「注文書」、「見積書」</p>
+              <div class="img-placeholder">
+                [データオブジェクトの記号のイメージ]
+              </div>
+            </li>
+            <li>
+              <span class="badge-element">データストア (Data Store)</span>
+              <strong>意味:</strong>
+              プロセス外部に永続的に保存されるデータを示します。データベースの円筒形のようなアイコンで表現されます。
+              <p class="example">例: 「顧客データベース」、「商品マスタ」</p>
+              <div class="img-placeholder">[データストアの記号のイメージ]</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="element-section">
+          <h3>5. 成果物 (Artifacts)</h3>
+          <p>プロセス図に補足的な情報を加えるために使用されます。</p>
+          <ul>
+            <li>
+              <span class="badge-element">テキスト注釈 (Text Annotation)</span>
+              <strong>意味:</strong>
+              プロセス図の特定の部分に説明やコメントを追加します。左側が開いた角括弧のような記号で示され、関連線でフローオブジェクトに接続されます。
+              <div class="img-placeholder">[テキスト注釈の記号のイメージ]</div>
+            </li>
+            <li>
+              <span class="badge-element">グループ (Group)</span>
+              <strong>意味:</strong>
+              複数の要素を視覚的にグループ化します。分析や文書化の目的で使用され、プロセスの実行順序には影響しません。破線の角丸長方形で表現されます。
+              <div class="img-placeholder">[グループの記号のイメージ]</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>簡単なBPMN図の例</h2>
+        <p>以下は、簡単な「休暇申請プロセス」の例です。</p>
+        <ol>
+          <li><strong>開始イベント:</strong> 「休暇申請」</li>
+          <li><strong>タスク:</strong> 「申請書作成」</li>
+          <li><strong>タスク:</strong> 「上長承認」</li>
+          <li>
+            <strong>エクスクルーシブゲートウェイ:</strong> 「承認結果は？」
+            <ul>
+              <li>
+                承認された場合 → <strong>タスク:</strong> 「人事部へ通知」 →
+                <strong>終了イベント:</strong> 「申請処理完了」
+              </li>
+              <li>
+                却下された場合 → <strong>タスク:</strong> 「申請者へ通知」 →
+                <strong>終了イベント:</strong> 「申請処理完了」
+              </li>
+            </ul>
+          </li>
+        </ol>
+        <p>
+          このプロセスを、プール（例:
+          申請者、上長、人事部）とレーンを使って役割分担を明確に表現することができます。
+        </p>
+        <div class="img-placeholder">[休暇申請プロセスのBPMN図のイメージ]</div>
+      </section>
+
+      <section>
+        <h2>さらに学ぶために</h2>
+        <p>
+          より詳細な情報や公式の仕様については、以下のリソースを参照してください。
+        </p>
+        <ul>
+          <li>
+            <a
+              href="https://www.omg.org/spec/BPMN/Current/"
+              target="_blank"
+              rel="noopener"
+              >OMG BPMN Specification (英語)</a
+            >
+          </li>
+          <li>BPMNに関する書籍やオンラインチュートリアル</li>
+        </ul>
+        <p>
+          このエディタを使って、ぜひ様々なビジネスプロセスをモデリングしてみてください。
+        </p>
+      </section>
+    </div>
+  </body>
+</html>
