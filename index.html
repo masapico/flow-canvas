@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flow Canvas</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f0f0f0%22 rx=%2220%22 ry=%2220%22></rect><circle cx=%2230%22 cy=%2250%22 r=%2215%22 fill=%22%23007bff%22></circle><polygon points=%2250,40 50,60 70,50%22 fill=%22%2328a745%22></polygon><rect x=%2275%22 y=%2235%22 width=%2230%22 height=%2230%22 fill=%22%23ffc107%22 rx=%225%22 ry=%225%22 transform=%22translate(-15, 0)%22></rect></svg>"
+    />
 
     <link rel="stylesheet" href="./lib/diagram-js.css" />
     <link rel="stylesheet" href="./lib/bpmn-embedded.css" />
@@ -113,7 +117,8 @@
       }
 
       #bpmn-container .bjs-breadcrumbs li {
-        display: inline-block;
+        display: inline-flex; /* Flexboxを使用してボタンとテキストを横並びにする */
+        align-items: center; /* 中央揃え */
         margin-right: 5px;
       }
       #bpmn-container .bjs-breadcrumbs li:not(:last-child)::after {
@@ -124,9 +129,12 @@
       }
 
       #bpmn-container .bjs-breadcrumbs li a,
-      #bpmn-container .bjs-breadcrumbs li span {
+      #bpmn-container .bjs-breadcrumbs li span.bjs-crumb {
+        /* span.bjs-crumb に限定 */
         color: #333;
         text-decoration: none;
+        display: inline-flex; /* Ensure button and text are on the same line */
+        align-items: center;
       }
       #bpmn-container .bjs-breadcrumbs li a:hover {
         color: #155cb5;
@@ -135,6 +143,25 @@
       #bpmn-container .bjs-breadcrumbs .bjs-crumb {
         /* パンくずリストのフォントサイズ調整 */
         font-size: 1rem;
+      }
+
+      /* プロセス名編集ボタン */
+      .edit-process-name-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0 5px 0 0; /* 右側に少し余白 */
+        display: inline-flex;
+        align-items: center;
+        color: #555;
+        line-height: 1; /* Ensure consistent line height */
+      }
+      .edit-process-name-btn:hover {
+        color: #155cb5;
+      }
+      .edit-process-name-btn svg {
+        width: 14px; /* アイコンサイズ調整 */
+        height: 14px;
       }
 
       /* エディタ背景のグリッドスタイル */
@@ -519,6 +546,7 @@
           console.log("BPMN XMLが正常にインポートされました。");
           fitViewport();
           breadcrumbsShownProcessed = false;
+          updateBreadcrumbsEditButton(); // プロセス名編集ボタンを更新
         } catch (err) {
           showError(`BPMNファイルのインポートに失敗: ${err.message || err}`);
         }
@@ -543,13 +571,99 @@
         translate: ["value", customTranslate],
       };
 
+      // パンくずリストのプロセス名編集ボタンを更新する関数
+      function updateBreadcrumbsEditButton() {
+        const breadcrumbsULElement =
+          bpmnContainer.querySelector("ul.bjs-breadcrumbs");
+        if (breadcrumbsULElement) {
+          const listItems = breadcrumbsULElement.querySelectorAll("li");
+          // 編集ボタンは最上位のプロセス（パンくずリストの項目が1つ）の場合のみ表示
+          if (listItems.length === 1) {
+            const firstCrumbLi = listItems[0]; // 最初のli要素（これが最上位プロセス）
+            const crumbLinkOrSpan = firstCrumbLi.querySelector(
+              "a.bjs-crumb, span.bjs-crumb"
+            );
+            if (
+              crumbLinkOrSpan &&
+              !crumbLinkOrSpan.querySelector(".edit-process-name-btn")
+            ) {
+              const editButton = document.createElement("button");
+              editButton.classList.add("edit-process-name-btn");
+              editButton.title = "プロセス名を編集";
+              editButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                </svg>
+              `;
+              editButton.addEventListener("click", handleEditProcessName);
+              crumbLinkOrSpan.insertBefore(
+                editButton,
+                crumbLinkOrSpan.firstChild
+              );
+            }
+          } else {
+            // パンくずリストが複数ある場合（サブプロセスなど）、既存の編集ボタンを削除
+            listItems.forEach((li) => {
+              const editBtn = li.querySelector(".edit-process-name-btn");
+              if (editBtn) {
+                editBtn.remove();
+              }
+            });
+          }
+        }
+      }
+
+      // プロセス名編集処理
+      async function handleEditProcessName() {
+        if (!modeler) return;
+        const modeling = modeler.get("modeling");
+        const canvas = modeler.get("canvas");
+        const rootElement = canvas.getRootElement();
+
+        if (!rootElement || !rootElement.businessObject) {
+          showError(
+            "編集対象のルート要素またはビジネスオブジェクトが見つかりません。"
+          );
+          return;
+        }
+        // 最上位のプロセスのみ編集可能とする
+        if (rootElement.parent) {
+          showError(
+            "サブプロセス名は編集できません。最上位のプロセスに戻って編集してください。"
+          );
+          return;
+        }
+
+        const process = rootElement.businessObject;
+
+        if (!process.$instanceOf("bpmn:Process")) {
+          showError("編集対象のプロセスが見つかりません。");
+          return;
+        }
+
+        const currentName = process.name || "Main";
+        const newName = window.prompt(
+          "新しいプロセス名を入力してください:",
+          currentName
+        );
+
+        if (newName !== null && newName.trim() !== "") {
+          try {
+            modeling.updateProperties(rootElement, { name: newName.trim() });
+            console.log(`プロセス名を "${newName.trim()}" に変更しました。`);
+          } catch (err) {
+            showError(`プロセス名の変更に失敗: ${err.message || err}`);
+          }
+        } else if (newName !== null && newName.trim() === "") {
+          showError("プロセス名は空にできません。");
+        }
+      }
+
       function initializeModeler() {
         clearError();
         modeler = new BpmnJS({
-          // BpmnJS はグローバルスコープから参照されます
           container: bpmnContainer,
           keyboard: { bindTo: window },
-          // additionalModules に翻訳モジュールを追加
           additionalModules: [translateModule],
         });
 
@@ -559,15 +673,11 @@
             console.log("初期ダイアグラムが正常に読み込まれました。");
             fitViewport();
             breadcrumbsShownProcessed = false;
+            updateBreadcrumbsEditButton();
 
             const canvasInternal = modeler.get("canvas");
             if (canvasInternal && canvasInternal._container) {
               const djsContainerElement = canvasInternal._container;
-              console.log(
-                "djs-containerの監視を開始します:",
-                djsContainerElement
-              );
-
               djsContainerObserver = new MutationObserver((mutationsList) => {
                 for (const mutation of mutationsList) {
                   if (
@@ -578,44 +688,31 @@
                     const classList = targetElement.classList;
                     if (classList.contains("bjs-breadcrumbs-shown")) {
                       if (!breadcrumbsShownProcessed) {
-                        console.log(
-                          "bjs-breadcrumbs-shown クラスが検出されました。(初回)"
-                        );
                         breadcrumbsShownProcessed = true;
-                        const breadcrumbsULElement =
-                          djsContainerElement.querySelector(
-                            "ul.bjs-breadcrumbs"
-                          );
-                        if (breadcrumbsULElement) {
-                          console.log(
-                            "パンくずリスト要素 (<ul.bjs-breadcrumbs>) が見つかりました。innerHTML:",
-                            breadcrumbsULElement.innerHTML
-                          );
-                        } else {
-                          console.warn(
-                            "bjs-breadcrumbs-shownクラスはありますが、<ul.bjs-breadcrumbs> 要素が見つかりません。"
-                          );
-                        }
+                        updateBreadcrumbsEditButton();
                         fitViewportWithDelay();
                       }
                     } else {
                       if (breadcrumbsShownProcessed) {
-                        console.log(
-                          "bjs-breadcrumbs-shown クラスが削除されました。フラグをリセットします。"
-                        );
                         breadcrumbsShownProcessed = false;
                       }
                     }
+                  } else if (
+                    mutation.type === "childList" &&
+                    mutation.target.classList &&
+                    mutation.target.classList.contains("bjs-breadcrumbs")
+                  ) {
+                    updateBreadcrumbsEditButton();
                   }
                 }
               });
               djsContainerObserver.observe(djsContainerElement, {
                 attributes: true,
+                childList: true,
+                subtree: true,
               });
             } else {
-              console.warn(
-                "djs-containerの監視設定に失敗しました。canvas._containerが見つかりません。"
-              );
+              console.warn("djs-containerの監視設定に失敗しました。");
             }
           })
           .catch((err) => {
@@ -625,18 +722,44 @@
           });
 
         modeler.on("root.changed", (event) => {
-          const { newRoot } = event;
-          console.log("ルート要素が変更されました:", newRoot.id);
+          const currentRoot = event.element || event.newRoot || event.root;
+          const oldRoot = event.oldRoot;
+
+          if (currentRoot && typeof currentRoot.id !== "undefined") {
+            console.log(
+              "ルート要素が変更/更新されました: old=",
+              oldRoot && typeof oldRoot.id !== "undefined"
+                ? oldRoot.id
+                : "undefined",
+              "current=",
+              currentRoot.id
+            );
+          } else if (currentRoot) {
+            console.warn(
+              "ルート要素が変更/更新されましたが、IDがありません:",
+              currentRoot,
+              "イベント詳細:",
+              event
+            );
+          } else {
+            if (oldRoot && typeof oldRoot.id !== "undefined") {
+              // console.warn("ルート要素変更イベント: currentRoot が undefined ですが、oldRoot は存在します:", oldRoot.id, "イベント詳細:", event);
+            } else {
+              // このケースは警告を抑制
+              // console.warn("ルート要素変更イベント: currentRoot と oldRoot.id が undefined です。イベント詳細:", event);
+            }
+          }
+
           breadcrumbsShownProcessed = false;
+          updateBreadcrumbsEditButton();
           fitViewportWithDelay();
         });
 
-        // パレットの列数制御のためのリサイズイベントリスナー
         window.addEventListener("resize", function () {
           if (modeler) {
             const canvas = modeler.get("canvas");
             if (canvas) {
-              canvas.resized(); // bpmn-js にリサイズを通知
+              canvas.resized();
               console.log(
                 "ウィンドウリサイズイベント: canvas.resized() を呼び出しました。"
               );
@@ -644,26 +767,17 @@
           }
         });
 
-        // breadcrumbsモジュールの取得とイベントリスナー設定
-        const breadcrumbsModule = modeler.get("drilldownBreadcrumbs", false);
-        const eventBusInstance = modeler.get("eventBus"); // イベントバスを取得
-
-        if (breadcrumbsModule && eventBusInstance) {
-          // breadcrumbsModule.on(...) ではなく eventBusInstance.on(...) を使用
+        const eventBusInstance = modeler.get("eventBus");
+        if (eventBusInstance) {
           eventBusInstance.on("breadcrumbs.updated", function (event) {
             console.log(
-              "パンくずリスト(モジュール)が更新されました。イベント:", // イベントオブジェクト全体をログに出力
+              "パンくずリスト(モジュール)が更新されました。イベント:",
               event
             );
-            // パンくずリストの更新時にビューポートを調整
+            updateBreadcrumbsEditButton();
             fitViewportWithDelay();
           });
-        } else if (!breadcrumbsModule) {
-          console.warn(
-            "drilldownBreadcrumbsモジュールが見つかりませんでした。"
-          );
         } else {
-          // breadcrumbsModule は存在するが eventBus がない場合 (通常は発生しないはず)
           console.warn(
             "eventBusが見つからず、breadcrumbs.updatedイベントを購読できません。"
           );
@@ -686,6 +800,7 @@
           console.log("新しいダイアグラムが作成されました。");
           fitViewport();
           breadcrumbsShownProcessed = false;
+          updateBreadcrumbsEditButton();
         } catch (err) {
           showError(`新規ダイアグラムの作成に失敗: ${err.message || err}`);
         }
@@ -695,7 +810,10 @@
         clearError();
         if (!modeler) return;
         try {
-          const defaultFilename = "diagram.bpmn";
+          const rootElement = modeler.get("canvas").getRootElement();
+          const processName = rootElement.businessObject.name || "diagram";
+          const defaultFilename = `${processName}.bpmn`;
+
           const filename = window.prompt(
             "BPMNファイル名を入力してください:",
             defaultFilename
@@ -748,9 +866,24 @@
         if (!modeler) return;
         try {
           const { svg } = await modeler.saveSVG();
+          const canvas = modeler.get("canvas");
+          const rootElement = canvas.getRootElement();
+          const processName =
+            (rootElement &&
+              rootElement.businessObject &&
+              rootElement.businessObject.name) ||
+            "BPMN Diagram";
+
+          // SVGデータに <title> 要素と <text> 要素を追加
+          let svgWithTitle = svg.replace(
+            /<svg(.*?)>/,
+            `<svg$1>\n  <title>${processName}</title>\n  <text x="10" y="20" font-family="Arial, sans-serif" font-size="16" fill="#333">${processName}</text>`
+          );
+
           const svgWindow = window.open("");
           if (svgWindow) {
-            svgWindow.document.write(svg);
+            svgWindow.document.write(svgWithTitle);
+            svgWindow.document.title = processName; // タブのタイトルも設定
             svgWindow.document.close();
             console.log("SVGが新しいタブに表示されました。");
           } else {
@@ -767,7 +900,10 @@
         clearError();
         if (!modeler) return;
         try {
-          const defaultFilename = "diagram.svg";
+          const rootElement = modeler.get("canvas").getRootElement();
+          const processName = rootElement.businessObject.name || "diagram";
+          const defaultFilename = `${processName}.svg`;
+
           const filename = window.prompt(
             "SVGファイル名を入力してください:",
             defaultFilename
