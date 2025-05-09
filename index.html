@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChotBPMN</title>
+
+    <link rel="stylesheet" href="./lib/diagram-js.css" />
+    <link rel="stylesheet" href="./lib/bpmn-embedded.css" />
+
+    <link href="./lib/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      /* 基本的なレイアウト */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden; /* スクロールバーを隠す */
+      }
+      #bpmn-container {
+        width: 100%;
+        height: 100%;
+        background-color: #f8f9fa; /* 少し明るい背景色に変更 */
+        position: relative; /* djs-containerの親としてposition指定 */
+      }
+      /* フローティングボタンのコンテナ */
+      .floating-buttons {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      .floating-buttons .btn {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        display: block;
+        width: 100%;
+      }
+      /* エラーメッセージ */
+      #error-message {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 2000;
+        display: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      #error-message .close-error {
+        color: white;
+        text-decoration: none;
+        margin-left: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      /* --- パンくずリストのスタイル調整 --- */
+      #bpmn-container .bjs-breadcrumbs {
+        display: block !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #fafafa;
+        border-bottom: solid 1px #ccc;
+        padding: 6px 10px;
+        list-style: none;
+        margin: 0;
+        z-index: 10;
+        box-sizing: border-box;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      #bpmn-container .bjs-breadcrumbs li {
+        display: inline-block;
+        margin-right: 5px;
+      }
+      #bpmn-container .bjs-breadcrumbs li:not(:last-child)::after {
+        content: ">";
+        margin-left: 8px;
+        margin-right: 3px;
+        color: #555;
+      }
+
+      #bpmn-container .bjs-breadcrumbs li a,
+      #bpmn-container .bjs-breadcrumbs li span {
+        color: #333;
+        text-decoration: none;
+      }
+      #bpmn-container .bjs-breadcrumbs li a:hover {
+        color: #155cb5;
+        text-decoration: underline;
+      }
+
+      /* --- エディタ背景のグリッドスタイル --- */
+      #bpmn-container .djs-container .layer-djs-grid rect {
+        /* fill: url(#djs-grid-pattern-dots); */ /* SVGパターンを使う場合 */
+        fill: none; /* デフォルトのグリッドパターンを無効化する場合 */
+      }
+      #bpmn-container .djs-container {
+        /* CSSでグリッド背景を生成 */
+        background-image: linear-gradient(
+            to right,
+            #e0e0e0 1px,
+            transparent 1px
+          ),
+          linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+        background-size: 20px 20px; /* グリッドの間隔 */
+      }
+      /* SVGパターンを使う場合の定義例 (必要に応じて<defs>に追加)
+        <svg>
+          <defs>
+            <pattern id="djs-grid-pattern-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" style="fill: #ccc;"></circle>
+            </pattern>
+          </defs>
+        </svg>
+        */
+    </style>
+  </head>
+  <body>
+    <div id="bpmn-container"></div>
+
+    <div class="floating-buttons">
+      <button id="btn-create-new" class="btn btn-primary">新規作成</button>
+      <button id="btn-export-bpmn" class="btn btn-success">
+        BPMN出力 (.bpmn)
+      </button>
+      <button id="btn-import-bpmn" class="btn btn-info">
+        BPMN読込 (.bpmn)
+      </button>
+      <input
+        type="file"
+        id="file-input-bpmn"
+        style="display: none"
+        accept=".bpmn, .xml"
+      />
+      <button id="btn-show-svg" class="btn btn-warning">
+        SVG表示 (別タブ)
+      </button>
+      <button id="btn-export-svg" class="btn btn-secondary">
+        SVGエクスポート (.svg)
+      </button>
+    </div>
+
+    <div id="error-message">
+      <span id="error-text"></span>
+      <a class="close-error" id="close-error-btn">&times; 閉じる</a>
+    </div>
+
+    <script src="./lib/bpmn-modeler.development.js"></script>
+
+    <script>
+      const initialDiagramXML = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" targetNamespace="http://bpmn.io/schema/bpmn" id="Definitions_1" name="Default Process">
+  <bpmn:process id="Process_1" name="Main" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1" name="開始"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="173.0" y="102.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
+
+      let modeler;
+      let djsContainerObserver;
+      let breadcrumbsShownProcessed = false;
+
+      const bpmnContainer = document.getElementById("bpmn-container");
+      const btnCreateNew = document.getElementById("btn-create-new");
+      const btnExportBpmn = document.getElementById("btn-export-bpmn");
+      const btnImportBpmn = document.getElementById("btn-import-bpmn");
+      const fileInputBpmn = document.getElementById("file-input-bpmn");
+      const btnShowSvg = document.getElementById("btn-show-svg");
+      const btnExportSvg = document.getElementById("btn-export-svg");
+
+      const errorMessageDiv = document.getElementById("error-message");
+      const errorTextSpan = document.getElementById("error-text");
+      const closeErrorBtn = document.getElementById("close-error-btn");
+
+      function showError(message) {
+        errorTextSpan.textContent = message;
+        errorMessageDiv.style.display = "block";
+        console.error(message);
+      }
+
+      function clearError() {
+        errorMessageDiv.style.display = "none";
+        errorTextSpan.textContent = "";
+      }
+      closeErrorBtn.onclick = clearError;
+
+      function downloadFile(filename, data, type) {
+        const blob = new Blob([data], { type });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      }
+
+      function fitViewport() {
+        if (!modeler) return;
+        const canvas = modeler.get("canvas");
+        if (canvas) {
+          try {
+            if (canvas.getRootElement()) {
+              canvas.zoom("fit-viewport", "auto");
+              console.log(
+                "ビューポートをフィットさせました。対象:",
+                canvas.getRootElement().id
+              );
+            } else {
+              console.warn(
+                "ルート要素が見つからないため、ビューポートのフィットをスキップしました。"
+              );
+            }
+          } catch (e) {
+            console.error("ビューポートフィットに失敗:", e);
+            showError(`ビューの調整に失敗しました: ${e.message || e}`);
+          }
+        }
+      }
+
+      function fitViewportWithDelay(delay = 250) {
+        console.log(`ビューポート調整を ${delay}ms 遅延実行します。`);
+        setTimeout(fitViewport, delay);
+      }
+
+      function initializeModeler() {
+        clearError();
+        modeler = new BpmnJS({
+          container: bpmnContainer,
+          keyboard: { bindTo: window },
+          // グリッド表示を有効にするための追加オプション (diagram-jsの機能)
+          // canvas: {
+          //   deferUpdate: false // グリッド表示に影響する場合がある
+          // },
+          // gridSnapping: { // bpmn-js-grid-snapping モジュールが必要な場合
+          //   active: true
+          // }
+        });
+
+        modeler
+          .importXML(initialDiagramXML)
+          .then(() => {
+            console.log("初期ダイアグラムが正常に読み込まれました。");
+            fitViewport();
+            breadcrumbsShownProcessed = false;
+
+            const canvasInternal = modeler.get("canvas");
+            if (canvasInternal && canvasInternal._container) {
+              const djsContainerElement = canvasInternal._container;
+              console.log(
+                "djs-containerの監視を開始します:",
+                djsContainerElement
+              );
+
+              djsContainerObserver = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                  if (
+                    mutation.type === "attributes" &&
+                    mutation.attributeName === "class"
+                  ) {
+                    const targetElement = mutation.target;
+                    const classList = targetElement.classList;
+                    if (classList.contains("bjs-breadcrumbs-shown")) {
+                      if (!breadcrumbsShownProcessed) {
+                        console.log(
+                          "bjs-breadcrumbs-shown クラスが検出されました。(初回)"
+                        );
+                        breadcrumbsShownProcessed = true;
+                        const breadcrumbsULElement =
+                          djsContainerElement.querySelector(
+                            "ul.bjs-breadcrumbs"
+                          );
+                        if (breadcrumbsULElement) {
+                          console.log(
+                            "パンくずリスト要素 (<ul.bjs-breadcrumbs>) が見つかりました。innerHTML:",
+                            breadcrumbsULElement.innerHTML
+                          );
+                        } else {
+                          console.warn(
+                            "bjs-breadcrumbs-shownクラスはありますが、<ul.bjs-breadcrumbs> 要素が見つかりません。"
+                          );
+                        }
+                        fitViewportWithDelay();
+                      }
+                    } else {
+                      if (breadcrumbsShownProcessed) {
+                        console.log(
+                          "bjs-breadcrumbs-shown クラスが削除されました。フラグをリセットします。"
+                        );
+                        breadcrumbsShownProcessed = false;
+                      }
+                    }
+                  }
+                }
+              });
+              djsContainerObserver.observe(djsContainerElement, {
+                attributes: true,
+              });
+            } else {
+              console.warn(
+                "djs-containerの監視設定に失敗しました。canvas._containerが見つかりません。"
+              );
+            }
+          })
+          .catch((err) => {
+            showError(
+              `初期ダイアグラムの読み込みに失敗: ${err.message || err}`
+            );
+          });
+
+        modeler.on("root.changed", (event) => {
+          const { newRoot } = event;
+          console.log("ルート要素が変更されました:", newRoot.id);
+          breadcrumbsShownProcessed = false;
+          fitViewportWithDelay();
+        });
+
+        const breadcrumbsModule = modeler.get("breadcrumbs", false);
+        if (breadcrumbsModule) {
+          breadcrumbsModule.on("changed", ({ active }) => {
+            console.log(
+              "パンくずリスト(モジュール)の状態が変更されました。アクティブ:",
+              active
+            );
+            if (!active) {
+              breadcrumbsShownProcessed = false;
+            }
+            fitViewportWithDelay();
+          });
+        } else {
+          console.warn("Breadcrumbsモジュールが見つかりませんでした。");
+        }
+      }
+
+      btnCreateNew.addEventListener("click", async () => {
+        clearError();
+        if (!modeler) return;
+        try {
+          // 新規作成時にプロセス名と開始イベント名を少し変更する例
+          const newDiagramXML = initialDiagramXML
+            .replace('id="Process_1"', 'id="Process_New"')
+            .replace('name="MyProcess"', 'name="新規プロセス"')
+            .replace('id="StartEvent_1"', 'id="StartEvent_New"')
+            .replace('name="開始"', 'name="新しい開始"');
+          await modeler.importXML(newDiagramXML);
+          console.log("新しいダイアグラムが作成されました。");
+          fitViewport();
+          breadcrumbsShownProcessed = false;
+        } catch (err) {
+          showError(`新規ダイアグラムの作成に失敗: ${err.message || err}`);
+        }
+      });
+
+      btnExportBpmn.addEventListener("click", async () => {
+        clearError();
+        if (!modeler) return;
+        try {
+          const defaultFilename = "diagram.bpmn";
+          // ユーザーにファイル名を入力させる
+          const filename = window.prompt(
+            "BPMNファイル名を入力してください:",
+            defaultFilename
+          );
+          if (filename === null) {
+            // キャンセルされた場合
+            console.log("BPMNエクスポートがキャンセルされました。");
+            return;
+          }
+          if (filename.trim() === "") {
+            showError("ファイル名が空です。");
+            return;
+          }
+          const finalFilename = filename.endsWith(".bpmn")
+            ? filename
+            : filename + ".bpmn";
+
+          const { xml } = await modeler.saveXML({ format: true });
+          downloadFile(finalFilename, xml, "application/xml");
+          console.log(
+            `BPMN XMLが ${finalFilename} としてエクスポートされました。`
+          );
+        } catch (err) {
+          showError(`BPMNのエクスポートに失敗: ${err.message || err}`);
+        }
+      });
+
+      btnImportBpmn.addEventListener("click", () => {
+        clearError();
+        fileInputBpmn.click();
+      });
+
+      fileInputBpmn.addEventListener("change", (event) => {
+        clearError();
+        const file = event.target.files[0];
+        if (file && modeler) {
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const xml = e.target.result;
+            try {
+              await modeler.importXML(xml);
+              console.log("BPMN XMLが正常にインポートされました。");
+              fitViewport();
+              breadcrumbsShownProcessed = false;
+            } catch (err) {
+              showError(
+                `BPMNファイルのインポートに失敗: ${err.message || err}`
+              );
+            }
+          };
+          reader.onerror = (e) => {
+            showError(`ファイルの読み込みに失敗しました。`);
+          };
+          reader.readAsText(file);
+        }
+        event.target.value = "";
+      });
+
+      btnShowSvg.addEventListener("click", async () => {
+        clearError();
+        if (!modeler) return;
+        try {
+          const { svg } = await modeler.saveSVG();
+          const svgWindow = window.open("");
+          if (svgWindow) {
+            svgWindow.document.write(svg);
+            svgWindow.document.close();
+            console.log("SVGが新しいタブに表示されました。");
+          } else {
+            showError(
+              "新しいタブを開けませんでした。ポップアップブロッカーを確認してください。"
+            );
+          }
+        } catch (err) {
+          showError(`SVGの生成または表示に失敗: ${err.message || err}`);
+        }
+      });
+
+      btnExportSvg.addEventListener("click", async () => {
+        clearError();
+        if (!modeler) return;
+        try {
+          const defaultFilename = "diagram.svg";
+          // ユーザーにファイル名を入力させる
+          const filename = window.prompt(
+            "SVGファイル名を入力してください:",
+            defaultFilename
+          );
+          if (filename === null) {
+            // キャンセルされた場合
+            console.log("SVGエクスポートがキャンセルされました。");
+            return;
+          }
+          if (filename.trim() === "") {
+            showError("ファイル名が空です。");
+            return;
+          }
+          const finalFilename = filename.endsWith(".svg")
+            ? filename
+            : filename + ".svg";
+
+          const { svg } = await modeler.saveSVG();
+          downloadFile(finalFilename, svg, "image/svg+xml");
+          console.log(`SVGが ${finalFilename} としてエクスポートされました。`);
+        } catch (err) {
+          showError(`SVGのエクスポートに失敗: ${err.message || err}`);
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", initializeModeler);
+
+      window.addEventListener("beforeunload", () => {
+        if (djsContainerObserver) {
+          djsContainerObserver.disconnect();
+          console.log("djs-containerの監視を停止しました。");
+        }
+      });
+    </script>
+  </body>
+</html>
