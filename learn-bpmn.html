@@ -3,353 +3,1026 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BPMN 2.0 学習コンテンツ</title>
-    <link rel="stylesheet" href="./lib/bootstrap.min.css" />
+    <title>BPMN作成ハンドブック - 業務改善のための実践ガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
-        font-family: sans-serif;
-        line-height: 1.6;
-        margin: 0;
-        padding: 20px;
-        background-color: #f4f4f4;
-        color: #333;
+        font-family: "Inter", sans-serif;
+        scroll-behavior: smooth;
       }
-      .container {
-        max-width: 900px;
-        margin: auto;
-        background: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      .toc a {
+        transition: all 0.3s ease;
       }
-      h1,
-      h2,
+      .toc a:hover {
+        color: #3b82f6; /* Tailwind blue-500 */
+        transform: translateX(4px);
+      }
+      .content-section {
+        padding-top: 60px; /* Adjust based on fixed header height if any */
+        margin-top: -60px; /* Negative margin to offset padding for anchor links */
+      }
+      h2 {
+        border-bottom: 2px solid #e5e7eb; /* Tailwind gray-200 */
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
       h3 {
-        color: #333;
-        border-bottom: 2px solid #007bff;
-        padding-bottom: 10px;
-        margin-top: 30px;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
       }
-      h1 {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-      p {
-        margin-bottom: 15px;
-      }
-      ul {
-        margin-bottom: 15px;
-        padding-left: 20px;
-      }
-      li {
-        margin-bottom: 8px;
-      }
-      strong {
-        color: #0056b3;
-      }
-      .element-section {
-        margin-bottom: 25px;
-        padding: 15px;
-        background-color: #e9ecef;
-        border-radius: 5px;
-      }
-      .element-section h3 {
-        margin-top: 0;
-        border-bottom: 1px solid #ccc;
-        font-size: 1.5em;
-      }
-      .example {
-        font-style: italic;
-        color: #555;
-        margin-top: 5px;
-      }
-      .badge-element {
-        display: inline-block;
-        padding: 0.25em 0.6em;
-        font-size: 75%;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: 0.25rem;
-        color: #fff;
-        background-color: #007bff;
-        margin-right: 5px;
-      }
-      .img-placeholder {
-        display: block;
+      .bpmn-diagram {
         width: 100%;
-        max-width: 300px; /* 画像が大きくなりすぎないように */
-        height: auto;
-        background-color: #ddd;
-        text-align: center;
-        padding: 20px;
-        margin: 10px auto;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-style: italic;
-        color: #777;
+        max-width: 700px;
+        border: 1px solid #d1d5db; /* Tailwind gray-300 */
+        border-radius: 0.5rem;
+        margin: 1rem auto;
+        display: block;
+        background-color: #f9fafb; /* Tailwind gray-50 */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+      }
+      th,
+      td {
+        border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+        padding: 0.75rem;
+        text-align: left;
+      }
+      th {
+        background-color: #f3f4f6; /* Tailwind gray-100 */
+      }
+      /* Responsive TOC for smaller screens */
+      @media (max-width: 768px) {
+        .toc-container {
+          position: static;
+          width: 100%;
+          height: auto;
+          max-height: 300px; /* Limit height on small screens */
+          overflow-y: auto;
+          margin-bottom: 1.5rem;
+        }
+        .main-content-container {
+          margin-left: 0;
+        }
+        .flex-container {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <h1>BPMN 2.0 クイックガイド</h1>
-
-      <section>
-        <h2>BPMNとは？</h2>
-        <p>
-          BPMN (Business Process Model and Notation)
-          は、ビジネスプロセスを視覚的に表現するための標準記法です。業務の流れを明確にし、関係者間での共通理解を促進することを目的としています。
-        </p>
-        <p>
-          このガイドでは、BPMN図を作成する上で基本となる要素とその意味について説明します。
-        </p>
-      </section>
-
-      <section>
-        <h2>主要な要素</h2>
-
-        <div class="element-section">
-          <h3>1. フローオブジェクト (Flow Objects)</h3>
-          <p>プロセスの振る舞いを定義する主要なグラフィカル要素です。</p>
-          <ul>
-            <li>
-              <span class="badge-element">イベント (Events)</span>
-              <strong>意味:</strong>
-              プロセスの中で「何かが起こる」ことを示します。プロセスの開始、終了、またはプロセス中に発生する事象を表します。
-              <ul>
-                <li>
-                  <strong>開始イベント (Start Event):</strong>
-                  プロセスの開始点。通常は細い線の円で表現されます。
-                </li>
-                <li>
-                  <strong>中間イベント (Intermediate Event):</strong>
-                  プロセス中に発生するイベント。二重線の円で表現され、境界に配置されることもあります。
-                </li>
-                <li>
-                  <strong>終了イベント (End Event):</strong>
-                  プロセスの終了点。太い線の円で表現されます。
-                </li>
-              </ul>
-              <p class="example">
-                例:
-                「顧客からの注文受付」（開始イベント）、「承認通知受信」（中間イベント）、「処理完了」（終了イベント）
-              </p>
-              <div class="img-placeholder">[イベントの記号のイメージ]</div>
-            </li>
-            <li>
-              <span class="badge-element">アクティビティ (Activities)</span>
-              <strong>意味:</strong>
-              プロセスの中で行われる「作業」や「仕事」を表します。
-              <ul>
-                <li>
-                  <strong>タスク (Task):</strong>
-                  それ以上分割できない基本的な作業単位。角丸の長方形で表現されます。様々な種類（ユーザータスク、サービスタスクなど）があります。
-                </li>
-                <li>
-                  <strong>サブプロセス (Sub-Process):</strong>
-                  より詳細なプロセスフローを含む複合的なアクティビティ。角丸の長方形の中に「+」マーク（折り畳み時）や詳細なフローが描かれます。
-                </li>
-              </ul>
-              <p class="example">
-                例: 「見積書作成」（タスク）、「承認プロセス」（サブプロセス）
-              </p>
-              <div class="img-placeholder">
-                [アクティビティの記号のイメージ]
-              </div>
-            </li>
-            <li>
-              <span class="badge-element">ゲートウェイ (Gateways)</span>
-              <strong>意味:</strong>
-              プロセスの流れを制御し、分岐させたり合流させたりするポイントを示します。ひし形で表現されます。
-              <ul>
-                <li>
-                  <strong
-                    >エクスクルーシブゲートウェイ (Exclusive Gateway):</strong
-                  >
-                  条件に基づいて、複数の経路のうち1つだけを選択します。「X」マークで示されることが多いです。
-                </li>
-                <li>
-                  <strong>パラレルゲートウェイ (Parallel Gateway):</strong>
-                  複数の経路を同時に実行（分岐）、または複数の経路の完了を待ってから次に進みます（合流）。「+」マークで示されます。
-                </li>
-                <li>
-                  <strong
-                    >インクルーシブゲートウェイ (Inclusive Gateway):</strong
-                  >
-                  条件に基づいて、1つ以上の経路を選択します。「O」マークで示されます。
-                </li>
-              </ul>
-              <p class="example">
-                例:
-                「金額が10万円以上か？」（エクスクルーシブゲートウェイでの分岐）、「書類Aと書類Bの両方が揃ったら次に進む」（パラレルゲートウェイでの合流）
-              </p>
-              <div class="img-placeholder">[ゲートウェイの記号のイメージ]</div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="element-section">
-          <h3>2. 接続オブジェクト (Connecting Objects)</h3>
-          <p>
-            フローオブジェクト同士を接続し、プロセスの順序や関係性を示します。
-          </p>
-          <ul>
-            <li>
-              <span class="badge-element"
-                >シーケンスフロー (Sequence Flow)</span
-              >
-              <strong>意味:</strong>
-              プロセス内のアクティビティが実行される順序を示します。実線の矢印で表現されます。
-              <p class="example">例: 「タスクA」→「タスクB」</p>
-              <div class="img-placeholder">
-                [シーケンスフローの記号のイメージ]
-              </div>
-            </li>
-            <li>
-              <span class="badge-element">メッセージフロー (Message Flow)</span>
-              <strong>意味:</strong>
-              異なるプール（参加者）間のメッセージのやり取りを示します。破線の矢印で、始点に白丸、終点に白抜きの矢印がつくことが多いです。
-              <p class="example">
-                例:
-                「顧客プール」から「自社プロセスプール」への「注文メッセージ」
-              </p>
-              <div class="img-placeholder">
-                [メッセージフローの記号のイメージ]
-              </div>
-            </li>
-            <li>
-              <span class="badge-element">関連 (Association)</span>
-              <strong>意味:</strong>
-              フローオブジェクトと成果物（テキスト注釈やデータオブジェクトなど）を関連付けます。点線で表現されます。
-              <p class="example">
-                例: 「タスクA」と「補足説明のテキスト注釈」を関連付ける
-              </p>
-              <div class="img-placeholder">[関連の記号のイメージ]</div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="element-section">
-          <h3>3. スイムレーン (Swimlanes)</h3>
-          <p>
-            プロセス内のアクティビティの責任範囲や役割分担を明確にするための視覚的な区画です。
-          </p>
-          <ul>
-            <li>
-              <span class="badge-element">プール (Pool)</span>
-              <strong>意味:</strong> プロセス全体の参加者（例:
-              企業、組織、システム）を表します。通常、大きな長方形で表現されます。
-              <p class="example">例: 「顧客」、「営業部」、「経理部」</p>
-              <div class="img-placeholder">[プールの記号のイメージ]</div>
-            </li>
-            <li>
-              <span class="badge-element">レーン (Lane)</span>
-              <strong>意味:</strong>
-              プール内の特定の役割や担当者を表します。プールを水平または垂直に分割する形で表現されます。
-              <p class="example">
-                例: 「営業部」プール内の「担当者レーン」と「上長レーン」
-              </p>
-              <div class="img-placeholder">[レーンの記号のイメージ]</div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="element-section">
-          <h3>4. データ (Data)</h3>
-          <p>プロセスで使用される情報や成果物を表します。</p>
-          <ul>
-            <li>
-              <span class="badge-element"
-                >データオブジェクト (Data Object)</span
-              >
-              <strong>意味:</strong>
-              プロセス中で作成、使用、更新されるデータを示します。書類のような形のアイコンで表現されます。
-              <p class="example">例: 「注文書」、「見積書」</p>
-              <div class="img-placeholder">
-                [データオブジェクトの記号のイメージ]
-              </div>
-            </li>
-            <li>
-              <span class="badge-element">データストア (Data Store)</span>
-              <strong>意味:</strong>
-              プロセス外部に永続的に保存されるデータを示します。データベースの円筒形のようなアイコンで表現されます。
-              <p class="example">例: 「顧客データベース」、「商品マスタ」</p>
-              <div class="img-placeholder">[データストアの記号のイメージ]</div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="element-section">
-          <h3>5. 成果物 (Artifacts)</h3>
-          <p>プロセス図に補足的な情報を加えるために使用されます。</p>
-          <ul>
-            <li>
-              <span class="badge-element">テキスト注釈 (Text Annotation)</span>
-              <strong>意味:</strong>
-              プロセス図の特定の部分に説明やコメントを追加します。左側が開いた角括弧のような記号で示され、関連線でフローオブジェクトに接続されます。
-              <div class="img-placeholder">[テキスト注釈の記号のイメージ]</div>
-            </li>
-            <li>
-              <span class="badge-element">グループ (Group)</span>
-              <strong>意味:</strong>
-              複数の要素を視覚的にグループ化します。分析や文書化の目的で使用され、プロセスの実行順序には影響しません。破線の角丸長方形で表現されます。
-              <div class="img-placeholder">[グループの記号のイメージ]</div>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section>
-        <h2>簡単なBPMN図の例</h2>
-        <p>以下は、簡単な「休暇申請プロセス」の例です。</p>
-        <ol>
-          <li><strong>開始イベント:</strong> 「休暇申請」</li>
-          <li><strong>タスク:</strong> 「申請書作成」</li>
-          <li><strong>タスク:</strong> 「上長承認」</li>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex flex-container min-h-screen">
+      <nav
+        class="toc-container w-full md:w-1/4 bg-white p-6 shadow-lg fixed top-0 left-0 h-full overflow-y-auto toc"
+      >
+        <h2 class="text-2xl font-semibold mb-6 text-blue-600">目次</h2>
+        <ul class="space-y-2">
           <li>
-            <strong>エクスクルーシブゲートウェイ:</strong> 「承認結果は？」
-            <ul>
+            <a
+              href="#section1"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第1章</strong> はじめに</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
               <li>
-                承認された場合 → <strong>タスク:</strong> 「人事部へ通知」 →
-                <strong>終了イベント:</strong> 「申請処理完了」
+                <a
+                  href="#section1-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >1.1 BPMNとは？</a
+                >
               </li>
               <li>
-                却下された場合 → <strong>タスク:</strong> 「申請者へ通知」 →
-                <strong>終了イベント:</strong> 「申請処理完了」
+                <a
+                  href="#section1-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >1.2 なぜBPMNなのか？ - 導入のメリット</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section1-3"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >1.3 本ハンドブックの読み進め方</a
+                >
               </li>
             </ul>
           </li>
-        </ol>
-        <p>
-          このプロセスを、プール（例:
-          申請者、上長、人事部）とレーンを使って役割分担を明確に表現することができます。
-        </p>
-        <div class="img-placeholder">[休暇申請プロセスのBPMN図のイメージ]</div>
-      </section>
-
-      <section>
-        <h2>さらに学ぶために</h2>
-        <p>
-          より詳細な情報や公式の仕様については、以下のリソースを参照してください。
-        </p>
-        <ul>
           <li>
             <a
-              href="https://www.omg.org/spec/BPMN/Current/"
-              target="_blank"
-              rel="noopener"
-              >OMG BPMN Specification (英語)</a
+              href="#section2"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第2章</strong> BPMN 2.0の基本</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section2-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >2.1 基本的な考え方</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section2-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >2.2 主要な図形要素</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section2-3"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >2.3 BPMN記述レベル</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a
+              href="#section3"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第3章</strong> BPMNエディタ入門</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section3-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >3.1 エディタの画面構成と基本機能</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section3-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >3.2 初めてのBPMN図作成</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a
+              href="#section4"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第4章</strong> 実践！BPMN記載例</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section4-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >4.1 記載例を読む上での注意点</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section4-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >4.2 事例1：住民票の写し交付申請</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section4-3"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >4.3 事例2：経費精算プロセス</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a
+              href="#section5"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第5章</strong> 分かりやすいBPMN図作成のヒント</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section5-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >5.1 初心者が陥りがちなワナ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section5-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >5.2 一目で伝わる図のルール</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a
+              href="#section6"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第6章</strong> 組織でのBPMN活用</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section6-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >6.1 組織に根付かせるステップ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section6-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >6.2 研修と学習リソース</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a
+              href="#section7"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>第7章</strong> おわりに</a
             >
           </li>
-          <li>BPMNに関する書籍やオンラインチュートリアル</li>
         </ul>
-        <p>
-          このエディタを使って、ぜひ様々なビジネスプロセスをモデリングしてみてください。
-        </p>
-      </section>
+      </nav>
+
+      <main
+        class="main-content-container md:ml-[25%] flex-1 p-8 pt-10 md:pt-8 bg-gray-50"
+      >
+        <header class="mb-10">
+          <h1 class="text-4xl font-bold text-blue-700">BPMN作成ハンドブック</h1>
+          <p class="text-lg text-gray-600 mt-2">
+            業務プロセスの可視化と改善、標準化のための実践ガイド
+          </p>
+        </header>
+
+        <section id="section1" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第1章 はじめに – BPMNで業務を見える化・改善する
+          </h2>
+          <div id="section1-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              1.1 BPMNとは？ – 業務プロセスの共通言語
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              BPMN (Business Process Model and Notation)
+              とは、業務プロセスを視覚的に記述するための国際標準の表記法です。複雑な業務の流れを、誰にでも理解しやすい図（BPMN図）として表現することができます。
+              組織内での多様な業務は、しばしば複数の部署や担当者が関わり合って遂行されます。BPMNは、これらの関係者間で業務プロセスに関する認識を統一し、誤解を防ぐための「共通言語」としての役割を果たします。
+            </p>
+            <img
+              src="https://placehold.co/600x300/EBF4FF/000000?text=BPMN%E3%81%AE%E6%A6%82%E5%BF%B5%E5%9B%B3"
+              alt="BPMNの概念図"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              従来の文字ベースの業務マニュアルでは、全体の流れや関連性が把握しにくく、更新も煩雑になりがちでした。BPMNを用いることで、業務の開始から終了までの一連の流れ、各ステップでの作業内容、判断条件、担当者などを視覚的に明確にできます。
+            </p>
+          </div>
+
+          <div id="section1-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              1.2 なぜ今、BPMNなのか？ – 導入のメリットと目的
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              BPMNを導入することには、多くのメリットがあります。これらは組織の業務効率と透明性を大幅に向上させる可能性を秘めています。
+            </p>
+            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong class="text-blue-600">業務の可視化と理解促進：</strong
+                ><br />
+                複雑な業務プロセスを誰にでも分かりやすく「見える化」することで、関係者間の共通理解を深めます。これにより、業務の全体像を把握しやすくなり、個々の作業がプロセス全体の中でどのような役割を担っているのかが明確になります。
+                <img
+                  src="https://placehold.co/600x350/EBF4FF/000000?text=%E6%A5%AD%E5%8B%99%E3%81%AE%E5%8F%AF%E8%A6%96%E5%8C%96%E3%81%AE%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E5%9B%B3"
+                  alt="業務の可視化イメージ図"
+                  class="bpmn-diagram my-3"
+                />
+              </li>
+              <li>
+                <strong class="text-blue-600">非効率性の発見と業務改善：</strong
+                ><br />
+                プロセスを客観的に図示することで、これまで気づかなかったボトルネック、無駄な作業、重複作業などが明らかになり、具体的な改善策を検討するための土台となります。現状の業務プロセス
+                (As-Is) を正確に把握することが、効果的な改善への第一歩です。
+              </li>
+              <li>
+                <strong class="text-blue-600">標準化と属人化の解消：</strong
+                ><br />
+                業務手順を標準化することで、特定の担当者しか業務内容を詳細に把握していないといった「属人化」の状態を解消できます。これにより、業務品質の安定化や、担当者変更時のリスク低減に繋がります。
+              </li>
+              <li>
+                <strong class="text-blue-600">職員研修・引継ぎの効率化：</strong
+                ><br />
+                視覚的に分かりやすいBPMN図は、新人研修や人事異動時の業務引継ぎ資料としても非常に有効です。業務内容の理解を早め、研修期間の短縮や引継ぎの質の向上に貢献します。
+              </li>
+              <li>
+                <strong class="text-blue-600"
+                  >システム調達・開発の効率化：</strong
+                ><br />
+                新しい情報システムを導入したり、既存システムを改修したりする際に、BPMN図は業務要件を明確に伝えるための有効な手段となります。開発者との認識の齟齬を防ぎ、手戻りの削減や開発期間の短縮に繋がります。
+              </li>
+              <li>
+                <strong class="text-blue-600">法令改正への迅速な対応：</strong
+                ><br />
+                行政事務は法令に基づいて行われるため、法令改正は業務プロセスの変更を伴います。プロセスが可視化されていれば、法令改正によって影響を受ける箇所や変更すべき点を迅速に特定し、対応することが容易になります。
+              </li>
+            </ul>
+          </div>
+
+          <div id="section1-3" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              1.3 本ハンドブックの読み進め方
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              本ハンドブックは、BPMNを初めて学ぶ方でも理解しやすいように、基本的な概念から具体的な作成方法、活用事例までを段階的に解説します。各セクションは、理論の学習から実践、そして応用へとスムーズに移行できるよう構成されています。
+              特に、実際にBPMNエディタを操作しながら読み進めることを推奨します。手を動かしながら学ぶことで、より深くBPMNを理解し、習得することができるでしょう。
+            </p>
+          </div>
+        </section>
+
+        <section id="section2" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第2章 BPMN 2.0の基本
+          </h2>
+          <div id="section2-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              2.1 基本的な考え方
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              BPMNには多くの図形やルールがありますが、最初からすべてを覚える必要はありません。まずは、業務プロセスを表現するための最も基本的な考え方と、主要な要素を理解することから始めましょう。
+            </p>
+            <ol class="list-decimal list-inside mt-4 space-y-2 pl-4">
+              <li>
+                <strong>横長の四角形（プールとレーン）</strong
+                >を書き、部署名や役割で区切る（誰が関わるか）。
+              </li>
+              <li>
+                <strong>角丸の四角形（タスク）</strong>を並べる（何を行うか）。
+              </li>
+              <li>
+                <strong>矢印（シーケンスフロー）</strong
+                >でつなぐ（どのような順番で行うか）。
+              </li>
+              <li>
+                開始を<strong>細い円（開始イベント）</strong>、終了を<strong>太い円（終了イベント）</strong>で示す（いつ始まり、いつ終わるか）。
+              </li>
+            </ol>
+            <img
+              src="https://placehold.co/700x250/EBF4FF/000000?text=BPMN%E5%9F%BA%E6%9C%AC4%E8%A6%81%E7%B4%A0%E3%81%AE%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8"
+              alt="BPMN基本4要素"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              基本的には、これらの要素の組み合わせで、多くの業務プロセスの骨格を描くことができます。
+            </p>
+          </div>
+
+          <div id="section2-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              2.2 主要な図形要素
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              BPMN
+              2.0でよく使われる主要な図形要素とその意味を解説します。これらの記号を理解することが、BPMN図を読み書きする第一歩です。
+            </p>
+            <div class="overflow-x-auto mt-4">
+              <table class="min-w-full">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
+                    <th class="px-4 py-2 text-left">名称</th>
+                    <th class="px-4 py-2 text-left">簡単な意味と利用例</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/50x50/FFFFFF/000000?text=Start"
+                        alt="開始イベント"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>開始イベント (Start Event)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      プロセスの開始点
+                      (細い線の円)。例：申請受付開始、定時処理開始。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/50x50/FFFFFF/000000?text=End"
+                        alt="終了イベント"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>終了イベント (End Event)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      プロセスの終了点
+                      (太い線の円)。例：処理完了、通知発行完了。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/100x50/FFFFFF/000000?text=Task"
+                        alt="タスク"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>タスク (Task)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      個別の作業単位
+                      (角が丸い四角形)。例：「申請書を確認する」「データを入力する」。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/50x50/FFFFFF/000000?text=XOR"
+                        alt="排他的ゲートウェイ"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>排他的ゲートウェイ (Exclusive Gateway)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      複数の経路のうち、条件に合致する「一つだけ」に進む
+                      (ひし形、X印または無印)。例：「承認ルート分岐」「エラー有無で分岐」。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/50x50/FFFFFF/000000?text=AND"
+                        alt="並行ゲートウェイ"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>並行ゲートウェイ (Parallel Gateway)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      複数の経路を「同時に」実行、または全経路完了を待つ
+                      (ひし形、＋印)。例：「複数部署へ同時照会」「関連書類準備と審査を並行」。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/100x20/FFFFFF/000000?text=Flow%E2%86%92"
+                        alt="シーケンスフロー"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>シーケンスフロー (Sequence Flow)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      要素の実行順序、プロセスの流れ (実線の矢印)。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/150x80/FFFFFF/000000?text=Pool"
+                        alt="プール"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>プール (Pool)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      プロセス全体の参加者（組織、部署、システム等）。例：「市民課」「経理部」。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/150x50/FFFFFF/000000?text=Lane"
+                        alt="レーン"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>レーン (Lane)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      プール内の役割や担当者。例：「窓口担当」「承認者」。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/100x20/FFFFFF/000000?text=Msg%20--%3E"
+                        alt="メッセージフロー"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>メッセージフロー (Message Flow)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      異なるプール間のメッセージや情報のやり取り (破線の矢印)。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img
+                        src="https://placehold.co/60x50/FFFFFF/000000?text=Data"
+                        alt="データオブジェクト"
+                      />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <strong>データオブジェクト (Data Object)</strong>
+                    </td>
+                    <td class="border px-4 py-2">
+                      プロセスで扱う情報や書類
+                      (右上隅が折れた書類の形)。例：「申請書」「報告書」。
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-2 leading-relaxed">
+              これらの図形を組み合わせることで、業務プロセスを具体的に表現していきます。
+              <strong class="text-red-600">業務の可視化</strong
+              >が進むことで、関係者全員が同じ理解を持つことができ、<strong
+                class="text-red-600"
+                >業務改善</strong
+              >の議論がスムーズになります。
+            </p>
+          </div>
+          <div id="section2-3" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              2.3 BPMN記述レベル
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              BPMNの記述にはいくつかのレベルがあり、目的に応じて使い分けられます。地方自治体においては、特に「分析レベル」での記述が推奨されることが多いです。
+            </p>
+            <ul class="list-disc list-inside mt-4 space-y-2 pl-4">
+              <li>
+                <strong>記述レベル：</strong>
+                事務の基本的な作業の流れを記述するレベル。
+              </li>
+              <li>
+                <strong>分析レベル：</strong>
+                記述レベルの内容に加え、事務の詳細（個々の作業をアクティビティとして具体的に表記）や、例外的な処理（エラー処理や手戻りなど）までを表記するレベル。業務を「人が行う作業」と「システムが行う作業」に明確に仕分け、関係者間での共通理解を促すことを目的とします。これが<strong
+                  class="text-red-600"
+                  >標準化</strong
+                >や<strong class="text-red-600">属人化の解消</strong
+                >に繋がります。
+              </li>
+              <li>
+                <strong>実行可能レベル：</strong>
+                BPMS（ビジネスプロセス管理システム）などで直接実行可能なレベルまで詳細に記述するレベル。
+              </li>
+            </ul>
+            <p class="mt-2 leading-relaxed">
+              「分析レベル」で記述することにより、業務の現状が正確に把握でき、システム開発者や他の職員とのコミュニケーションが円滑になります。これは、<strong
+                class="text-red-600"
+                >職員研修・引継ぎの効率化</strong
+              >にも大いに役立ちます。
+            </p>
+          </div>
+        </section>
+
+        <section id="section3" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第3章 BPMNエディタ入門
+          </h2>
+          <p class="mt-2 leading-relaxed">
+            BPMN図を作成するためには、専用のエディタを使用します。ここでは、一般的なWebベースのBPMNエディタ（例：bpmn-jsを利用したもの）の基本的な使い方を解説します。
+          </p>
+          <div id="section3-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              3.1 エディタの画面構成と基本機能
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              多くのBPMNエディタは、以下のような共通の画面構成と機能を備えています。
+            </p>
+            <ul class="list-disc list-inside mt-4 space-y-2 pl-4">
+              <li>
+                <strong>キャンバスエリア：</strong>
+                BPMN図を実際に描画し、編集する中心的な作業領域。
+              </li>
+              <li>
+                <strong>パレット：</strong>
+                BPMNの各要素（開始イベント、タスク、ゲートウェイなど）がアイコンとして並んでいる領域。ここから要素を選択し、キャンバスに配置します。
+              </li>
+              <li>
+                <strong>プロパティパネル：</strong>
+                キャンバス上で選択した要素の詳細情報（名前、条件など）を設定・編集する領域。
+              </li>
+              <li>
+                <strong>メニューバー/ツールバー：</strong>
+                ファイル操作（新規作成、保存、読込）、ズーム、元に戻す/やり直しなどの共通操作を行うメニューやボタン。
+              </li>
+            </ul>
+            <img
+              src="https://placehold.co/700x400/EBF4FF/000000?text=BPMN%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF%E7%94%BB%E9%9D%A2%E6%A7%8B%E6%88%90%E4%BE%8B"
+              alt="BPMNエディタ画面構成例"
+              class="bpmn-diagram my-4"
+            />
+          </div>
+
+          <div id="section3-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              3.2 初めてのBPMN図作成（要素の配置、接続、ラベル付け）
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              簡単なBPMN図を作成する基本的な手順は以下の通りです。
+            </p>
+            <ol class="list-decimal list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong>プールの配置：</strong>
+                パレットから「プール」を選択し、キャンバスに配置。必要に応じて「レーン」を追加します。
+              </li>
+              <li>
+                <strong>開始イベントの配置：</strong>
+                プールの左端の適切なレーンに「開始イベント」を配置します。
+              </li>
+              <li>
+                <strong>タスクの配置：</strong>
+                具体的な作業を表す「タスク」をパレットから選択し、担当レーン上に配置します。
+              </li>
+              <li>
+                <strong>シーケンスフローでの接続：</strong>
+                配置したイベントやタスクを「シーケンスフロー」でつなぎ、業務の流れを表現します。
+              </li>
+              <li>
+                <strong>ゲートウェイの配置と分岐：</strong>
+                条件分岐がある場合は、「ゲートウェイ」を配置し、分岐フローを作成します。
+              </li>
+              <li>
+                <strong>終了イベントの配置：</strong>
+                プロセスの右端に「終了イベント」を配置します。
+              </li>
+              <li>
+                <strong>ラベル付け：</strong>
+                配置した全ての要素に、内容が明確にわかる名称（ラベル）を付けます。これが<strong
+                  class="text-red-600"
+                  >業務の可視化</strong
+                >と理解促進の鍵です。
+              </li>
+              <li>
+                <strong>保存：</strong>
+                作成したBPMN図を保存します（通常はXML形式）。
+              </li>
+            </ol>
+            <img
+              src="https://placehold.co/700x450/EBF4FF/000000?text=%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AABPMN%E5%9B%B3%E4%BD%9C%E6%88%90%E3%82%B9%E3%83%86%E3%83%83%E3%83%97"
+              alt="BPMN図作成ステップ"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              最初は簡単なプロセスから始め、徐々に慣れていくことが大切です。
+            </p>
+          </div>
+        </section>
+
+        <section id="section4" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第4章 実践！BPMN記載例
+          </h2>
+          <div id="section4-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              4.1 記載例を読む上での注意点
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              ここに提示する記載例は、あくまでBPMNの理解を助けるための「一例」です。各組織の体制や規則によって実際のプロセスは異なります。基本的な考え方や表現方法を参考に、自身の業務に合わせて修正・追記してください。
+              特に「分析レベル」での記述を意識し、業務担当者とシステム開発者の双方が理解できるレベルを目指しましょう。これにより、<strong
+                class="text-red-600"
+                >標準化</strong
+              >が進み、<strong class="text-red-600">属人化の解消</strong
+              >に繋がります。
+            </p>
+          </div>
+          <div id="section4-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              4.2 事例1：住民票の写し交付申請プロセス（窓口申請）
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              市民が窓口で住民票の写しを申請し、職員が発行・交付する一般的なプロセスです。
+            </p>
+            <ul class="list-disc list-inside mt-2 pl-4">
+              <li>
+                <strong>主な参加者（プール/レーン）：</strong>
+                申請者（市民）、市民課（窓口担当、システム操作担当）
+              </li>
+              <li>
+                <strong>主要タスク例：</strong>
+                申請書受付、本人確認、手数料徴収、システム検索、住民票印刷、交付
+              </li>
+              <li>
+                <strong>関連データ例：</strong>
+                住民票交付申請書、本人確認書類、住民基本台帳システム
+              </li>
+            </ul>
+            <img
+              src="https://placehold.co/700x500/EBF4FF/000000?text=BPMN%E5%9B%B3%EF%BC%9A%E4%BD%8F%E6%B0%91%E7%A5%A8%E4%BA%A4%E4%BB%98%E7%94%B3%E8%AB%8B"
+              alt="BPMN図：住民票交付申請プロセス"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              この図により、申請から交付までの流れ、担当者の役割、必要な情報が明確になり、<strong
+                class="text-red-600"
+                >業務の可視化</strong
+              >が実現されます。新人職員の<strong class="text-red-600"
+                >研修資料</strong
+              >としても有効です。
+            </p>
+          </div>
+
+          <div id="section4-3" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              4.3 事例2：経費精算プロセス
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              従業員が経費を申請し、上司が承認、経理部が処理・支払う一般的なプロセスです。
+            </p>
+            <ul class="list-disc list-inside mt-2 pl-4">
+              <li>
+                <strong>主な参加者（プール/レーン）：</strong>
+                申請者（従業員）、承認者（上司）、経理部（確認担当、支払担当）
+              </li>
+              <li>
+                <strong>主要タスク例：</strong>
+                経費申請書作成、領収書添付、上司承認、経理確認、支払処理
+              </li>
+              <li>
+                <strong>関連データ例：</strong>
+                経費精算申請書、領収書、会計システム
+              </li>
+            </ul>
+            <img
+              src="https://placehold.co/700x550/EBF4FF/000000?text=BPMN%E5%9B%B3%EF%BC%9A%E7%B5%8C%E8%B2%BB%E7%B2%BE%E7%AE%97%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9"
+              alt="BPMN図：経費精算プロセス"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              このプロセスをBPMNで描くことで、承認フローのボトルネックや確認作業の重複など、<strong
+                class="text-red-600"
+                >業務改善</strong
+              >のポイントが見つけやすくなります。また、全社的な<strong
+                class="text-red-600"
+                >標準化</strong
+              >にも貢献します。
+            </p>
+          </div>
+        </section>
+
+        <section id="section5" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第5章 分かりやすいBPMN図作成のためのヒント集
+          </h2>
+          <div id="section5-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              5.1 初心者が陥りがちなワナと、その回避策
+            </h3>
+            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong>ワナ1：複雑すぎる図</strong> →
+                回避策：基本要素から始め、詳細はサブプロセスに。1ページに収める。
+              </li>
+              <li>
+                <strong>ワナ2：フローの方向がバラバラ</strong> →
+                回避策：左から右への流れを基本とし、一貫性を持たせる。
+              </li>
+              <li>
+                <strong>ワナ3：ゲートウェイの誤用</strong> →
+                回避策：分岐条件を明確に記述し、ゲートウェイの種類を正しく使い分ける。
+              </li>
+              <li>
+                <strong>ワナ4：プールとレーンの混乱</strong> →
+                回避策：「誰が」行うかを意識し、組織構造に合わせて設定する。
+              </li>
+              <li>
+                <strong>ワナ5：命名規則の不統一・曖昧さ</strong> →
+                回避策：「目的語＋動詞」で具体的に、一貫した用語を使用する。
+              </li>
+            </ul>
+            <p class="mt-2 leading-relaxed">
+              これらのワナを避けることで、BPMN図の可読性が向上し、<strong
+                class="text-red-600"
+                >業務の可視化</strong
+              >の効果が高まります。
+            </p>
+          </div>
+
+          <div id="section5-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              5.2 一目で伝わる図のルール：レイアウト、命名規則、シンプル化の秘訣
+            </h3>
+            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong>レイアウトの工夫：</strong>
+                1ページに収める、フローの方向を統一（左から右へ）、適切な間隔と整列、コネクタの交差を避ける。
+              </li>
+              <li>
+                <strong>命名規則の徹底：</strong>
+                タスク名は「（目的語）を（動詞）する」、イベント名も具体的に、ゲートウェイの分岐フローには条件を明記。
+              </li>
+              <li>
+                <strong>シンプル化の追求：</strong>
+                使用する記号の種類を絞る、サブプロセスの活用、注釈の活用、対象プロセスの範囲を明確にする。
+              </li>
+            </ul>
+            <img
+              src="https://placehold.co/700x300/EBF4FF/000000?text=%E5%88%86%E3%81%8B%E3%82%8A%E3%82%84%E3%81%99%E3%81%84BPMN%E5%9B%B3%E3%81%AE%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88"
+              alt="分かりやすいBPMN図のポイント"
+              class="bpmn-diagram my-4"
+            />
+            <p class="mt-2 leading-relaxed">
+              これらのルールを守ることで、誰にとっても理解しやすいBPMN図を作成でき、<strong
+                class="text-red-600"
+                >職員研修・引継ぎの効率化</strong
+              >にも繋がります。
+            </p>
+          </div>
+        </section>
+
+        <section id="section6" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            第6章 組織でのBPMN活用
+          </h2>
+          <div id="section6-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              6.1 BPMNを組織に根付かせるためのステップ
+            </h3>
+            <ol class="list-decimal list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong>目的の共有とリーダーシップ：</strong>
+                なぜBPMNを導入するのか目的を明確にし、経営層・管理職がコミットする。
+              </li>
+              <li>
+                <strong>スモールスタートと成功体験の共有：</strong>
+                特定部署や単純な業務から試行し、成功事例を共有する。
+              </li>
+              <li>
+                <strong>推進体制の整備：</strong>
+                担当者や専門チームを設置し、サポート体制を構築する。
+              </li>
+              <li>
+                <strong>研修と学習機会の提供：</strong>
+                継続的な研修プログラムを実施し、スキルアップを支援する。
+              </li>
+              <li>
+                <strong>ツール環境の整備：</strong>
+                アクセスしやすく使いやすいBPMNエディタ環境を提供する。
+              </li>
+              <li>
+                <strong>BPMN図の共有と日常的な活用：</strong>
+                作成した図をポータルサイトなどで共有し、業務マニュアルや改善検討資料として日常的に活用する文化を醸成する。
+              </li>
+              <li>
+                <strong>評価とフィードバックによる継続的改善：</strong>
+                導入効果を定期的に評価し、改善サイクルを確立する。
+              </li>
+            </ol>
+            <p class="mt-2 leading-relaxed">
+              これらのステップを通じて、BPMNは組織の<strong class="text-red-600"
+                >業務改善</strong
+              >と<strong class="text-red-600">標準化</strong
+              >を推進する強力なツールとなります。
+            </p>
+          </div>
+          <div id="section6-2" class="content-section mt-8">
+            <h3 class="text-2xl font-medium text-gray-700">
+              6.2 研修の進め方と学習リソース
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              効果的な研修と学習リソースの提供は、BPMNスキルを組織全体に広める鍵です。
+            </p>
+            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
+              <li>
+                <strong>研修計画：</strong>
+                対象者とレベルに応じたプログラム（基礎、実践、推進者向けなど）を設計する。
+              </li>
+              <li>
+                <strong>研修内容：</strong>
+                BPMNの基本、エディタ操作、実践演習、分かりやすい図の作成ポイント、成功事例紹介など。
+              </li>
+              <li>
+                <strong>研修の工夫：</strong>
+                専門用語を避け、実践重視、メリット提示、飽きさせない工夫。
+              </li>
+              <li>
+                <strong>学習リソース：</strong>
+                内部資料（本ハンドブック等）、公的ガイドライン、オンラインチュートリアル、エディタの公式ドキュメントなどを整備・活用する。
+              </li>
+            </ul>
+            <p class="mt-2 leading-relaxed">
+              これにより、全職員がBPMNを効果的に活用できるようになり、<strong
+                class="text-red-600"
+                >職員研修・引継ぎの効率化</strong
+              >が図られ、組織全体の<strong class="text-red-600">業務改善</strong
+              >能力が向上します。
+            </p>
+          </div>
+        </section>
+
+        <section id="section7" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">第7章 おわりに</h2>
+          <p class="mt-4 leading-relaxed">
+            本ハンドブックを通じて、BPMNの基本的な知識と活用方法を学んでいただけたことと思います。BPMNは、業務プロセスを「見える化」し、関係者間の共通理解を深め、継続的な業務改善を推進するための強力なツールです。
+          </p>
+          <p class="mt-4 leading-relaxed">
+            BPMNを習得し活用することで、以下のメリットが期待できます。
+          </p>
+          <ul
+            class="list-disc list-inside mt-4 space-y-2 pl-4 bg-blue-50 p-4 rounded-md"
+          >
+            <li>
+              <strong class="text-blue-700">業務の可視化：</strong>
+              複雑なプロセスも一目で理解。
+            </li>
+            <li>
+              <strong class="text-blue-700">業務改善：</strong>
+              ボトルネックや無駄を発見し、効率化。
+            </li>
+            <li>
+              <strong class="text-blue-700">標準化と属人化の解消：</strong>
+              誰でも同じ品質で業務を遂行。
+            </li>
+            <li>
+              <strong class="text-blue-700">職員研修・引継ぎの効率化：</strong>
+              スムーズな知識移転。
+            </li>
+          </ul>
+          <p class="mt-4 leading-relaxed">
+            BPMNのスキルは、個々の職員の能力向上だけでなく、組織全体の生産性向上とサービス品質の向上に大きく貢献します。ぜひ、本ハンドブックで得た知識を日々の業務に活かし、より良い業務プロセスの構築を目指してください。
+            さらなる学習を進め、BPMNを組織文化として根付かせることで、変化に強く、継続的に進化できる組織づくりに繋がることを願っています。
+          </p>
+        </section>
+
+        <footer
+          class="mt-12 pt-8 border-t border-gray-300 text-center text-gray-500"
+        >
+          <p>&copy; 2025 BPMN作成ハンドブック. All rights reserved.</p>
+        </footer>
+      </main>
     </div>
+
+    <script>
+      // Smooth scroll for TOC links
+      document.querySelectorAll('.toc a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute("href");
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: "smooth",
+            });
+
+            // Optional: Basic active link styling (can be enhanced)
+            document
+              .querySelectorAll(".toc a")
+              .forEach((link) =>
+                link.classList.remove("font-bold", "text-blue-600")
+              );
+            this.classList.add("font-bold", "text-blue-600");
+          }
+        });
+      });
+
+      // Highlight TOC link based on scroll position (basic implementation)
+      const sections = document.querySelectorAll(".content-section[id]");
+      const tocLinks = document.querySelectorAll(".toc a");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 70) {
+            // 70 is an offset
+            current = section.getAttribute("id");
+          }
+        });
+
+        tocLinks.forEach((link) => {
+          link.classList.remove("font-bold", "text-blue-600");
+          if (link.getAttribute("href").includes(current) && current !== "") {
+            // Find the exact link or parent link for sub-sections
+            if (
+              link.getAttribute("href") === `#${current}` ||
+              document.querySelector(`a[href="#${current}"]`).contains(link)
+            ) {
+              link.classList.add("font-bold", "text-blue-600");
+            }
+          }
+        });
+        // If no section is "current" (e.g., at the very top or bottom), clear all active states or set a default
+        if (current === "") {
+          // Optionally, highlight the first link or clear all
+          // tocLinks[0].classList.add('font-bold', 'text-blue-600'); // Example: highlight first
+        }
+      });
+    </script>
   </body>
 </html>
