@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="./lib/diagram-js.css" />
     <link rel="stylesheet" href="./lib/bpmn-embedded.css" />
 
-    <link href="./lib/bootstrap.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="./lib/bootstrap.min.css" />
     <style>
       /* 基本的なレイアウト */
       html,
@@ -30,19 +29,40 @@
       .floating-buttons {
         position: fixed;
         bottom: 20px;
-        right: 20px;
+        left: 20px; /* Changed from right to left */
+        right: auto; /* Added to ensure left positioning overrides right */
         z-index: 100;
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 10px;
+        background-color: #f0f0f0; /* Light grey background for the container */
+        padding: 8px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        display: flex; /* Horizontal layout for buttons */
+        gap: 8px; /* Spacing between buttons */
       }
       .floating-buttons .btn {
-        font-size: 0.9rem;
-        margin-bottom: 5px;
-        display: block;
-        width: 100%;
+        font-size: 1.2rem; /* Kept for potential future use, though SVG size is fixed */
+        width: 40px; /* Fixed width for square-ish buttons */
+        height: 40px; /* Fixed height for square-ish buttons */
+        padding: 0; /* Remove default bootstrap padding */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc; /* Subtle border for buttons */
+        background-color: #fff; /* White background for buttons */
+        color: #333; /* Icon color, will be inherited by SVG fill="currentColor" */
+        border-radius: 6px; /* Slightly rounded corners for buttons */
       }
+      .floating-buttons .btn:hover {
+        background-color: #e9e9e9; /* Hover effect */
+        border-color: #bbb;
+      }
+
+      .floating-buttons .btn svg {
+        /* Style for SVGs within buttons */
+        width: 20px;
+        height: 20px;
+      }
+
       /* エラーメッセージ */
       #error-message {
         position: fixed;
@@ -119,27 +139,100 @@
           linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
         background-size: 20px 20px; /* グリッドの間隔 */
       }
-      /* SVGパターンを使う場合の定義例 (必要に応じて<defs>に追加)
-        <svg>
-          <defs>
-            <pattern id="djs-grid-pattern-dots" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="1" style="fill: #ccc;"></circle>
-            </pattern>
-          </defs>
-        </svg>
-        */
+
+      .bjs-breadcrumbs {
+        text-align: center;
+      }
+      .bjs-crumb {
+        font-size: 1rem;
+      }
+      .djs-palette {
+        top: 50px;
+      }
+      .bjs-powered-by {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <div id="bpmn-container"></div>
 
     <div class="floating-buttons">
-      <button id="btn-create-new" class="btn btn-primary">新規作成</button>
-      <button id="btn-export-bpmn" class="btn btn-success">
-        BPMN出力 (.bpmn)
+      <button id="btn-import-bpmn" class="btn" title="BPMN読込 (.bpmn)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-folder2-open"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.973 0 1.942.372 2.684 1.054L10.5 5.5H14.5A1.5 1.5 0 0 1 16 7v5.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5V4.964A1.5 1.5 0 0 1 1 3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9.828a.5.5 0 0 1-.354-.146l-.943-.943A.5.5 0 0 0 8.172 4H2.5a.5.5 0 0 0-.5.5V6zm-1 7v-5.5A1.5 1.5 0 0 1 2.5 6h11A1.5 1.5 0 0 1 15 7.5V13a1 1 0 0 1-1 1H1.5a1 1 0 0 1-1-1z"
+          />
+        </svg>
       </button>
-      <button id="btn-import-bpmn" class="btn btn-info">
-        BPMN読込 (.bpmn)
+      <button id="btn-create-new" class="btn" title="新規作成">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-plus-lg"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+          />
+        </svg>
+      </button>
+      <button id="btn-export-bpmn" class="btn" title="BPMN出力 (.bpmn)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-download"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+          />
+          <path
+            d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+          />
+        </svg>
+      </button>
+      <button id="btn-show-svg" class="btn" title="SVG表示 (別タブ)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-image"
+          viewBox="0 0 16 16"
+        >
+          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+          <path
+            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"
+          />
+        </svg>
+      </button>
+      <button id="btn-export-svg" class="btn" title="SVGエクスポート (.svg)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-file-earmark-image"
+          viewBox="0 0 16 16"
+        >
+          <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+          <path
+            d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+          />
+        </svg>
       </button>
       <input
         type="file"
@@ -147,12 +240,6 @@
         style="display: none"
         accept=".bpmn, .xml"
       />
-      <button id="btn-show-svg" class="btn btn-warning">
-        SVG表示 (別タブ)
-      </button>
-      <button id="btn-export-svg" class="btn btn-secondary">
-        SVGエクスポート (.svg)
-      </button>
     </div>
 
     <div id="error-message">
@@ -249,13 +336,6 @@
         modeler = new BpmnJS({
           container: bpmnContainer,
           keyboard: { bindTo: window },
-          // グリッド表示を有効にするための追加オプション (diagram-jsの機能)
-          // canvas: {
-          //   deferUpdate: false // グリッド表示に影響する場合がある
-          // },
-          // gridSnapping: { // bpmn-js-grid-snapping モジュールが必要な場合
-          //   active: true
-          // }
         });
 
         modeler
@@ -357,7 +437,6 @@
         clearError();
         if (!modeler) return;
         try {
-          // 新規作成時にプロセス名と開始イベント名を少し変更する例
           const newDiagramXML = initialDiagramXML
             .replace('id="Process_1"', 'id="Process_New"')
             .replace('name="MyProcess"', 'name="新規プロセス"')
@@ -377,13 +456,11 @@
         if (!modeler) return;
         try {
           const defaultFilename = "diagram.bpmn";
-          // ユーザーにファイル名を入力させる
           const filename = window.prompt(
             "BPMNファイル名を入力してください:",
             defaultFilename
           );
           if (filename === null) {
-            // キャンセルされた場合
             console.log("BPMNエクスポートがキャンセルされました。");
             return;
           }
@@ -461,13 +538,11 @@
         if (!modeler) return;
         try {
           const defaultFilename = "diagram.svg";
-          // ユーザーにファイル名を入力させる
           const filename = window.prompt(
             "SVGファイル名を入力してください:",
             defaultFilename
           );
           if (filename === null) {
-            // キャンセルされた場合
             console.log("SVGエクスポートがキャンセルされました。");
             return;
           }
