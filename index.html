@@ -169,6 +169,77 @@
         outline-offset: -10px;
         background-color: rgba(0, 123, 255, 0.1);
       }
+
+      /* Keyboard Shortcuts Modal Styles */
+      .shortcuts-modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1001; /* Above floating buttons */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      .shortcuts-modal-content {
+        background-color: #fefefe;
+        margin: 10% auto; /* 10% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+
+      .shortcuts-modal-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .shortcuts-modal-close:hover,
+      .shortcuts-modal-close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .shortcuts-modal h2 {
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+      .shortcuts-modal ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .shortcuts-modal li {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+      }
+      .shortcuts-modal li:last-child {
+        border-bottom: none;
+      }
+      .shortcuts-modal kbd {
+        background-color: #eee;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+          0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+        color: #333;
+        display: inline-block;
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        white-space: nowrap;
+      }
     </style>
   </head>
   <body>
@@ -251,6 +322,27 @@
           />
         </svg>
       </button>
+      <button
+        id="btn-show-shortcuts"
+        class="btn"
+        title="キーボードショートカット"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-keyboard"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M14 5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12zM2 4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2z"
+          />
+          <path
+            d="M13 10.25a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm-2 2a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-1.5a.25.25 0 0 1-.25-.25v-.5zm0-2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zM2.5 7.75a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5zm0 2a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25v-.5z"
+          />
+        </svg>
+      </button>
       <button id="btn-learn-bpmn" class="btn" title="BPMN学習コンテンツを開く">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -279,6 +371,28 @@
     <div id="error-message">
       <span id="error-text"></span>
       <a class="close-error" id="close-error-btn">&times;</a>
+    </div>
+
+    <div id="shortcuts-modal" class="shortcuts-modal">
+      <div class="shortcuts-modal-content">
+        <span class="shortcuts-modal-close" id="close-shortcuts-modal-btn"
+          >&times;</span
+        >
+        <h2 style="font-size: 1.1rem; font-weight: bold">
+          キーボードショートカット
+        </h2>
+        <ul>
+          <li>ローカルファイルから図を開く <kbd>Ctrl</kbd> + <kbd>O</kbd></li>
+          <li>元に戻す <kbd>Ctrl</kbd> + <kbd>Z</kbd></li>
+          <li>やり直す <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></li>
+          <li>すべて選択 <kbd>Ctrl</kbd> + <kbd>A</kbd></li>
+          <li>ズーム <kbd>Ctrl</kbd> + <kbd>スクロール</kbd></li>
+          <li>要素の文字編集 <kbd>E</kbd></li>
+          <li>ハンドツール <kbd>H</kbd></li>
+          <li>投げ縄ツール <kbd>L</kbd></li>
+          <li>スペースツール <kbd>S</kbd></li>
+        </ul>
+      </div>
     </div>
 
     <script src="./lib/bpmn-modeler.development.js"></script>
@@ -434,7 +548,6 @@
           "フロー要素はプール/参加者の子でなければなりません",
       };
 
-      // Request ②: Change initial process name to "Top"
       const initialDiagramXML = `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" targetNamespace="http://bpmn.io/schema/bpmn" id="Definitions_1" name="Default Process">
   <bpmn:process id="Process_1" name="Top" isExecutable="false">
@@ -461,6 +574,11 @@
       const btnShowSvg = document.getElementById("btn-show-svg");
       const btnExportSvg = document.getElementById("btn-export-svg");
       const btnLearnBpmn = document.getElementById("btn-learn-bpmn");
+      const btnShowShortcuts = document.getElementById("btn-show-shortcuts"); // ② Keyboard shortcut button
+      const shortcutsModal = document.getElementById("shortcuts-modal"); // ② Modal element
+      const closeShortcutsModalBtn = document.getElementById(
+        "close-shortcuts-modal-btn"
+      ); // ② Modal close button
 
       const errorMessageDiv = document.getElementById("error-message");
       const errorTextSpan = document.getElementById("error-text");
@@ -478,11 +596,10 @@
       }
       closeErrorBtn.onclick = clearError;
 
-      // Request ③: Helper function to get current date string
       function getCurrentDateString() {
         const date = new Date();
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
         return `${year}-${month}-${day}`;
       }
@@ -529,6 +646,19 @@
       async function importBPMN(xml) {
         clearError();
         if (!modeler) return;
+
+        // Request ①: Add confirmation for drag and drop
+        if (
+          !window.confirm(
+            "現在のキャンバスをクリアしてファイルを開いてもよろしいですか？"
+          )
+        ) {
+          console.log(
+            "ファイルインポート（ドラッグ＆ドロップ）がキャンセルされました。"
+          );
+          return;
+        }
+
         try {
           await modeler.importXML(xml);
           console.log("BPMN XMLが正常にインポートされました。");
@@ -564,6 +694,15 @@
             breadcrumbsULElement.style.display = "none";
           }
         }
+      }
+
+      // ② Functions to handle shortcuts modal
+      function openShortcutsModal() {
+        if (shortcutsModal) shortcutsModal.style.display = "block";
+      }
+
+      function closeShortcutsModal() {
+        if (shortcutsModal) shortcutsModal.style.display = "none";
       }
 
       function initializeModeler() {
@@ -699,10 +838,9 @@
         }
 
         try {
-          // Request ②: Ensure new process name is "Top"
           const newDiagramXML = initialDiagramXML
             .replace(/id="Process_1"/g, `id="Process_${new Date().getTime()}"`)
-            .replace(/name="Top"/g, 'name="Top"') // Keep name as Top
+            .replace(/name="Top"/g, 'name="Top"')
             .replace(
               /id="StartEvent_1"/g,
               `id="StartEvent_${new Date().getTime()}"`
@@ -722,7 +860,6 @@
         clearError();
         if (!modeler) return;
         try {
-          // Request ③: Update default filename format
           const dateStr = getCurrentDateString();
           const defaultFilename = `${dateStr}_FlowCanvas.bpmn`;
 
@@ -754,6 +891,30 @@
 
       btnImportBpmn.addEventListener("click", () => {
         clearError();
+        // Request ①: Add confirmation for file input import
+        if (
+          modeler.getDefinitions() &&
+          modeler.getDefinitions().rootElements &&
+          modeler.getDefinitions().rootElements.length > 0 &&
+          !(
+            modeler.getDefinitions().rootElements.length === 1 &&
+            modeler.getDefinitions().rootElements[0].id === "Process_1" &&
+            modeler.getDefinitions().rootElements[0].flowElements.length ===
+              1 &&
+            modeler.getDefinitions().rootElements[0].flowElements[0].id ===
+              "StartEvent_1"
+          )
+        ) {
+          // Check if canvas is not empty (more robust check might be needed)
+          if (
+            !window.confirm(
+              "現在のキャンパスをクリアしてファイルを開いてもよろしいですか？"
+            )
+          ) {
+            console.log("ファイルインポート（ボタン）がキャンセルされました。");
+            return;
+          }
+        }
         fileInputBpmn.click();
       });
 
@@ -763,6 +924,7 @@
         if (file && modeler) {
           const reader = new FileReader();
           reader.onload = async (e) => {
+            // Confirmation is now handled before fileInputBpmn.click()
             importBPMN(e.target.result);
           };
           reader.onerror = (e) => {
@@ -794,7 +956,6 @@
           const svgWindow = window.open("");
           if (svgWindow) {
             svgWindow.document.write(svgWithTitle);
-            // Request ①: Change SVG tab title
             svgWindow.document.title = "Flow Canvas";
             svgWindow.document.close();
             console.log("SVGが新しいタブに表示されました。");
@@ -812,7 +973,6 @@
         clearError();
         if (!modeler) return;
         try {
-          // Request ③: Update default filename format
           const dateStr = getCurrentDateString();
           const defaultFilename = `${dateStr}_FlowCanvas.svg`;
 
@@ -844,6 +1004,31 @@
         window.open("learn-bpmn.html", "_blank");
       });
 
+      // ② Event listener for the new shortcuts button
+      if (btnShowShortcuts) {
+        btnShowShortcuts.addEventListener("click", openShortcutsModal);
+      }
+      if (closeShortcutsModalBtn) {
+        closeShortcutsModalBtn.addEventListener("click", closeShortcutsModal);
+      }
+
+      // ② Close modal if clicked outside of it
+      if (shortcutsModal) {
+        window.addEventListener("click", function (event) {
+          if (event.target == shortcutsModal) {
+            closeShortcutsModal();
+          }
+        });
+      }
+
+      // ② Keyboard shortcut to open modal (Ctrl+Shift+H)
+      document.addEventListener("keydown", function (event) {
+        if (event.ctrlKey && event.shiftKey && event.key === "H") {
+          event.preventDefault();
+          openShortcutsModal();
+        }
+      });
+
       const dropContainer = document.getElementById("bpmn-container");
 
       dropContainer.addEventListener("dragover", function (event) {
@@ -864,6 +1049,7 @@
         clearError();
         console.log("drop event");
 
+        // Request ①: Confirmation handled within importBPMN for drag & drop
         const files = event.dataTransfer.files;
 
         if (files.length === 1) {
@@ -872,7 +1058,7 @@
             if (modeler) {
               const reader = new FileReader();
               reader.onload = async function (e) {
-                importBPMN(e.target.result);
+                importBPMN(e.target.result); // importBPMN now includes confirmation
               };
               reader.onerror = function (e) {
                 showError("ファイルの読み込みに失敗しました。");
