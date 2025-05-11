@@ -401,10 +401,7 @@
                 <tbody>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/50x50/FFFFFF/000000?text=Start"
-                        alt="開始イベント"
-                      />
+                      <img src="./images/2.2_start.png" alt="開始イベント" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>開始イベント (Start Event)</strong>
@@ -416,10 +413,7 @@
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/50x50/FFFFFF/000000?text=End"
-                        alt="終了イベント"
-                      />
+                      <img src="./images/2.2_end.png" alt="終了イベント" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>終了イベント (End Event)</strong>
@@ -431,10 +425,7 @@
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/100x50/FFFFFF/000000?text=Task"
-                        alt="タスク"
-                      />
+                      <img src="./images/2.2_task.png" alt="タスク" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>タスク (Task)</strong>
@@ -447,12 +438,12 @@
                   <tr>
                     <td class="border px-4 py-2">
                       <img
-                        src="https://placehold.co/50x50/FFFFFF/000000?text=XOR"
+                        src="./images/2.2_xor.png"
                         alt="排他的ゲートウェイ"
                       />
                     </td>
                     <td class="border px-4 py-2">
-                      <strong>排他的ゲートウェイ (Exclusive Gateway)</strong>
+                      <strong>排他ゲートウェイ (Exclusive Gateway)</strong>
                     </td>
                     <td class="border px-4 py-2">
                       複数の経路のうち、条件に合致する「一つだけ」に進む
@@ -461,10 +452,7 @@
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/50x50/FFFFFF/000000?text=AND"
-                        alt="並行ゲートウェイ"
-                      />
+                      <img src="./images/2.2_and.png" alt="並行ゲートウェイ" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>並行ゲートウェイ (Parallel Gateway)</strong>
@@ -477,7 +465,7 @@
                   <tr>
                     <td class="border px-4 py-2">
                       <img
-                        src="https://placehold.co/100x20/FFFFFF/000000?text=Flow%E2%86%92"
+                        src="./images/2.2_arrow.png"
                         alt="シーケンスフロー"
                       />
                     </td>
@@ -490,24 +478,18 @@
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/150x80/FFFFFF/000000?text=Pool"
-                        alt="プール"
-                      />
+                      <img src="./images/2.2_pool.png" alt="プール" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>プール (Pool)</strong>
                     </td>
                     <td class="border px-4 py-2">
-                      プロセス全体の参加者（組織、部署、システム等）。例：「市民課」「経理部」。
+                      参加者やプロセス全体の括り（住民プールと役所内のプールなど）。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img
-                        src="https://placehold.co/150x50/FFFFFF/000000?text=Lane"
-                        alt="レーン"
-                      />
+                      <img src="./images/2.2_lane.png" alt="レーン" />
                     </td>
                     <td class="border px-4 py-2">
                       <strong>レーン (Lane)</strong>
@@ -519,7 +501,7 @@
                   <tr>
                     <td class="border px-4 py-2">
                       <img
-                        src="https://placehold.co/100x20/FFFFFF/000000?text=Msg%20--%3E"
+                        src="./images/2.2_message-flow.png"
                         alt="メッセージフロー"
                       />
                     </td>
@@ -530,10 +512,11 @@
                       異なるプール間のメッセージや情報のやり取り (破線の矢印)。
                     </td>
                   </tr>
+
                   <tr>
                     <td class="border px-4 py-2">
                       <img
-                        src="https://placehold.co/60x50/FFFFFF/000000?text=Data"
+                        src="./images/2.2_data-object.png"
                         alt="データオブジェクト"
                       />
                     </td>
@@ -562,7 +545,9 @@
               2.3 BPMN記述レベル
             </h3>
             <p class="mt-2 leading-relaxed">
-              BPMNの記述にはいくつかのレベルがあり、目的に応じて使い分けられます。地方自治体においては、特に「分析レベル」での記述が推奨されることが多いです。
+              BPMNの記述にはいくつかのレベルがあり、目的に応じて使い分けられます。地方自治体においては、特に「分析レベル」での記述が推奨されることが多いようです。
+              しかしあくまで「分析レベル」での記述は、業務の現状を把握するための一つの手段であり、必ずしも全てこのレベルで記述する必要はありません。<br />
+              まずは、業務の全体像を把握するために「記述レベル」での記載を行い、業務を可視化していくことが肝要です。
             </p>
             <ul class="list-disc list-inside mt-4 space-y-2 pl-4">
               <li>
@@ -583,7 +568,7 @@
               </li>
             </ul>
             <p class="mt-2 leading-relaxed">
-              「分析レベル」で記述することにより、業務の現状が正確に把握でき、システム開発者や他の職員とのコミュニケーションが円滑になります。これは、<strong
+              「分析レベル」での記述ができると、業務が正確に把握可能となり、他の職員やシステムベンダーとのコミュニケーションが円滑になります。これは、<strong
                 class="text-red-600"
                 >職員研修・引継ぎの効率化</strong
               >にも大いに役立ちます。
@@ -596,7 +581,8 @@
             第3章 BPMNエディタ入門
           </h2>
           <p class="mt-2 leading-relaxed">
-            BPMN図を作成するためには、専用のエディタを使用します。ここでは、一般的なWebベースのBPMNエディタ（例：bpmn-jsを利用したもの）の基本的な使い方を解説します。
+            BPMN図を作成するためには、専用のエディタを利用すると便利です。ここでは、BPMNエディタ
+            Flow Canvas の基本的な使い方を解説します。
           </p>
           <div id="section3-1" class="content-section mt-6">
             <h3 class="text-2xl font-medium text-gray-700">
@@ -620,11 +606,11 @@
               </li>
               <li>
                 <strong>メニューバー/ツールバー：</strong>
-                ファイル操作（新規作成、保存、読込）、ズーム、元に戻す/やり直しなどの共通操作を行うメニューやボタン。
+                ファイル操作（新規作成、保存、読込）などの共通操作を行うメニューやボタン。
               </li>
             </ul>
             <img
-              src="https://placehold.co/700x400/EBF4FF/000000?text=BPMN%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF%E7%94%BB%E9%9D%A2%E6%A7%8B%E6%88%90%E4%BE%8B"
+              src="./images/3.1.png"
               alt="BPMNエディタ画面構成例"
               class="bpmn-diagram my-4"
             />
