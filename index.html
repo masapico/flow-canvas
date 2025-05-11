@@ -748,6 +748,97 @@
           additionalModules: [translateModule],
         });
 
+        // START: 変更箇所 (ここから)
+        const eventBus = modeler.get("eventBus");
+        const elementRegistry = modeler.get("elementRegistry");
+        const overlays = modeler.get("overlays");
+
+        // ドリルダウンオーバーレイの表示状態を更新する関数
+        function updateDrilldownOverlayVisibility(element, selectedElementId) {
+          // 'drilldown' タイプのオーバーレイを取得
+          const drilldownOverlays = overlays.get({
+            element: element.id,
+            type: "drilldown",
+          });
+
+          if (drilldownOverlays && drilldownOverlays.length > 0) {
+            drilldownOverlays.forEach((overlay) => {
+              let shouldShow = false;
+              // 要素が選択されており、かつそれが現在の要素である場合
+              if (selectedElementId === element.id) {
+                const bo = element.businessObject;
+                // サブプロセスまたはコールアクティビティであるかを確認
+                // bpmn-js は通常、ドリルダウン可能な要素にのみこのオーバーレイを追加します
+                if (
+                  bo &&
+                  (bo.$instanceOf("bpmn:SubProcess") ||
+                    bo.$instanceOf("bpmn:CallActivity"))
+                ) {
+                  shouldShow = true;
+                }
+              }
+
+              // overlay.html はオーバーレイのルート <div> 要素を指します
+              if (overlay.html) {
+                overlay.html.style.display = shouldShow ? "block" : "none";
+              }
+            });
+          }
+        }
+
+        // 選択変更イベントの処理
+        eventBus.on("selection.changed", function (event) {
+          const newSelection = event.newSelection;
+          const oldSelection = event.oldSelection;
+          const selectedElement =
+            newSelection.length === 1 ? newSelection[0] : null;
+          const selectedElementId = selectedElement ? selectedElement.id : null;
+
+          // 以前選択されていた要素のオーバーレイを更新（非表示にする）
+          if (
+            oldSelection.length === 1 &&
+            oldSelection[0] !== selectedElement
+          ) {
+            updateDrilldownOverlayVisibility(
+              oldSelection[0],
+              selectedElementId
+            );
+          }
+
+          // 新しく選択された要素のオーバーレイを更新（表示する）
+          if (selectedElement) {
+            updateDrilldownOverlayVisibility(
+              selectedElement,
+              selectedElementId
+            );
+          } else {
+            // 何も選択されていない、または複数選択されている場合、
+            // すべてのドリルダウンオーバーレイを非表示にする (念のため)
+            elementRegistry.forEach(function (element) {
+              updateDrilldownOverlayVisibility(element, null);
+            });
+          }
+        });
+
+        // 初期状態および図の変更時のオーバーレイ表示を管理する関数
+        function manageAllDrilldownOverlaysVisibility() {
+          const currentSelection = modeler.get("selection").get();
+          const selectedElement =
+            currentSelection.length === 1 ? currentSelection[0] : null;
+          const selectedElementId = selectedElement ? selectedElement.id : null;
+
+          elementRegistry.forEach(function (element) {
+            updateDrilldownOverlayVisibility(element, selectedElementId);
+          });
+        }
+
+        // 図の読み込み完了後やコマンドスタック変更後にオーバーレイの表示状態を管理
+        eventBus.on(["import.done", "commandStack.changed"], function () {
+          // bpmn-js がオーバーレイを処理する時間を確保するために少し遅延させる
+          setTimeout(manageAllDrilldownOverlaysVisibility, 0);
+        });
+        // END: 変更箇所 (ここまで)
+
         modeler
           .importXML(initialDiagramXML)
           .then(() => {
@@ -755,6 +846,9 @@
             fitViewport();
             breadcrumbsShownProcessed = false;
             updateBreadcrumbsVisibility();
+            // START: 変更箇所 - 初期表示のために manageAllDrilldownOverlaysVisibility を呼び出す
+            setTimeout(manageAllDrilldownOverlaysVisibility, 0);
+            // END: 変更箇所
 
             const canvasInternal = modeler.get("canvas");
             if (canvasInternal && canvasInternal._container) {
