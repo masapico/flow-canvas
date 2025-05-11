@@ -243,6 +243,36 @@
         display: flex; /* キーの組み合わせを横並びにする */
         align-items: center;
       }
+
+      /* START: 折りたたみタスク展開ボタンのスタイル変更 */
+      .djs-overlay-drilldown button.bjs-drilldown {
+        background-color: #007bff; /* 青色の背景 */
+        border: 1px solid #007bff; /* 青色の枠線 */
+        border-radius: 4px; /* 角丸 */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 軽い影 */
+        color: white; /* アイコンの色を白に */
+        padding: 4px; /* アイコン周りの余白を調整 */
+        width: 28px; /* ボタンの幅 */
+        height: 28px; /* ボタンの高さ */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .djs-overlay-drilldown button.bjs-drilldown:hover {
+        background-color: #0056b3; /* ホバー時の背景色を少し濃く */
+        border-color: #0056b3;
+      }
+
+      .djs-overlay-drilldown button.bjs-drilldown svg {
+        fill: white; /* SVGアイコンの色を白に */
+        width: 16px; /* アイコンのサイズ調整 */
+        height: 16px; /* アイコンのサイズ調整 */
+      }
+      div.djs-overlay.djs-overlay-drilldown button.bjs-drilldown {
+        padding: 0;
+      }
+      /* END: 折りたたみタスク展開ボタンのスタイル変更 */
     </style>
   </head>
   <body>
