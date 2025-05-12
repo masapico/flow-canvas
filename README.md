@@ -1,11 +1,11 @@
 # Flow Canvas
-- BPMNの作成ができる
-- 作成したBPMNをファイル保存できる
+- BPMNエディター
+- 作成したBPMNをファイル保存できる（xml）
 - ファイル保存したBPMNを読み込み再編集できる
-- BPMNをSVGに変換し表示することができる
-- SVGとしてファイル保存できる
+- BPMN図をSVGに変換し表示することができる
+- BPMN図をSVGファイルとして保存できる
 - BPMN2.0に対応
-  - BPMNの描画・XMLについては、bpmn-jsに依存している
+  - BPMNの関連機能は、[bpmn-js](https://github.com/bpmn-io/bpmn-js) を利用しています
 
 ## 利用方法
-- 本リポジトリごとダウンロードしindex.htmlをブラウザで開くことで利用できる
+- 本リポジトリごとダウンロードしindex.htmlをブラウザで開くことで利用可能です。
