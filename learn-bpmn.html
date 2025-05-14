@@ -928,7 +928,7 @@
               8.1 タスクの種類
             </h3>
             <p class="mt-2 leading-relaxed">
-              タスクは角丸の四角形で表現します。タスクの種類はタスク内の左上に表示されるアイコンの種類で見分けることができます。<br>
+              タスクは角丸の四角形で表現します。タスクの種類はタスク内の左上に表示されるマーカーの種類で見分けることができます。<br>
               手作業タスク、何かのルールに基づくタスク、別に定義済のタスクなどを表現することができます。
             </p>
             <div class="overflow-x-auto mt-4">
@@ -943,20 +943,12 @@
                 <tbody>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img src="./images/task_user.png" alt="ユーザタスク" />
+                      <img src="./images/abstract.png" alt="抽象タスク" />
                     </td>
-                    <td class="border px-4 py-2">ユーザタスク (User Task)</td>
+                    <td class="border px-4 py-2">抽象タスク (Abstract Task)</td>
                     <td class="border px-4 py-2">
-                      人間が行う作業を表します。例：申請書の確認、データ入力。
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_service.png" alt="サービスタスク" />
-                    </td>
-                    <td class="border px-4 py-2">サービスタスク (Service Task)</td>
-                    <td class="border px-4 py-2">
-                      システムやアプリケーションが実行する作業を表します。例：データベースへの登録、メール送信。
+                      汎用的なタスクです。特定のマーカーを持ちません。<br>
+                      難しく考えず、このタスクだけで業務フローを記載しても間違いではありません。
                     </td>
                   </tr>
                   <tr>
@@ -970,11 +962,30 @@
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
+                      <img src="./images/task_user.png" alt="ユーザタスク" />
+                    </td>
+                    <td class="border px-4 py-2">ユーザタスク (User Task)</td>
+                    <td class="border px-4 py-2">
+                      人間が行う作業です。システムを使用する場合もこれに含まれます。例：システムへのデータ入力、承認作業。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_service.png" alt="サービスタスク" />
+                    </td>
+                    <td class="border px-4 py-2">サービスタスク (Service Task)</td>
+                    <td class="border px-4 py-2">
+                      システムやアプリケーションが実行する処理を表します。この場合人の介在はありません。<br>
+                      例：データベースの更新、APIの呼び出しなど。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
                       <img src="./images/task_script.png" alt="スクリプトタスク" />
                     </td>
                     <td class="border px-4 py-2">スクリプトタスク (Script Task)</td>
                     <td class="border px-4 py-2">
-                      スクリプトやコードを実行するタスクを表します。例：データ変換スクリプトの実行。
+                      これはあまり使われませんが、プログラムやスクリプトを実行するタスクを表します。
                     </td>
                   </tr>
                   <tr>
@@ -983,7 +994,7 @@
                     </td>
                     <td class="border px-4 py-2">ビジネスルールタスク (Business Rule Task)</td>
                     <td class="border px-4 py-2">
-                      ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。例：ローン審査の自動判定。
+                      これもあまり使われませんが、ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。例：ローン審査の自動判定。
                     </td>
                   </tr>
                 </tbody>
@@ -1013,7 +1024,7 @@
                     </td>
                     <td class="border px-4 py-2">排他的ゲートウェイ (Exclusive Gateway)</td>
                     <td class="border px-4 py-2">
-                      条件に基づいて1つの経路を選択します。例：承認済みか否かで分岐。
+                      条件に基づいて1つの経路を選択します。例：YESかNO、承認済みか否かで分岐。
                     </td>
                   </tr>
                   <tr>
