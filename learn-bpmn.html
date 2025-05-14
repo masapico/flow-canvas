@@ -1020,11 +1020,11 @@
                 <tbody>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img src="./images/gateway_exclusive.png" alt="排他的ゲートウェイ" />
+                      <img src="./images/gateway_exclusive.png" alt="排他ゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">排他的ゲートウェイ (Exclusive Gateway)</td>
+                    <td class="border px-4 py-2">排他ゲートウェイ (Exclusive Gateway)</td>
                     <td class="border px-4 py-2">
-                      条件に基づいて1つの経路を選択します。例：YESかNO、承認済みか否かで分岐。
+                      条件に基づいて唯一の経路を選択します。例：YESかNO、承認済みか否かで分岐。
                     </td>
                   </tr>
                   <tr>
@@ -1033,7 +1033,7 @@
                     </td>
                     <td class="border px-4 py-2">並行ゲートウェイ (Parallel Gateway)</td>
                     <td class="border px-4 py-2">
-                      複数の経路を同時に実行します。例：複数部署への同時通知。
+                      複数の経路を同時に実行し、終了は同期しその後のに進みます。例：複数部署への同時通知。
                     </td>
                   </tr>
                   <tr>
@@ -1042,7 +1042,7 @@
                     </td>
                     <td class="border px-4 py-2">包括的ゲートウェイ (Inclusive Gateway)</td>
                     <td class="border px-4 py-2">
-                      条件に基づいて1つ以上の経路を選択します。例：複数条件を満たす場合の分岐。
+                      条件に基づいて1つ以上の経路を選択します。排他ゲートウェイと並行ゲートウェイの中間の性質です。例：複数の条件に基づく選択肢。
                     </td>
                   </tr>
                   <tr>
