@@ -239,6 +239,29 @@
               ><strong>第7章</strong> おわりに</a
             >
           </li>
+          <li>
+            <a
+              href="#section8"
+              class="text-gray-700 hover:text-blue-500 block py-1"
+              ><strong>付録</strong> タスクとゲートウェイの解説</a
+            >
+            <ul class="ml-4 mt-1 space-y-1">
+              <li>
+                <a
+                  href="#section8-1"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >8.1 タスクの種類</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#section6-2"
+                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
+                  >8.2 ゲートウェイの種類</a
+                >
+              </li>
+
+          </li>
         </ul>
       </nav>
 
@@ -728,18 +751,18 @@
             <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
               <li>
                 <strong>ワナ1：複雑すぎる図</strong> →
-                回避策：基本要素から始め、詳細はサブプロセスに。1ページに収める。
+                回避策：基本要素から始め、できる限り1ページに収める。
               </li>
               <li>
                 <strong>ワナ2：フローの方向がバラバラ</strong> →
                 回避策：左から右への流れを基本とし、一貫性を持たせる。
               </li>
               <li>
-                <strong>ワナ3：ゲートウェイの誤用</strong> →
-                回避策：分岐条件を明確に記述し、ゲートウェイの種類を正しく使い分ける。
+                <strong>ワナ3：ゲートウェイによる混乱</strong> →
+                回避策：分岐条件やシーケンスはわかりやすく記述するようにしましょう。
               </li>
               <li>
-                <strong>ワナ4：プールとレーンの混乱</strong> →
+                <strong>ワナ4：プールとレーンが曖昧</strong> →
                 回避策：「誰が」行うかを意識し、組織構造に合わせて設定する。
               </li>
               <li>
@@ -770,7 +793,7 @@
               </li>
               <li>
                 <strong>シンプル化の追求：</strong>
-                使用する記号の種類を絞る、サブプロセスの活用、注釈の活用、対象プロセスの範囲を明確にする。
+                使用する記号の種類を絞る、サブプロセス（折りたたみタスク）の利用、注釈の活用、対象プロセスの範囲を明確にする。
               </li>
             </ul>
             <a href="./images/5.2.png" target="_blank">
@@ -800,11 +823,11 @@
             <ol class="list-decimal list-inside mt-4 space-y-3 pl-4">
               <li>
                 <strong>目的の共有とリーダーシップ：</strong>
-                なぜBPMNを導入するのか目的を明確にし、経営層・管理職がコミットする。
+                なぜBPMNを利用するのか目的を明確にし、経営層・管理職がコミットする。
               </li>
               <li>
                 <strong>スモールスタートと成功体験の共有：</strong>
-                単純な業務や特定の業務・部署などから試行し、成功事例を共有する。
+                単純業務、身近な業務、特定の部署などから試行し、成功事例を共有する。
               </li>
               <li>
                 <strong>支援体制の整備：</strong>
@@ -896,10 +919,149 @@
           </p>
         </section>
 
+        <section id="section8" class="content-section mb-12">
+          <h2 class="text-3xl font-semibold text-gray-700">
+            付録：タスクとゲートウェイの解説
+          </h2>
+          <div id="section8-1" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              8.1 タスクの種類
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              タスクは角丸の四角形で表現します。タスクの種類はタスク内の左上に表示されるアイコンの種類で見分けることができます。<br>
+              手作業タスク、何かのルールに基づくタスク、別に定義済のタスクなどを表現することができます。
+            </p>
+            <div class="overflow-x-auto mt-4">
+              <table class="min-w-full">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
+                    <th class="px-4 py-2 text-left">名称</th>
+                    <th class="px-4 py-2 text-left">意味と利用例</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_user.png" alt="ユーザタスク" />
+                    </td>
+                    <td class="border px-4 py-2">ユーザタスク (User Task)</td>
+                    <td class="border px-4 py-2">
+                      人間が行う作業を表します。例：申請書の確認、データ入力。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_service.png" alt="サービスタスク" />
+                    </td>
+                    <td class="border px-4 py-2">サービスタスク (Service Task)</td>
+                    <td class="border px-4 py-2">
+                      システムやアプリケーションが実行する作業を表します。例：データベースへの登録、メール送信。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_manual.png" alt="手作業タスク" />
+                    </td>
+                    <td class="border px-4 py-2">手作業タスク (Manual Task)</td>
+                    <td class="border px-4 py-2">
+                      システムを使用せずに人間が行う作業を表します。例：書類の郵送、物理的な検査。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_script.png" alt="スクリプトタスク" />
+                    </td>
+                    <td class="border px-4 py-2">スクリプトタスク (Script Task)</td>
+                    <td class="border px-4 py-2">
+                      スクリプトやコードを実行するタスクを表します。例：データ変換スクリプトの実行。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/task_business_rule.png" alt="ビジネスルールタスク" />
+                    </td>
+                    <td class="border px-4 py-2">ビジネスルールタスク (Business Rule Task)</td>
+                    <td class="border px-4 py-2">
+                      ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。例：ローン審査の自動判定。
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="section8-2" class="content-section mt-6">
+            <h3 class="text-2xl font-medium text-gray-700">
+              8.2 ゲートウェイの種類
+            </h3>
+            <p class="mt-2 leading-relaxed">
+              ゲートウェイを適切に記載することはBPMNの利用において非常に重要です。以下に解説します。
+            </p>
+            <div class="overflow-x-auto mt-4">
+              <table class="min-w-full">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
+                    <th class="px-4 py-2 text-left">名称</th>
+                    <th class="px-4 py-2 text-left">意味と利用例</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/gateway_exclusive.png" alt="排他的ゲートウェイ" />
+                    </td>
+                    <td class="border px-4 py-2">排他的ゲートウェイ (Exclusive Gateway)</td>
+                    <td class="border px-4 py-2">
+                      条件に基づいて1つの経路を選択します。例：承認済みか否かで分岐。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/gateway_parallel.png" alt="並行ゲートウェイ" />
+                    </td>
+                    <td class="border px-4 py-2">並行ゲートウェイ (Parallel Gateway)</td>
+                    <td class="border px-4 py-2">
+                      複数の経路を同時に実行します。例：複数部署への同時通知。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/gateway_inclusive.png" alt="包括的ゲートウェイ" />
+                    </td>
+                    <td class="border px-4 py-2">包括的ゲートウェイ (Inclusive Gateway)</td>
+                    <td class="border px-4 py-2">
+                      条件に基づいて1つ以上の経路を選択します。例：複数条件を満たす場合の分岐。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/gateway_event_based.png" alt="イベントベースゲートウェイ" />
+                    </td>
+                    <td class="border px-4 py-2">イベントベースゲートウェイ (Event-Based Gateway)</td>
+                    <td class="border px-4 py-2">
+                      発生したイベントに基づいて経路を選択します。例：ユーザーの応答待ち。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border px-4 py-2">
+                      <img src="./images/gateway_complex.png" alt="複合ゲートウェイ" />
+                    </td>
+                    <td class="border px-4 py-2">複合ゲートウェイ (Complex Gateway)</td>
+                    <td class="border px-4 py-2">
+                      複雑な条件に基づいて経路を制御します。例：特定の条件を満たす経路の組み合わせ。
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
         <footer
           class="mt-12 pt-8 border-t border-gray-300 text-center text-gray-500"
         >
-          <p>&copy; 2025 m.arakane</p>
+          <p>&copy; 2025 Masahiro ARAKANE</p>
         </footer>
       </main>
     </div>
