@@ -945,7 +945,7 @@
                     <td class="border px-4 py-2">
                       <img src="./images/abstract.png" alt="抽象タスク" />
                     </td>
-                    <td class="border px-4 py-2">抽象タスク (Abstract Task)</td>
+                    <td class="border px-4 py-2">抽象タスク<br>(Abstract Task)</td>
                     <td class="border px-4 py-2">
                       汎用的なタスクです。特定のマーカーを持ちません。<br>
                       難しく考えず、このタスクだけで業務フローを記載しても間違いではありません。
@@ -955,25 +955,27 @@
                     <td class="border px-4 py-2">
                       <img src="./images/task_manual.png" alt="手作業タスク" />
                     </td>
-                    <td class="border px-4 py-2">手作業タスク (Manual Task)</td>
+                    <td class="border px-4 py-2">手作業タスク<br>(Manual Task)</td>
                     <td class="border px-4 py-2">
-                      システムを使用せずに人間が行う作業を表します。例：書類の郵送、物理的な検査。
+                      システムを使用せずに人間が行う作業を表します。<br>
+                      例：宛名書き、物理的検査。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/task_user.png" alt="ユーザタスク" />
                     </td>
-                    <td class="border px-4 py-2">ユーザタスク (User Task)</td>
+                    <td class="border px-4 py-2">ユーザタスク<br>(User Task)</td>
                     <td class="border px-4 py-2">
-                      人間が行う作業です。システムを使用する場合もこれに含まれます。例：システムへのデータ入力、承認作業。
+                      人間が行う作業です。システムを使用する場合もこれに含まれます。<br>
+                      例：システムへのデータ入力、承認作業。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/task_service.png" alt="サービスタスク" />
                     </td>
-                    <td class="border px-4 py-2">サービスタスク (Service Task)</td>
+                    <td class="border px-4 py-2">サービスタスク<br>(Service Task)</td>
                     <td class="border px-4 py-2">
                       システムやアプリケーションが実行する処理を表します。この場合人の介在はありません。<br>
                       例：データベースの更新、APIの呼び出しなど。
@@ -983,18 +985,20 @@
                     <td class="border px-4 py-2">
                       <img src="./images/task_script.png" alt="スクリプトタスク" />
                     </td>
-                    <td class="border px-4 py-2">スクリプトタスク (Script Task)</td>
+                    <td class="border px-4 py-2">スクリプトタスク<br>(Script Task)</td>
                     <td class="border px-4 py-2">
-                      これはあまり使われませんが、プログラムやスクリプトを実行するタスクを表します。
+                      あまり業務担当部署で使うことはないかもしれませんが、プログラムやスクリプトを実行するタスクを表します。<br>
+                      例：文字コード変換ツール実行
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/task_business_rule.png" alt="ビジネスルールタスク" />
                     </td>
-                    <td class="border px-4 py-2">ビジネスルールタスク (Business Rule Task)</td>
+                    <td class="border px-4 py-2">ビジネスルールタスク<br>(Business Rule Task)</td>
                     <td class="border px-4 py-2">
-                      これもあまり使われませんが、ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。例：ローン審査の自動判定。
+                      こちらも参考程度に、ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。<br>
+                      例：ローン審査の自動判定。
                     </td>
                   </tr>
                 </tbody>
@@ -1022,45 +1026,50 @@
                     <td class="border px-4 py-2">
                       <img src="./images/gateway_exclusive.png" alt="排他ゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">排他ゲートウェイ (Exclusive Gateway)</td>
+                    <td class="border px-4 py-2">排他ゲートウェイ<br>(Exclusive Gateway)</td>
                     <td class="border px-4 py-2">
-                      条件に基づいて唯一の経路を選択します。例：YESかNO、承認済みか否かで分岐。
+                      条件に基づいて唯一の経路を選択します。最も基本的なゲートウェイです。<br>
+                      例：YESかNO、承認済みか否かで分岐。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/gateway_parallel.png" alt="並行ゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">並行ゲートウェイ (Parallel Gateway)</td>
+                    <td class="border px-4 py-2">並行ゲートウェイ<br>(Parallel Gateway)</td>
                     <td class="border px-4 py-2">
-                      複数の経路を同時に実行し、終了は同期しその後のに進みます。例：複数部署への同時通知。
+                      複数の経路を同時に実行し、終了は同期しその後のに進みます。<br>
+                      例：複数部署への同時通知。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
-                      <img src="./images/gateway_inclusive.png" alt="包括的ゲートウェイ" />
+                      <img src="./images/gateway_inclusive.png" alt="包含ゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">包括的ゲートウェイ (Inclusive Gateway)</td>
+                    <td class="border px-4 py-2">包含ゲートウェイ<br>(Inclusive Gateway)</td>
                     <td class="border px-4 py-2">
-                      条件に基づいて1つ以上の経路を選択します。排他ゲートウェイと並行ゲートウェイの中間の性質です。例：複数の条件に基づく選択肢。
+                      条件に基づいて1つ以上の経路を選択します。排他ゲートウェイと並行ゲートウェイの中間の性質です。<br>
+                      例：複数の条件に基づく選択肢。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/gateway_event_based.png" alt="イベントベースゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">イベントベースゲートウェイ (Event-Based Gateway)</td>
+                    <td class="border px-4 py-2">イベントベースゲートウェイ<br>(Event-Based Gateway)</td>
                     <td class="border px-4 py-2">
-                      発生したイベントに基づいて経路を選択します。例：ユーザーの応答待ち。
+                      発生したイベントに基づいて経路を選択します。<br>
+                      例：ユーザーの応答待ち。
                     </td>
                   </tr>
                   <tr>
                     <td class="border px-4 py-2">
                       <img src="./images/gateway_complex.png" alt="複合ゲートウェイ" />
                     </td>
-                    <td class="border px-4 py-2">複合ゲートウェイ (Complex Gateway)</td>
+                    <td class="border px-4 py-2">複合ゲートウェイ<br>(Complex Gateway)</td>
                     <td class="border px-4 py-2">
-                      複雑な条件に基づいて経路を制御します。例：特定の条件を満たす経路の組み合わせ。
+                      複雑な条件に基づいて経路を制御します。<br>
+                      例：特定の条件を満たす経路の組み合わせ。
                     </td>
                   </tr>
                 </tbody>
