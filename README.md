@@ -1,5 +1,6 @@
 # Flow Canvas
-- BPMNエディター
+- BPMN2.0エディター
+- [demo](https://masapico.github.io/flow-canvas/)
 - 作成したBPMNをファイル保存できる（xml）
 - ファイル保存したBPMNを読み込み再編集できる
 - BPMN図をSVGに変換し表示することができる
