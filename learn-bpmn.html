@@ -3,7 +3,7 @@
 <head></head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BPMN研修ハンドブック — 業務プロセス可視化の第一歩</title>
+<title>BPMNハンドブック — 業務プロセス可視化の第一歩</title>
 <style>
 /* ============================================================
    CSS Custom Properties
@@ -81,18 +81,6 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 70%);
   border-radius: 50%;
 }
-.cover-badge {
-  display: inline-block;
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 999px;
-  padding: 5px 16px;
-  font-size: 11px;
-  letter-spacing: .12em;
-  color: #bfdbfe;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
 .cover h1 {
   font-size: 36px;
   font-weight: 800;
@@ -101,25 +89,6 @@ body {
   position: relative;
   z-index: 1;
 }
-.cover h1 span { color: #93c5fd; }
-.cover .cover-sub {
-  font-size: 15px;
-  color: #bfdbfe;
-  max-width: 520px;
-  line-height: 1.8;
-  position: relative;
-  z-index: 1;
-}
-.cover .cover-meta {
-  margin-top: 32px;
-  display: flex;
-  gap: 32px;
-  font-size: 12px;
-  color: #94a3b8;
-  position: relative;
-  z-index: 1;
-}
-.cover .cover-meta strong { color: #e2e8f0; display: block; font-size: 13px; }
 
 /* ============================================================
    Section / Chapter Headings
@@ -581,17 +550,10 @@ strong.hl { color: var(--accent); }
      COVER
      ============================================================ -->
 <div class="cover">
-  <div class="cover-badge">TRAINING HANDBOOK</div>
-  <h1>BPMN<span>研修</span>ハンドブック</h1>
+  <h1>BPMNハンドブック</h1>
   <p class="cover-sub">
-    業務プロセスを「見える化」するための国際標準記法 BPMN の基本を、
-    豊富な図解と実例でやさしく学べる入門書です。
+    業務プロセスを「可視化」するため BPMN の基本を、図解と実例でやさしく学べるガイドです。
   </p>
-  <div class="cover-meta">
-    <div><strong>対象</strong>BPMN初心者・新任研修</div>
-    <div><strong>所要時間</strong>約60分</div>
-    <div><strong>形式</strong>自習・集合研修両用</div>
-  </div>
 </div>
 
 <!-- ============================================================
@@ -608,7 +570,7 @@ strong.hl { color: var(--accent); }
   </div>
 
   <h3>BPMN図が表すもの</h3>
-  <p>下の図は「住民票の交付申請」をBPMNで描いたものです。3つの要素で構成されています：</p>
+  <p>下の図は「住民票の交付申請」をBPMNで描いたものです。3つの要素で構成されています：<br/>＊まずは細かい条件・判断なしに大きな流れだけを簡単に考えてみます</p>
 
   <div class="diagram">
     <div class="lane-wrap">
@@ -786,12 +748,12 @@ strong.hl { color: var(--accent); }
       <div class="flow-row">
         <div class="flow-node">
           <svg viewBox="0 0 44 44" style="width:36px;height:36px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#16a34a" stroke-width="1.6"/></svg>
-          <div class="lbl" style="color:#16a34a">申請書を確認する</div>
+          <div class="lbl" style="color:#16a34a;white-space:nowrap;">申請書を確認する</div>
         </div>
         <span class="flow-arrow">→</span>
         <div class="flow-node">
           <svg viewBox="0 0 44 44" style="width:36px;height:36px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#16a34a" stroke-width="1.6"/></svg>
-          <div class="lbl" style="color:#16a34a">システムに登録する</div>
+          <div class="lbl" style="color:#16a34a;white-space:nowrap;">システムに登録する</div>
         </div>
       </div>
       <p style="font-size:11px;color:#166534;margin-top:6px;">誰が見ても「何をするか」が明確</p>
@@ -825,7 +787,7 @@ strong.hl { color: var(--accent); }
         <span class="flow-arrow">→</span>
         <div class="flow-node"><svg viewBox="0 0 44 44" style="width:32px;height:32px"><circle cx="22" cy="22" r="15" fill="#fff" stroke="#16a34a" stroke-width="2.6"/></svg><div class="lbl" style="color:#16a34a">終了</div></div>
       </div>
-      <p style="font-size:11px;color:#166534;margin-top:6px;">直感的に読める。印刷・共有に最適</p>
+      <p style="font-size:11px;color:#166534;margin-top:6px;">直感的に流れを追えることが大事<br />＊条件判断などで戻りがある場合がある場合でも、右・右下にゴールがあるように</p>
     </div>
   </div>
 
@@ -847,11 +809,11 @@ strong.hl { color: var(--accent); }
       <p style="margin-bottom:8px;"><strong>レーンで担当者を明示</strong></p>
       <div style="border:1px solid #bbf7d0;border-radius:4px;overflow:hidden;font-size:11px;">
         <div style="display:flex;border-bottom:1px solid #bbf7d0;">
-          <div style="width:56px;background:#f0fdf4;padding:4px;text-align:center;font-weight:700;color:#16a34a;">職員</div>
+          <div style="width:56px;background:#f0fdf4;padding:4px;text-align:center;font-weight:700;color:#16a34a;">xx課</div>
           <div style="padding:4px 8px;">申請</div>
         </div>
         <div style="display:flex;">
-          <div style="width:56px;background:#f0fdf4;padding:4px;text-align:center;font-weight:700;color:#16a34a;">上長</div>
+          <div style="width:56px;background:#f0fdf4;padding:4px;text-align:center;font-weight:700;color:#16a34a;">yy課</div>
           <div style="padding:4px 8px;">承認 → 発注</div>
         </div>
       </div>
@@ -871,10 +833,10 @@ strong.hl { color: var(--accent); }
   <div class="chapter-num">CHAPTER 04</div>
   <h2>実践！業務フローを描いてみよう</h2>
 
-  <p>ここでは実際の業務をBPMNで表現した例を2つ紹介します。どちらも研修ですぐに使える題材です。</p>
+  <p>ここでは実際の業務をBPMNで表現した例を考えてみます。</p>
 
-  <h3>事例1：休暇申請プロセス</h3>
-  <p>職員が休暇を申請し、上長が承認・却下を判断する最も基本的なワークフローです。</p>
+  <h3>事例：休暇申請プロセス</h3>
+  <p>職員が休暇を申請し、上長が承認・却下を判断する最も基本的なワークフローです。<br/>＊条件判断（ゲートウェイを配置してみましょう）</p>
 
   <div class="diagram">
     <div class="lane-wrap">
@@ -908,7 +870,7 @@ strong.hl { color: var(--accent); }
         <div style="margin-top:4px;">
           <div class="flow-node" style="display:inline-flex;">
             <svg viewBox="0 0 44 44" style="width:36px;height:36px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#475569" stroke-width="1.6"/></svg>
-            <div class="lbl">休暇を登録</div>
+            <div class="lbl">承認処理を行う</div>
           </div>
           <span class="flow-arrow">→</span>
           <div class="flow-node" style="display:inline-flex;">
@@ -922,7 +884,7 @@ strong.hl { color: var(--accent); }
         <div style="margin-top:4px;">
           <div class="flow-node" style="display:inline-flex;">
             <svg viewBox="0 0 44 44" style="width:36px;height:36px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#475569" stroke-width="1.6"/></svg>
-            <div class="lbl">差戻し通知</div>
+            <div class="lbl">差戻し処理を行う</div>
           </div>
           <span class="flow-arrow">→</span>
           <div class="flow-node" style="display:inline-flex;">
@@ -939,67 +901,6 @@ strong.hl { color: var(--accent); }
     排他ゲートウェイ（ひし形＋×）は「条件によって1つの道だけに進む」分岐です。「OKならA、NGならB」というパターンで最もよく使います。
   </div>
 
-  <h3>事例2：備品購入プロセス（並行処理）</h3>
-  <p>上長の承認と経理の予算確認を<strong>同時に</strong>進め、両方が完了してから発注するプロセスです。</p>
-
-  <div class="diagram">
-    <div class="lane-wrap">
-      <div class="lane">
-        <div class="lane-label">申請者</div>
-        <div class="lane-body">
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><circle cx="22" cy="22" r="15" fill="#fff" stroke="#475569" stroke-width="1.6"/></svg>
-            <div class="lbl">購入申請を起票</div>
-          </div>
-          <span class="flow-arrow">→</span>
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><polygon points="22,4 40,22 22,40 4,22" fill="#fff" stroke="#475569" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#475569" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#475569" stroke-width="2.2"/></svg>
-            <div class="lbl">分岐</div>
-          </div>
-        </div>
-      </div>
-      <div class="lane">
-        <div class="lane-label">上長</div>
-        <div class="lane-body">
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#475569" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#475569" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#475569" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <div class="lbl">内容を承認</div>
-          </div>
-        </div>
-      </div>
-      <div class="lane">
-        <div class="lane-label">経理</div>
-        <div class="lane-body">
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#475569" stroke-width="1.6"/><circle cx="15" cy="19" r="4.5" fill="none" stroke="#475569" stroke-width="1.3"/><line x1="19.5" y1="19" x2="21.6" y2="19" stroke="#475569" stroke-width="1.5"/><line x1="18.18" y1="22.18" x2="19.67" y2="23.67" stroke="#475569" stroke-width="1.5"/><line x1="15" y1="23.5" x2="15" y2="25.6" stroke="#475569" stroke-width="1.5"/><line x1="11.82" y1="22.18" x2="10.33" y2="23.67" stroke="#475569" stroke-width="1.5"/><line x1="10.5" y1="19" x2="8.4" y2="19" stroke="#475569" stroke-width="1.5"/><line x1="11.82" y1="15.82" x2="10.33" y2="14.33" stroke="#475569" stroke-width="1.5"/><line x1="15" y1="14.5" x2="15" y2="12.4" stroke="#475569" stroke-width="1.5"/><line x1="18.18" y1="15.82" x2="19.67" y2="14.33" stroke="#475569" stroke-width="1.5"/><circle cx="15" cy="19" r="1.6" fill="#fff" stroke="#475569" stroke-width="1"/></svg>
-            <div class="lbl">予算を確認</div>
-          </div>
-          <span class="flow-arrow">→</span>
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><polygon points="22,4 40,22 22,40 4,22" fill="#fff" stroke="#475569" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#475569" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#475569" stroke-width="2.2"/></svg>
-            <div class="lbl">合流</div>
-          </div>
-          <span class="flow-arrow">→</span>
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><rect x="4" y="9" width="36" height="26" rx="5" fill="#fff" stroke="#475569" stroke-width="1.6"/></svg>
-            <div class="lbl">発注する</div>
-          </div>
-          <span class="flow-arrow">→</span>
-          <div class="flow-node">
-            <svg viewBox="0 0 44 44" style="width:40px;height:40px"><circle cx="22" cy="22" r="15" fill="#fff" stroke="#475569" stroke-width="2.6"/></svg>
-            <div class="lbl">発注完了</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="diagram-caption">図4：備品購入プロセス — 並行ゲートウェイで「承認」と「予算確認」を同時進行</div>
-  </div>
-
-  <div class="point">
-    <strong>並行ゲートウェイ（＋マーク）のポイント：</strong>分岐では複数の経路が「同時に」スタートし、合流では「すべての経路が完了するのを待って」次に進みます。実際の業務にある「同時進行」を正確に表現できます。
-  </div>
-</div>
-
 <!-- ============================================================
      CHAPTER 5: 描き方のコツ
      ============================================================ -->
@@ -1010,7 +911,7 @@ strong.hl { color: var(--accent); }
   <ol class="step-list">
     <li>
       <div>
-        <strong>左から右へ一直線に</strong><br>
+        <strong>左から右へ業務が流れる</strong><br>
         <span style="font-size:12px;color:var(--sub);">人間の目は左→右に流れるのが自然です。上下にジグザグする図は読む人を疲れさせます。</span>
       </div>
     </li>
@@ -1130,7 +1031,7 @@ strong.hl { color: var(--accent); }
   </div>
 
   <div class="point" style="margin-top:24px;">
-    全問正解できましたか？ 間違えた問題は、該当する章に戻って復習してみてください。BPMNは「描いて覚える」のが一番の近道です。さっそく身近な業務を1つ図にしてみましょう！
+    全問正解できましたか？ 間違えた問題は、該当する章に戻って復習してみてください。BPMNは「描いて覚える」のが一番の近道です。<br/>BPMNには絶対の正解はありません。一緒に働く仲間と認識にズレがなければ、それが正解とも言えます。<br/>さっそく身近な業務を1つ図にしてみましょう！
   </div>
 </div>
 
@@ -1138,7 +1039,7 @@ strong.hl { color: var(--accent); }
      Footer
      ============================================================ -->
 <div class="footer">
-  <p>BPMN研修ハンドブック — 業務プロセス可視化の第一歩</p>
+  <p>BPMNハンドブック</p>
   <p>&copy; 2025-2026 Masahiro ARAKANE</p>
 </div>
 
