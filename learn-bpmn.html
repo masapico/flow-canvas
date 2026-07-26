@@ -4,1084 +4,1071 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BPMN作成ハンドブック</title>
-    <script src="./lib/tailwind.js"></script>
+    <link rel="stylesheet" href="./bootstrap.min.css" />
     <style>
+      :root {
+        --ink: #24292f;
+        --sub: #57606a;
+        --line: #d9dee3;
+        --brand: #1d4ed8;
+        --brand-soft: #eef3ff;
+        --accent: #c2410c;
+        --accent-soft: #fff4ec;
+        --paper: #fbfbfa;
+        --card: #ffffff;
+      }
+      * { box-sizing: border-box; }
       body {
-        font-size: .9rem;
-        font-family: "Inter", sans-serif;
+        font-size: 0.95rem;
+        font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
         scroll-behavior: smooth;
+        background-color: var(--paper);
+        color: var(--ink);
+        line-height: 1.8;
       }
-      .toc a {
-        transition: all 0.3s ease;
+      h1, h2, h3, h4 { font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; letter-spacing: .01em; }
+
+      /* ---------- Sidebar / TOC ---------- */
+      .sidebar-nav {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        background: #111827;
+        color: #cbd5e1;
       }
-      .toc a:hover {
-        color: #3b82f6; /* Tailwind blue-500 */
-        transform: translateX(4px);
-      }
-      .content-section {
-        padding-top: 60px; /* Adjust based on fixed header height if any */
-        margin-top: -60px; /* Negative margin to offset padding for anchor links */
-      }
-      h2 {
-        border-bottom: 2px solid #e5e7eb; /* Tailwind gray-200 */
-        padding-bottom: 0.5rem;
+      .toc-brand {
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: #fff;
+        border-bottom: 1px solid #2b3446;
+        padding-bottom: 1rem;
         margin-bottom: 1rem;
       }
-      h3 {
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
+      .toc-brand small { display:block; font-weight:400; color:#8aa0c9; font-size:.72rem; margin-top:.3rem; letter-spacing:.08em; }
+      .toc a { transition: all .15s ease; color: #b7c2d6; display: block; padding: .3rem .1rem; text-decoration: none; border-radius: 4px; }
+      .toc a:hover { color: #fff; background: rgba(255,255,255,.06); padding-left: .5rem; }
+      .toc ul ul a { font-size: .8rem; color: #8592a8; padding: .18rem .1rem; }
+      .toc ul ul a:hover { color: #fff; }
+      .toc a.active { color: #fff; background: rgba(59,130,246,.25); font-weight: 600; padding-left: .5rem; }
+      .toc .chapter-num { display:inline-block; width:1.4em; color:#5b6b8c; font-variant-numeric: tabular-nums; }
+
+      .content-section { padding-top: 70px; margin-top: -70px; }
+      main { max-width: 980px; }
+      h2.chapter-title {
+        border-bottom: 3px solid var(--brand);
+        padding-bottom: .6rem;
+        margin-bottom: 1.4rem;
+        font-weight: 700;
       }
-      .bpmn-diagram {
-        width: 100%;
-        max-width: 700px;
-        border: 1px solid #d1d5db; /* Tailwind gray-300 */
-        border-radius: 0.5rem;
-        margin: 1rem auto;
-        display: block;
-        background-color: #f9fafb; /* Tailwind gray-50 */
+      h2.chapter-title .eyebrow { display:block; font-size:.75rem; letter-spacing:.15em; color: var(--brand); font-weight:700; margin-bottom:.3rem; }
+      h3 { margin-top: 2rem; margin-bottom: .9rem; font-weight: 700; color: #111827; }
+      h3 .eyebrow { color: var(--sub); font-weight: 500; margin-right:.4rem; }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        background: linear-gradient(135deg, #111827 0%, #1d3a6b 55%, #1d4ed8 100%);
+        color: #fff;
+        border-radius: 14px;
+        padding: 2.6rem 2.4rem;
+        margin-bottom: 2.4rem;
+        position: relative;
+        overflow: hidden;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 1rem;
+      .hero::after {
+        content: "";
+        position: absolute; right: -60px; top: -60px; width: 260px; height: 260px;
+        background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
       }
-      th,
-      td {
-        border: 1px solid #e5e7eb; /* Tailwind gray-200 */
-        padding: 0.75rem;
-        text-align: left;
+      .hero .badge-outline {
+        display:inline-block; border:1px solid rgba(255,255,255,.4); border-radius: 999px;
+        padding: .25rem .9rem; font-size:.75rem; letter-spacing:.1em; margin-bottom:1rem; color:#dbe6ff;
       }
-      th {
-        background-color: #f3f4f6; /* Tailwind gray-100 */
+      .hero h1 { font-weight: 800; font-size: 2.1rem; margin-bottom:.6rem; }
+      .hero p { color: #cfe0ff; max-width: 640px; margin-bottom: 0; }
+
+      /* ---------- Cards / callouts ---------- */
+      .card-soft { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem 1.5rem; }
+      .point-box {
+        background: var(--brand-soft); border-left: 4px solid var(--brand);
+        border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0;
       }
-      /* Responsive TOC for smaller screens */
-      @media (max-width: 768px) {
-        .toc-container {
-          position: static;
-          width: 100%;
-          height: auto;
-          max-height: 300px; /* Limit height on small screens */
-          overflow-y: auto;
-          margin-bottom: 1.5rem;
-        }
-        .main-content-container {
-          margin-left: 0;
-        }
-        .flex-container {
-          flex-direction: column;
-        }
+      .point-box .point-label { font-weight:700; color: var(--brand); font-size:.8rem; letter-spacing:.08em; margin-bottom:.3rem; display:block;}
+      .warn-box {
+        background: var(--accent-soft); border-left: 4px solid var(--accent);
+        border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0;
+      }
+      .warn-box .point-label { font-weight:700; color: var(--accent); font-size:.8rem; letter-spacing:.08em; margin-bottom:.3rem; display:block;}
+      strong.hl { color: var(--accent); }
+
+      /* ---------- BPMN icon table ---------- */
+      .bpmn-icon { display:block; }
+      .icon-table th, .icon-table td { border: 1px solid var(--line); padding: .8rem; vertical-align: middle; }
+      .icon-table th { background: #f3f5f8; font-weight:700; font-size:.82rem; color:#374151; }
+      .icon-cell { width: 76px; text-align:center; background: #fcfcfb; }
+      .icon-cell .bpmn-icon { margin: 0 auto; }
+      .name-cell { white-space: nowrap; font-weight:700; }
+      .name-cell small { display:block; font-weight:400; color: var(--sub); font-size:.75rem; }
+
+      /* ---------- Schematic diagram panels (replace screenshots) ---------- */
+      .diagram-panel {
+        border: 1px solid var(--line); border-radius: 12px; background: #fff;
+        padding: 1.4rem; margin: 1.2rem 0; overflow-x: auto;
+      }
+      .diagram-panel .diagram-caption { font-size: .8rem; color: var(--sub); text-align:center; margin-top: .6rem; }
+      .flow-row { display:flex; align-items:center; gap: .35rem; flex-wrap: wrap; }
+      .flow-node { display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+      .flow-node .lbl { font-size: .72rem; color:#374151; text-align:center; max-width: 92px; line-height:1.3; }
+      .flow-arrow { color: var(--sub); font-size: 1.2rem; margin: 0 .1rem; }
+      .lane-wrap { border: 1.5px solid #374151; border-radius: 6px; overflow:hidden; min-width: 640px; }
+      .lane { display:flex; border-bottom: 1px solid #d1d5db; }
+      .lane:last-child { border-bottom:none; }
+      .lane .lane-label {
+        width: 110px; min-width:110px; background:#eef1f5; display:flex; align-items:center; justify-content:center;
+        font-size:.78rem; font-weight:700; color:#374151; padding: .5rem; text-align:center; border-right:1px solid #d1d5db;
+      }
+      .lane .lane-body { flex:1; display:flex; align-items:center; gap: .6rem; padding: 1rem; overflow-x:auto; }
+
+      /* ---------- Toolbar reference ---------- */
+      .tool-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: .9rem; margin: 1.2rem 0; }
+      .tool-card { border:1px solid var(--line); border-radius:10px; padding: .9rem 1rem; background:#fff; }
+      .tool-card .tool-icon { width:32px; height:32px; color: var(--brand); margin-bottom:.5rem; }
+      .tool-card h4 { font-size:.9rem; font-weight:700; margin-bottom:.25rem; }
+      .tool-card p { font-size:.8rem; color: var(--sub); margin-bottom:0; }
+      kbd { background:#1f2937; color:#fff; border-radius:4px; padding:.15rem .45rem; font-size:.78rem; }
+
+      .custom-table th, .custom-table td { border: 1px solid var(--line); padding: .75rem; text-align:left; }
+      .custom-table th { background-color: #f3f5f8; }
+      .space-y-1 > * + * { margin-top: .25rem; }
+      .space-y-2 > * + * { margin-top: .5rem; }
+      .space-y-3 > * + * { margin-top: 1rem; }
+      .list-disc { list-style-type: disc; padding-left: 1.5rem; }
+      .list-decimal { padding-left: 1.5rem; }
+
+      /* ---------- Quiz ---------- */
+      .quiz-card { border:1px solid var(--line); border-radius:12px; padding:1.3rem 1.4rem; margin-bottom:1.2rem; background:#fff; }
+      .quiz-q { font-weight:700; margin-bottom:.8rem; }
+      .quiz-opt {
+        display:flex; align-items:flex-start; gap:.6rem; padding:.55rem .7rem; border:1px solid var(--line);
+        border-radius:8px; margin-bottom:.5rem; cursor:pointer; font-size:.88rem; background:#fbfbfb;
+      }
+      .quiz-opt:hover { border-color:#93b4ff; background: #f5f8ff; }
+      .quiz-opt.correct { border-color:#16a34a; background:#f0fdf4; }
+      .quiz-opt.wrong { border-color:#dc2626; background:#fef2f2; }
+      .quiz-opt .oc { font-weight:700; color:var(--sub); }
+      .quiz-explain { display:none; font-size:.82rem; color:#374151; background:#f3f5f8; border-radius:8px; padding:.7rem .9rem; margin-top:.5rem; }
+      .quiz-explain.show { display:block; }
+      .quiz-score { position: sticky; top: 70px; z-index: 5; }
+
+      /* ---------- Checklist ---------- */
+      .checklist-item { display:flex; align-items:flex-start; gap:.6rem; padding:.6rem .2rem; border-bottom:1px dashed var(--line); }
+      .checklist-item:last-child { border-bottom:none; }
+      .checklist-item input { margin-top:.3rem; width:18px; height:18px; flex-shrink:0; }
+      .checklist-item label { cursor:pointer; }
+      .checklist-item.done label { color:#9aa4b2; text-decoration: line-through; }
+
+      /* ---------- Glossary ---------- */
+      .glossary-term { font-weight:700; color:#111827; }
+      dl.glossary dt { margin-top:1.1rem; }
+      dl.glossary dd { color:#374151; margin-left:0; }
+
+      @media (max-width: 767.98px) {
+        .sidebar-nav { position: static; height: auto; max-height: 320px; overflow-y: auto; margin-bottom: 1.5rem; }
+        .hero { padding: 1.6rem; }
       }
     </style>
   </head>
-  <body class="bg-gray-100 text-gray-800">
-    <div class="flex flex-container min-h-screen">
-      <nav
-        class="toc-container w-full md:w-1/4 bg-white p-6 shadow-lg fixed top-0 left-0 h-full overflow-y-auto toc"
-      >
-        <h2 class="text-2xl font-semibold mb-6 text-blue-600">目次</h2>
-        <ul class="space-y-2">
+  <body>
+    <div class="d-flex">
+      <nav class="toc sidebar-nav p-4" style="width: 300px; min-width: 300px;">
+        <div class="toc-brand">
+          BPMN作成ハンドブック
+          <small>業務プロセス可視化・実践ガイド &mdash; 第2版</small>
+        </div>
+        <ul class="list-unstyled space-y-2">
           <li>
-            <a
-              href="#section1"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第1章</strong> はじめに</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section1-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >1.1 BPMNとは？</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section1-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >1.2 なぜBPMNなのか？ - 導入のメリット</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section1-3"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >1.3 本ハンドブックの読み進め方</a
-                >
-              </li>
+            <a href="#section1" class="toc-link"><span class="chapter-num">1</span>はじめに</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section1-1" class="toc-link">1.1 BPMNとは？</a></li>
+              <li><a href="#section1-2" class="toc-link">1.2 なぜBPMNなのか？</a></li>
+              <li><a href="#section1-3" class="toc-link">1.3 本書の読み進め方</a></li>
             </ul>
           </li>
           <li>
-            <a
-              href="#section2"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第2章</strong> BPMN 2.0の基本</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section2-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >2.1 基本的な考え方</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section2-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >2.2 主要な図形要素</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section2-3"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >2.3 BPMN記載レベル</a
-                >
-              </li>
+            <a href="#section2" class="toc-link"><span class="chapter-num">2</span>BPMN 2.0の基本</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section2-1" class="toc-link">2.1 基本的な考え方</a></li>
+              <li><a href="#section2-2" class="toc-link">2.2 主要な図形要素</a></li>
+              <li><a href="#section2-3" class="toc-link">2.3 BPMN記載レベル</a></li>
+              <li><a href="#section2-4" class="toc-link">2.4 イベントの種類を理解する</a></li>
+              <li><a href="#section2-5" class="toc-link">2.5 サブプロセスと境界イベント</a></li>
             </ul>
           </li>
           <li>
-            <a
-              href="#section3"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第3章</strong> BPMNエディタ入門</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section3-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >3.1 エディタの画面構成と基本機能</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section3-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >3.2 初めてのBPMN図作成</a
-                >
-              </li>
+            <a href="#section3" class="toc-link"><span class="chapter-num">3</span>BPMNエディタ入門</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section3-1" class="toc-link">3.1 画面構成と基本機能</a></li>
+              <li><a href="#section3-2" class="toc-link">3.2 ツールバー機能一覧</a></li>
+              <li><a href="#section3-3" class="toc-link">3.3 覚えておきたいショートカット</a></li>
+              <li><a href="#section3-4" class="toc-link">3.4 初めてのBPMN図作成</a></li>
             </ul>
           </li>
           <li>
-            <a
-              href="#section4"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第4章</strong> 実践！BPMN記載例</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section4-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >4.1 記載例を読む上での注意点</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section4-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >4.2 事例：住民票の写し交付の業務プロセス</a
-                >
-              </li>
+            <a href="#section4" class="toc-link"><span class="chapter-num">4</span>実践！BPMN記載例</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section4-1" class="toc-link">4.1 記載例を読む上での注意点</a></li>
+              <li><a href="#section4-2" class="toc-link">4.2 事例1：住民票の写し交付申請</a></li>
+              <li><a href="#section4-3" class="toc-link">4.3 事例2：備品購入申請（並行処理）</a></li>
             </ul>
           </li>
           <li>
-            <a
-              href="#section5"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第5章</strong> 分かりやすいBPMN図作成のヒント</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section5-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >5.1 初心者が陥りがちなワナ</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section5-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >5.2 一目で伝わる図のルール</a
-                >
-              </li>
+            <a href="#section5" class="toc-link"><span class="chapter-num">5</span>分かりやすい図作成のヒント</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section5-1" class="toc-link">5.1 初心者が陥りがちなワナ</a></li>
+              <li><a href="#section5-2" class="toc-link">5.2 一目で伝わる図のルール</a></li>
             </ul>
           </li>
           <li>
-            <a
-              href="#section6"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第6章</strong> 組織内でのBPMN活用</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section6-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >6.1 組織に根付かせるステップ</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section6-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >6.2 研修と学習リソース</a
-                >
-              </li>
+            <a href="#section6" class="toc-link"><span class="chapter-num">6</span>組織内でのBPMN活用</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section6-1" class="toc-link">6.1 組織に根付かせるステップ</a></li>
+              <li><a href="#section6-2" class="toc-link">6.2 研修と学習リソース</a></li>
             </ul>
           </li>
+          <li><a href="#section7" class="toc-link"><span class="chapter-num">7</span>おわりに</a></li>
           <li>
-            <a
-              href="#section7"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>第7章</strong> おわりに</a
-            >
-          </li>
-          <li>
-            <a
-              href="#section8"
-              class="text-gray-700 hover:text-blue-500 block py-1"
-              ><strong>付録</strong> タスクとゲートウェイの解説</a
-            >
-            <ul class="ml-4 mt-1 space-y-1">
-              <li>
-                <a
-                  href="#section8-1"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >8.1 タスクの種類</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#section8-2"
-                  class="text-sm text-gray-600 hover:text-blue-500 block py-0.5"
-                  >8.2 ゲートウェイの種類</a
-                >
-              </li>
-
+            <a href="#section8" class="toc-link"><span class="chapter-num">付</span>付録</a>
+            <ul class="list-unstyled ms-3 mt-1 space-y-1">
+              <li><a href="#section8-1" class="toc-link">A. タスクの種類</a></li>
+              <li><a href="#section8-2" class="toc-link">B. ゲートウェイの種類</a></li>
+              <li><a href="#section8-3" class="toc-link">C. イベントの種類一覧</a></li>
+              <li><a href="#section8-4" class="toc-link">D. 理解度チェック（クイズ）</a></li>
+              <li><a href="#section8-5" class="toc-link">E. 用語集</a></li>
+            </ul>
           </li>
         </ul>
       </nav>
 
-      <main
-        class="main-content-container md:ml-[25%] flex-1 p-8 pt-10 md:pt-8 bg-gray-50"
-      >
-        <header class="mb-10">
-          <h1 class="text-4xl font-bold text-blue-700">BPMN作成ハンドブック</h1>
-          <p class="text-lg text-gray-600 mt-2">
-            業務プロセスの可視化と改善、標準化のための実践ガイド
-          </p>
-        </header>
+      <main class="flex-grow-1 p-4 p-md-5 bg-light min-vh-100" style="margin-left: 20px;">
+        <div class="hero">
+          <span class="badge-outline">PROCESS MODELING HANDBOOK</span>
+          <h1>BPMN作成ハンドブック</h1>
+          <p>業務プロセスの可視化・改善・標準化のための実践ガイド。基本の考え方からエディタの使い方、記載例、組織展開のヒントまでを一冊で。</p>
+        </div>
 
-        <section id="section1" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第1章 はじめに – BPMNで業務を見える化・改善する
-          </h2>
-          <div id="section1-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              1.1 BPMNとは？ – 業務プロセスの共通言語
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMN (Business Process Model and Notation)
-              とは、業務プロセスを視覚的に記述するための国際標準の表記法です。複雑な業務の流れを、誰にでも理解しやすい図（BPMN図）として表現することができます。
+        <section id="section1" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 01</span>はじめに &ndash; BPMNで業務を見える化・改善する</h2>
+
+          <div id="section1-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">1.1</span>BPMNとは？ &ndash; 業務プロセスの共通言語</h3>
+            <p class="mt-2 lh-lg">
+              BPMN（Business Process Model and Notation）とは、業務プロセスを視覚的に記述するための国際標準の表記法です。複雑な業務の流れを、誰にでも理解しやすい図（BPMN図）として表現することができます。
               組織内での多様な業務は、しばしば複数の部署や担当者が関わり合って遂行されます。BPMNは、これらの関係者間で業務プロセスに関する認識を統一し、誤解を防ぐための「共通言語」としての役割を果たします。
             </p>
-            <img
-              src="./images/1.1.png"
-              alt="BPMNの概念図"
-              class="bpmn-diagram my-4"
-            />
-            <p class="mt-2 leading-relaxed">
+            <div class="diagram-panel">
+              <div class="lane-wrap">
+                <div class="lane">
+                  <div class="lane-label">市民</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">申請を
+提出</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">受付内容を
+確認</div></div>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="lane-label">窓口担当</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">本人確認
+を行う</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="16" y1="16" x2="28" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/><line x1="28" y1="16" x2="16" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/></svg><div class="lbl">確認
+OK?</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="19" r="4.5" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="19.5" y1="19.0" x2="21.6" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="18.181980515339465" y1="22.181980515339465" x2="19.66690475583121" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="23.5" x2="15.0" y2="25.6" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="22.181980515339465" x2="10.333095244168787" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="10.5" y1="19.0" x2="8.4" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="15.818019484660535" x2="10.333095244168785" y2="14.333095244168787" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="14.5" x2="14.999999999999998" y2="12.4" stroke="#495057" stroke-width="1.5"/><line x1="18.18198051533946" y1="15.818019484660535" x2="19.66690475583121" y2="14.333095244168785" stroke="#495057" stroke-width="1.5"/><circle cx="15" cy="19" r="1.6" fill="#ffffff" stroke="#495057" stroke-width="1"/></svg><div class="lbl">台帳を
+検索する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg><div class="lbl">交付
+完了</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-caption">図1.1　プールとレーンで「誰が・何を・どの順で」行うかを一枚の図に表現する</div>
+            </div>
+            <p class="lh-lg">
               従来の文字ベースの業務マニュアルでは、全体の流れや関連性が把握しにくく、更新も煩雑になりがちでした。BPMNを用いることで、業務の開始から終了までの一連の流れ、各ステップでの作業内容、判断条件、担当者などを視覚的に明確にできます。
             </p>
           </div>
 
-          <div id="section1-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              1.2 なぜBPMNなのか？ – 利用時のメリットと目的
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMNを導入することには、多くのメリットがあります。これらは組織の業務効率と透明性を大幅に向上させる可能性を秘めています。
-            </p>
-            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong class="text-blue-600">業務の可視化と理解促進：</strong
-                ><br />
-                複雑な業務プロセスを誰にでも分かりやすく「見える化」することで、関係者間の共通理解を深めます。これにより、業務の全体像を把握しやすくなり、個々の作業がプロセス全体の中でどのような役割を担っているのかが明確になります。
-                <img
-                  src="./images/1.2.png"
-                  alt="業務の可視化イメージ図"
-                  class="bpmn-diagram my-3"
-                />
-              </li>
-              <li>
-                <strong class="text-blue-600">非効率性の発見と業務改善：</strong
-                ><br />
-                プロセスを客観的に図示することで、これまで気づかなかったボトルネック、無駄な作業、重複作業などが明らかになり、具体的な改善策を検討するための土台となります。現状の業務プロセス
-                (As-Is) を正確に把握することが、効果的な改善への第一歩です。
-              </li>
-              <li>
-                <strong class="text-blue-600">標準化と属人化の解消：</strong
-                ><br />
-                業務手順を標準化することで、特定の担当者しか業務内容を詳細に把握していないといった「属人化」の状態を解消できます。これにより、担当者変更や業務分担変更時のリスク低減に繋がります。
-              </li>
-              <li>
-                <strong class="text-blue-600">職員研修・引継ぎの効率化：</strong
-                ><br />
-                視覚的に分かりやすいBPMN図は、新人研修や人事異動時の業務引継ぎ資料としても非常に有効です。業務内容の理解を早め、研修期間の短縮や引継ぎの質の向上に貢献します。
-              </li>
-              <li>
-                <strong class="text-blue-600"
-                  >システム調達・開発の効率化：</strong
-                ><br />
-                情報システムの導入や更新、既存システムを改修したりする際に、BPMN図は業務要件を明確に伝えるための有効な手段となります。システムベンダーとの認識の齟齬を防ぎ、手戻りの削減や開発・移行期間の短縮に繋がります。
-              </li>
-              <li>
-                <strong class="text-blue-600">法令改正への迅速な対応：</strong
-                ><br />
-                行政事務は法令に基づいて行われるため、法令改正は業務プロセスの変更を伴います。プロセスが可視化されていれば、法令改正によって影響を受ける箇所や変更すべき点を迅速に特定し、対応することが容易になります。
-              </li>
+          <div id="section1-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">1.2</span>なぜBPMNなのか？ &ndash; 利用時のメリットと目的</h3>
+            <p class="mt-2 lh-lg">BPMNを導入することには、多くのメリットがあります。これらは組織の業務効率と透明性を大幅に向上させる可能性を秘めています。</p>
+            <ul class="list-disc mt-3 space-y-3">
+              <li><strong class="hl">業務の可視化と理解促進：</strong><br>複雑な業務プロセスを誰にでも分かりやすく「見える化」することで、関係者間の共通理解を深めます。これにより、業務の全体像を把握しやすくなり、個々の作業がプロセス全体の中でどのような役割を担っているのかが明確になります。</li>
+              <li><strong class="hl">非効率性の発見と業務改善：</strong><br>プロセスを客観的に図示することで、これまで気づかなかったボトルネック、無駄な作業、重複作業などが明らかになり、具体的な改善策を検討するための土台となります。</li>
+              <li><strong class="hl">標準化と属人化の解消：</strong><br>業務手順を標準化することで、特定の担当者しか業務内容を詳細に把握していないといった「属人化」の状態を解消できます。</li>
+              <li><strong class="hl">職員研修・引継ぎの効率化：</strong><br>視覚的に分かりやすいBPMN図は、新人研修や人事異動時の業務引継ぎ資料としても非常に有効です。</li>
+              <li><strong class="hl">システム調達・開発の効率化：</strong><br>情報システムの導入や更新の際に、BPMN図は業務要件を明確に伝えるための有効な手段となります。</li>
+              <li><strong class="hl">法令改正への迅速な対応：</strong><br>行政事務は法令に基づいて行われるため、法令改正は業務プロセスの変更を伴います。プロセスが可視化されていれば影響箇所を迅速に特定できます。</li>
             </ul>
           </div>
 
-          <div id="section1-3" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              1.3 本ハンドブックの読み進め方
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              本ハンドブックは、BPMNを初めて学ぶ方でも理解しやすいように、基本的な概念から具体的な作成方法、活用事例までを段階的に解説します。各セクションは、理論の学習から実践、そして応用へとスムーズに移行できるよう構成されています。
-              特に、実際にBPMNエディタを操作しながら読み進めることを推奨します。手を動かしながら学ぶことで、より深くBPMNを理解し、習得することができるでしょう。
+          <div id="section1-3" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">1.3</span>本ハンドブックの読み進め方</h3>
+            <p class="mt-2 lh-lg">
+              本ハンドブックは、BPMNを初めて学ぶ方でも理解しやすいように、基本的な概念から具体的な作成方法、活用事例までを段階的に解説します。第2章で基礎知識、第3章でエディタの使い方、第4章で実例、第5〜6章で運用のコツを扱い、巻末の付録には図形の早見表と理解度チェックを収録しています。目次から気になる章に直接ジャンプしても構いません。
             </p>
+            <div class="point-box">
+              <span class="point-label">POINT</span>
+              初めてBPMNに触れる方は、第2章2.1〜2.2 → 第3章 → 第4章の順に読むと、最短で「自分の業務を図にする」ところまでたどり着けます。
+            </div>
           </div>
         </section>
 
-        <section id="section2" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第2章 BPMN 2.0の基本
-          </h2>
-          <div id="section2-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              2.1 基本的な考え方
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMNには多くの図形やルールがありますが、最初からすべてを覚える必要はありません。まずは、業務プロセスを表現するための最も基本的な考え方と、主要な要素を理解することから始めましょう。
-            </p>
-            <ol class="list-decimal list-inside mt-4 space-y-2 pl-4">
-              <li>
-                <strong>横長の四角形（プールとレーン）</strong
-                >を書き、部署名や役割で区切る（誰が関わるか）。
-              </li>
-              <li>
-                <strong>角丸の四角形（タスク）</strong>を並べる（何を行うか）。
-              </li>
-              <li>
-                <strong>矢印（シーケンスフロー）</strong
-                >でつなぐ（どのような順番で行うか）。
-              </li>
-              <li>
-                開始を<strong>細い円（開始イベント）</strong>、終了を<strong>太い円（終了イベント）</strong>で示す（いつ始まり、いつ終わるか）。
-              </li>
+        <section id="section2" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 02</span>BPMN 2.0の基本</h2>
+
+          <div id="section2-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">2.1</span>基本的な考え方</h3>
+            <p class="mt-2 lh-lg">BPMNには多くの図形やルールがありますが、最初からすべてを覚える必要はありません。まずは、業務プロセスを表現するための最も基本的な考え方と、主要な要素を理解することから始めましょう。</p>
+            <ol class="list-decimal mt-3 space-y-2">
+              <li><strong>横長の四角形（プールとレーン）</strong>を書き、部署名や役割で区切る（誰が関わるか）。</li>
+              <li><strong>角丸の四角形（タスク）</strong>を並べる（何を行うか）。</li>
+              <li><strong>矢印（シーケンスフロー）</strong>でつなぐ（どのような順番で行うか）。</li>
+              <li>開始を<strong>細い円（開始イベント）</strong>、終了を<strong>太い円（終了イベント）</strong>で示す。</li>
             </ol>
-            <img
-              src="./images/2.1.png"
-              alt="BPMN基本4要素"
-              class="bpmn-diagram my-4"
-            />
-            <p class="mt-2 leading-relaxed">
-              基本的には、これらの要素の組み合わせで、多くの業務プロセスの骨格を描くことができます。
-            </p>
+            <div class="diagram-panel">
+              <div class="flow-row justify-content-center">
+                <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">開始</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">タスク</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">タスク</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg><div class="lbl">終了</div></div>
+              </div>
+              <div class="diagram-caption">図2.1　BPMNの基本4要素だけで、多くの業務プロセスの骨格を描くことができる</div>
+            </div>
+            <p class="mt-2 lh-lg">基本的には、これらの要素の組み合わせで、多くの業務プロセスの骨格を描くことができます。</p>
           </div>
 
-          <div id="section2-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              2.2 主要な図形要素
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMN
-              2.0でよく使われる主要な図形要素とその意味を解説します。これらの記号を理解することが、BPMN図を読み書きする第一歩です。
-            </p>
-            <div class="overflow-x-auto mt-4">
-              <table class="min-w-full">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
-                    <th class="px-4 py-2 text-left">名称</th>
-                    <th class="px-4 py-2 text-left">簡単な意味と利用例</th>
-                  </tr>
-                </thead>
+          <div id="section2-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">2.2</span>主要な図形要素</h3>
+            <p class="mt-2 lh-lg">BPMN 2.0でよく使われる主要な図形要素とその意味を解説します。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>簡単な意味と利用例</th></tr></thead>
                 <tbody>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_start.png" alt="開始イベント" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>開始イベント (Start Event)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      プロセスの開始点
-                      (細い線の円)。例：申請受付開始、定時処理開始。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg></td>
+      <td class="name-cell">開始イベント<small>Start Event</small></td>
+      <td>プロセスの開始点（細い線の円）。例：申請受付開始、定時処理開始。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_end.png" alt="終了イベント" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>終了イベント (End Event)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      プロセスの終了点
-                      (太い線の円)。例：処理完了、通知発行完了。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg></td>
+      <td class="name-cell">終了イベント<small>End Event</small></td>
+      <td>プロセスの終了点（太い線の円）。例：処理完了、通知発行完了。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_task.png" alt="タスク" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>タスク (Task)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      個別の作業単位
-                      (角が丸い四角形)。例：「申請書を確認する」「データを入力する」。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg></td>
+      <td class="name-cell">タスク<small>Task</small></td>
+      <td>個別の作業単位（角が丸い四角形）。例：「申請書を確認する」「データを入力する」。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img
-                        src="./images/2.2_xor.png"
-                        alt="排他的ゲートウェイ"
-                      />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>排他ゲートウェイ (Exclusive Gateway)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      複数の経路のうち、条件に合致する「一つだけ」に進む
-                      (ひし形、X印または無印)。例：「承認ルート分岐」「エラー有無で分岐」。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="16" y1="16" x2="28" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/><line x1="28" y1="16" x2="16" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/></svg></td>
+      <td class="name-cell">排他ゲートウェイ<small>Exclusive Gateway</small></td>
+      <td>複数の経路のうち、条件に合致する「一つだけ」に進む。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_and.png" alt="並行ゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>並行ゲートウェイ (Parallel Gateway)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      複数の経路を「同時に」実行、または全経路完了を待つ
-                      (ひし形、＋印)。例：「複数部署へ同時照会」「関連書類準備と審査を並行」。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#495057" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#495057" stroke-width="2.2"/></svg></td>
+      <td class="name-cell">並行ゲートウェイ<small>Parallel Gateway</small></td>
+      <td>複数の経路を「同時に」実行、または全経路完了を待つ。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img
-                        src="./images/2.2_arrow.png"
-                        alt="シーケンスフロー"
-                      />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>シーケンスフロー (Sequence Flow)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      要素の実行順序、プロセスの流れ (実線の矢印)。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="4" y1="22" x2="36" y2="22" stroke="#495057" stroke-width="2"/><polygon points="36,22 28,18 28,26" fill="#495057"/></svg></td>
+      <td class="name-cell">シーケンスフロー<small>Sequence Flow</small></td>
+      <td>要素の実行順序、プロセスの流れ（実線の矢印）。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_pool.png" alt="プール" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>プール (Pool)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      参加者やプロセス全体の括り（住民プールと役所内のプールなど）。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="6" width="38" height="32" fill="#ffffff" stroke="#495057" stroke-width="1.5"/><line x1="3" y1="22" x2="41" y2="22" stroke="#495057" stroke-width="1.2"/><line x1="10" y1="6" x2="10" y2="38" stroke="#495057" stroke-width="1.2"/></svg></td>
+      <td class="name-cell">プール／レーン<small>Pool / Lane</small></td>
+      <td>参加者やプロセス全体の括り（プール）と、その中の役割・担当者（レーン）。例：「窓口担当」「承認者」。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/2.2_lane.png" alt="レーン" />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>レーン (Lane)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      プール内の役割や担当者。例：「窓口担当」「承認者」。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="6" cy="22" r="2.6" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><line x1="9" y1="22" x2="34" y2="22" stroke="#495057" stroke-width="1.6" stroke-dasharray="4,3"/><polygon points="38,22 30,18 30,26" fill="#ffffff" stroke="#495057" stroke-width="1.4"/></svg></td>
+      <td class="name-cell">メッセージフロー<small>Message Flow</small></td>
+      <td>異なるプール間のメッセージや情報のやり取り（破線の矢印）。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img
-                        src="./images/2.2_message-flow.png"
-                        alt="メッセージフロー"
-                      />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>メッセージフロー (Message Flow)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      異なるプール間のメッセージや情報のやり取り (破線の矢印)。
-                    </td>
-                  </tr>
-
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M11 4 h14 l6 6 v30 h-20 z" fill="#ffffff" stroke="#495057" stroke-width="1.5" stroke-linejoin="round"/><path d="M25 4 v6 h6" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="14" y1="20" x2="26" y2="20" stroke="#495057" stroke-width="1"/><line x1="14" y1="25" x2="26" y2="25" stroke="#495057" stroke-width="1"/><line x1="14" y1="30" x2="22" y2="30" stroke="#495057" stroke-width="1"/></svg></td>
+      <td class="name-cell">データオブジェクト<small>Data Object</small></td>
+      <td>プロセスで扱う情報や書類。例：「申請書」「報告書」。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img
-                        src="./images/2.2_data-object.png"
-                        alt="データオブジェクト"
-                      />
-                    </td>
-                    <td class="border px-4 py-2">
-                      <strong>データオブジェクト (Data Object)</strong>
-                    </td>
-                    <td class="border px-4 py-2">
-                      プロセスで扱う情報や書類
-                      (右上隅が折れた書類の形)。例：「申請書」「報告書」。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="4" y1="30" x2="38" y2="12" stroke="#495057" stroke-width="1.4" stroke-dasharray="1.5,2.5" stroke-linecap="round"/></svg></td>
+      <td class="name-cell">関連<small>Association</small></td>
+      <td>要素と注釈・データオブジェクトなどを結びつける点線。</td>
+    </tr>
                 </tbody>
               </table>
             </div>
-            <p class="mt-2 leading-relaxed">
-              これらの図形を組み合わせることで、業務プロセスを具体的に表現していきます。
-              <strong class="text-red-600">業務の可視化</strong
-              >が進むことで、関係者全員が同じ理解を持つことができ、<strong
-                class="text-red-600"
-                >業務改善</strong
-              >の議論がスムーズになります。
+            <p class="mt-3 lh-lg">
+              これらの図形を組み合わせることで、業務プロセスを具体的に表現していきます。<strong class="hl">業務の可視化</strong>が進むことで、関係者全員が同じ理解を持つことができ、<strong class="hl">業務改善</strong>の議論がスムーズになります。
             </p>
           </div>
-          <div id="section2-3" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              2.3 BPMN記載レベル
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMNにはいくつかのレベルがあり、目的に応じて使い分けられます。地方自治体においては、特に「分析レベル」での記述が推奨されることが多いようです。
-              しかしあくまで「分析レベル」での記述は、業務の現状を把握するための一つの手段であり、必ずしも全てこのレベルで記述する必要はありません。<br />
-              まずは、業務の全体像を把握するために「記述レベル」での記載を行い、業務を可視化していくことが肝要です。
-            </p>
-            <ul class="list-disc list-inside mt-4 space-y-2 pl-4">
-              <li>
-                <strong>記述レベル：</strong>
-                事務の基本的な作業の流れを記載するレベル。
-              </li>
-              <li>
-                <strong>分析レベル：</strong>
-                記述レベルの内容に加え、事務の詳細（個々の作業をアクティビティとして具体的に表記）や、例外的な処理（エラー処理や手戻りなど）までを表記するレベル。業務を「人が行う作業」と「システムが行う作業」に明確に仕分け、関係者間での共通理解を促すことを目的とします。これが<strong
-                  class="text-red-600"
-                  >標準化</strong
-                >や<strong class="text-red-600">属人化の解消</strong
-                >に繋がります。
-              </li>
-              <li>
-                <strong>実行可能レベル：</strong>
-                RPAの詳細設計資料やプログラム開発のための設計資料として詳細に記載するレベル。
-              </li>
+
+          <div id="section2-3" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">2.3</span>BPMN記載レベル</h3>
+            <p class="mt-2 lh-lg">BPMNにはいくつかのレベルがあり、目的に応じて使い分けられます。地方自治体においては、特に「分析レベル」での記述が推奨されることが多いようです。</p>
+            <ul class="list-disc mt-3 space-y-2">
+              <li><strong>記述レベル：</strong>事務の基本的な作業の流れを記載するレベル。</li>
+              <li><strong>分析レベル：</strong>記述レベルの内容に加え、事務の詳細や例外的な処理までを表記するレベル。これが<strong class="hl">標準化</strong>や<strong class="hl">属人化の解消</strong>に繋がります。</li>
+              <li><strong>実行可能レベル：</strong>RPAの詳細設計資料やプログラム開発のための設計資料として詳細に記載するレベル。</li>
             </ul>
-            <p class="mt-2 leading-relaxed">
-              「分析レベル」での記述ができると、業務が正確に把握可能となり、他の職員やシステムベンダーとのコミュニケーションが円滑になります。これは、<strong
-                class="text-red-600"
-                >職員研修・引継ぎの効率化</strong
-              >にも大いに役立ちます。<br />
+            <p class="mt-2 lh-lg">「分析レベル」での記述ができると、業務が正確に把握可能となり、<strong class="hl">職員研修・引継ぎの効率化</strong>にも大いに役立ちます。</p>
+          </div>
+
+          <div id="section2-4" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">2.4</span>イベントの種類を理解する</h3>
+            <p class="mt-2 lh-lg">
+              イベントは円で表現されますが、線の太さ・重なり・内側のアイコンによって「いつ・何によって」プロセスが動くのかを細かく表現できます。まずは3つの見分け方を覚えましょう。
             </p>
+            <div class="point-box">
+              <span class="point-label">見分け方の基本</span>
+              <strong>①線の太さ</strong>：細い線＝開始、二重の細い線＝中間、太い線＝終了。<br>
+              <strong>②塗りつぶし</strong>：白抜き＝キャッチ（受動的に発生を待つ）、黒塗り＝スロー（能動的に発信する）。<br>
+              <strong>③内側のアイコン</strong>：無印＝プロセスの開始・終了、封筒＝メッセージ、時計＝タイマー、稲妻＝エラー。
+            </div>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>意味と利用例</th></tr></thead>
+                <tbody>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg></td>
+      <td class="name-cell">開始イベント（無印）<small>None Start Event</small></td>
+      <td>特にトリガーを指定しない、標準的なプロセスの開始点。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">メッセージ開始イベント<small>Message Start Event</small></td>
+      <td>他者からのメッセージ（申請書の到着など）でプロセスが開始する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="22" cy="22" r="9" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="15.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="27" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="30.0" y1="22.0" x2="32.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.92820323027551" y1="26.0" x2="31.17986928011505" y2="27.299999999999997" stroke="#495057" stroke-width="0.9"/><line x1="26.0" y1="28.928203230275507" x2="27.3" y2="31.17986928011505" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="30.0" x2="22.0" y2="32.6" stroke="#495057" stroke-width="0.9"/><line x1="18.0" y1="28.92820323027551" x2="16.700000000000003" y2="31.17986928011505" stroke="#495057" stroke-width="0.9"/><line x1="15.07179676972449" y1="26.0" x2="12.82013071988495" y2="27.299999999999997" stroke="#495057" stroke-width="0.9"/><line x1="14.0" y1="22.0" x2="11.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.071796769724491" y1="18.0" x2="12.82013071988495" y2="16.7" stroke="#495057" stroke-width="0.9"/><line x1="17.999999999999996" y1="15.071796769724493" x2="16.699999999999996" y2="12.820130719884954" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="14.0" x2="21.999999999999996" y2="11.4" stroke="#495057" stroke-width="0.9"/><line x1="26.0" y1="15.071796769724491" x2="27.3" y2="12.82013071988495" stroke="#495057" stroke-width="0.9"/><line x1="28.928203230275507" y1="17.999999999999996" x2="31.179869280115046" y2="16.699999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">タイマー開始イベント<small>Timer Start Event</small></td>
+      <td>特定の日時・周期でプロセスが開始する。例：毎月1日の定例処理。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">中間イベント（メッセージ受信）<small>Intermediate Catch (Message)</small></td>
+      <td>プロセスの途中で、他者からのメッセージ（回答・承認結果など）を待って先に進む。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">中間イベント（タイマー）<small>Intermediate Catch (Timer)</small></td>
+      <td>一定時間の経過や特定の日時まで処理を待機させる。例：「3営業日後」。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg></td>
+      <td class="name-cell">終了イベント（無印）<small>None End Event</small></td>
+      <td>特に結果を指定しない、標準的なプロセスの終了点。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="#495057" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">メッセージ終了イベント<small>Message End Event</small></td>
+      <td>プロセスの終了とともに、他者へメッセージ（通知）を送信する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><polygon points="20,13 25,21 21,21 24,31 18,23 22,23" fill="#495057" stroke="#495057" stroke-width="0.6" stroke-linejoin="round"/></svg></td>
+      <td class="name-cell">エラー終了イベント<small>Error End Event</small></td>
+      <td>異常な状態でプロセスを終了し、エラーを発生させる。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><circle cx="22" cy="22" r="8" fill="#495057"/></svg></td>
+      <td class="name-cell">終了（強制終了）イベント<small>Terminate End Event</small></td>
+      <td>プロセス内の他の全ての進行中の活動も含めて、直ちに終了させる。</td>
+    </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-3 lh-lg">
+              実務でよく使うのは「メッセージ」と「タイマー」の2種類です。<strong class="hl">「誰かからの連絡待ち」はメッセージイベント、「一定期間・特定日時の経過待ち」はタイマーイベント</strong>、と覚えておくと使い分けに迷いません。
+            </p>
+          </div>
+
+          <div id="section2-5" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">2.5</span>サブプロセスと境界イベント</h3>
+            <p class="mt-2 lh-lg">
+              業務が複雑になり1つのタスクでは表現しきれない場合や、複数の手順をひとまとまりとして扱いたい場合には「サブプロセス」を使います。また、タスクの実行中に割り込みで発生しうる例外（急な問い合わせ、期限切れなど）は「境界イベント」で表現します。
+            </p>
+            <h4 class="h6 fw-bold mt-4">サブプロセス（Sub-Process）</h4>
+            <p class="lh-lg">タスクの角丸四角形の下部中央に「＋」マークが付いた図形で、複数のステップから成る詳細な処理をひとまとめに折りたたんで表現します。本エディタでは、この＋マークをクリックすると詳細フロー（内部の図）を展開・編集できます。</p>
+            <div class="diagram-panel">
+              <div class="flow-row justify-content-center">
+                <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">申請書を
+受け付ける</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="17.5" y="28" width="9" height="9" fill="#ffffff" stroke="#495057" stroke-width="1.2"/><line x1="19.4" y1="32.5" x2="24.6" y2="32.5" stroke="#495057" stroke-width="1.1"/><line x1="22" y1="29.9" x2="22" y2="35.1" stroke="#495057" stroke-width="1.1"/></svg><div class="lbl">審査を
+行う（詳細）</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">結果を
+通知する</div></div>
+              </div>
+              <div class="diagram-caption">図2.5a　サブプロセス（＋マーク）は、クリックすると内部の詳細フローが展開される</div>
+            </div>
+            <h4 class="h6 fw-bold mt-4">境界イベント（Boundary Event）</h4>
+            <p class="lh-lg">タスクやサブプロセスの外枠上に配置される、二重丸の小さいイベントです。そのタスクの実行中に特定の事象（メッセージの割り込み、タイムアウト、エラーなど）が発生した場合の「例外ルート」を表現します。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>意味と利用例</th></tr></thead>
+                <tbody>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">境界タイマーイベント<small>Boundary Timer Event（中断）</small></td>
+      <td>一定時間内に処理が終わらない場合、タスクを中断して例外ルートへ分岐する。例：「3日以内に返信がなければ督促」。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">境界タイマーイベント（非中断・破線）<small>Boundary Timer（非中断）</small></td>
+      <td>元のタスクは中断せず継続したまま、並行して別ルートを開始する。例：処理を続けつつ一定時間後にリマインド通知を送る。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">境界メッセージイベント<small>Boundary Message Event</small></td>
+      <td>タスク実行中に外部からのメッセージ（取消依頼など）を受けて中断・分岐する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><polygon points="20,13 25,21 21,21 24,31 18,23 22,23" fill="#495057" stroke="#495057" stroke-width="0.6" stroke-linejoin="round"/></svg></td>
+      <td class="name-cell">境界エラーイベント<small>Boundary Error Event</small></td>
+      <td>タスク内でエラーが発生した場合に、専用のエラー処理ルートへ分岐する。</td>
+    </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="warn-box">
+              <span class="point-label">注意</span>
+              境界イベントの外枠が<strong>実線の二重丸</strong>なら「中断（Interrupting）」＝元のタスクは止まります。<strong>破線の二重丸</strong>なら「非中断（Non-interrupting）」＝元のタスクは動いたまま並行して例外処理が始まります。この違いを取り違えると、図の意味が正反対になるので注意しましょう。
+            </div>
           </div>
         </section>
 
-        <section id="section3" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第3章 BPMNエディタ入門
-          </h2>
-          <p class="mt-2 leading-relaxed">
-            BPMN図を作成するためには、専用のエディタを利用すると便利です。<br>
-            ここでは、本BPMNエディタの基本的な使い方を解説します。
-          </p>
-          <div id="section3-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              3.1 エディタの画面構成と基本機能
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              BPMNエディタは、以下のような共通の画面構成と機能を備えています。
-            </p>
-            <ul class="list-disc list-inside mt-4 space-y-2 pl-4">
-              <li>
-                <strong>キャンバスエリア：</strong>
-                BPMN図を実際に描画し、編集する中心的な作業領域。
-              </li>
-              <li>
-                <strong>パレット：</strong>
-                BPMNの各要素（開始イベント、タスク、ゲートウェイなど）がアイコンとして並んでいる領域。ここから要素を選択し、キャンバスエリアに配置します。
-              </li>
-              <li>
-                <strong>プロパティパネル：</strong>
-                キャンバス上で選択した要素の詳細情報（名前、条件など）を設定・編集する領域です。プロパティパネルからは、要素の追加・属性変更、接続先を指定できます。
-              </li>
-              <li>
-                <strong>ツールバー：</strong>
-                ファイル操作（新規作成、保存、読込）などの共通操作を行うメニューやボタンが並んでいます。
-              </li>
+        <section id="section3" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 03</span>BPMNエディタ入門</h2>
+          <p class="mt-2 lh-lg">BPMN図を作成するためには、専用のエディタを利用すると便利です。ここでは、本サイトのBPMN作図ツール（bpmn.jsベース）を例に、基本的な使い方を解説します。</p>
+
+          <div id="section3-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">3.1</span>画面構成と基本機能</h3>
+            <p class="mt-2 lh-lg">BPMNエディタは、以下のような共通の画面構成と機能を備えています。</p>
+            <ul class="list-disc mt-3 space-y-2">
+              <li><strong>キャンバスエリア：</strong>BPMN図を実際に描画し、編集する中心的な作業領域。画面全体に大きく確保されています。</li>
+              <li><strong>パレット：</strong>BPMNの各要素（イベント・タスク・ゲートウェイなど）がアイコンとして並んでいる領域。キャンバス左側に表示されます。</li>
+              <li><strong>プロパティパネル：</strong>選択した要素の詳細情報（名称、担当者、実行条件など）を設定・編集する領域。要素を選択すると右側に表示されます。</li>
+              <li><strong>コンテキストパッド：</strong>要素を選択した際にその周囲に現れる、よく使う操作（接続・削除・変形など）のショートカットメニュー。</li>
+              <li><strong>フローティングツールバー：</strong>画面右下に常駐する、ファイル操作用のアイコン群。詳細は次項で解説します。</li>
             </ul>
-            <img
-              src="./images/3.1.png"
-              alt="BPMNエディタ画面構成例"
-              class="bpmn-diagram my-4"
-            />
+            <div class="diagram-panel">
+              <div class="flow-row justify-content-center">
+                <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">パレット
+（左側）</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">キャンバス
+（中央）</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">プロパティ
+パネル（右）</div></div>
+              </div>
+              <div class="diagram-caption">図3.1　画面は「パレット→キャンバス→プロパティパネル」の3領域で構成される</div>
+            </div>
           </div>
 
-          <div id="section3-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              3.2 初めてのBPMN図作成（要素の配置、接続、ラベル付け）
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              簡単なBPMN図を作成する基本的な手順は以下の通りです。
-            </p>
-            <ol class="list-decimal list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong>プールの配置：</strong>
-                パレットから「プール」を選択し、キャンバスに配置。必要に応じて「レーン」を追加します。
-              </li>
-              <li>
-                <strong>開始イベントの配置：</strong>
-                プールの左端の適切なレーンに「開始イベント」を配置します。
-              </li>
-              <li>
-                <strong>タスクの配置：</strong>
-                具体的な作業を表す「タスク」をパレットから選択し、担当レーン上に配置します。
-              </li>
-              <li>
-                <strong>シーケンスフローでの接続：</strong>
-                配置したイベントやタスクを「シーケンスフロー」でつなぎ、業務の流れを表現します。
-              </li>
-              <li>
-                <strong>ゲートウェイの配置と分岐：</strong>
-                条件分岐がある場合は、「ゲートウェイ」を配置し、分岐フローを作成します。
-              </li>
-              <li>
-                <strong>終了イベントの配置：</strong>
-                プロセスの右端に「終了イベント」を配置します。
-              </li>
-              <li>
-                <strong>ラベル付け：</strong>
-                配置した全ての要素に、内容が明確にわかる名称（ラベル）を付けます。これが<strong
-                  class="text-red-600"
-                  >業務の可視化</strong
-                >と理解促進の鍵です。
-              </li>
-              <li>
-                <strong>保存：</strong>
-                作成したBPMN図を保存します（通常はXML形式）。
-              </li>
+          <div id="section3-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">3.2</span>ツールバー機能一覧</h3>
+            <p class="mt-2 lh-lg">画面右下のフローティングツールバーには、ファイルの入出力に関する機能がまとまっています。</p>
+            <div class="tool-grid">
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.973 0 1.942.372 2.684 1.054L10.5 5.5H14.5A1.5 1.5 0 0 1 16 7v5.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5V4.964A1.5 1.5 0 0 1 1 3.5z"/></svg>
+      <h4>BPMN読込 (.bpmn)</h4><p>既存の .bpmn / .xml ファイルを開いて編集を再開します。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+      <h4>新規作成</h4><p>空のキャンバスから新しいBPMN図の作成を始めます。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/></svg>
+      <h4>BPMN保存 (.bpmn)</h4><p>編集中の図をBPMN 2.0形式（XML）でファイルに保存します。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+      <h4>SVG表示（別タブ）</h4><p>作成した図をSVGとして別タブに表示し、印刷やプレビューに使えます。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/><path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 1.5v2l2 2h-2v-2zM3 2a1 1 0 0 1 1-1h5.5v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2z"/></svg>
+      <h4>SVGエクスポート (.svg)</h4><p>図をSVG画像として書き出し、資料やスライドに貼り付けられます。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.47-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/></svg>
+      <h4>BPMNを学ぶ</h4><p>この学習用ハンドブックを新しいタブで開きます。</p>
+    </div>
+              <div class="tool-card">
+      <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="currentColor" viewBox="0 0 16 16"><path d="M14 5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12zM2 4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2z"/></svg>
+      <h4>ショートカット一覧</h4><p>主要なキーボードショートカットの一覧をモーダルで表示します。</p>
+    </div>
+            </div>
+            <div class="point-box">
+              <span class="point-label">POINT</span>
+              保存したBPMN図（.bpmnファイル）はXML形式のテキストファイルです。他の職員に共有したり、バージョン管理（Gitなど）で変更履歴を追ったりすることもできます。
+            </div>
+          </div>
+
+          <div id="section3-3" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">3.3</span>覚えておきたいショートカット</h3>
+            <p class="mt-2 lh-lg">マウス操作に加えて、以下のショートカットを覚えると作図速度が大きく向上します。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered custom-table mb-0">
+                <thead><tr><th>操作</th><th>キー</th></tr></thead>
+                <tbody>
+                  <tr><td>ファイル読込み</td><td>エディタ画面にファイルをドラッグ＆ドロップ</td></tr>
+                  <tr><td>ファイル保存</td><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td></tr>
+                  <tr><td>元に戻す（Undo）</td><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td></tr>
+                  <tr><td>やり直し（Redo）</td><td><kbd>Ctrl</kbd> + <kbd>Y</kbd></td></tr>
+                  <tr><td>ラベル編集</td><td>要素を選択した状態で <kbd>E</kbd></td></tr>
+                  <tr><td>ハンドツール（画面移動）</td><td><kbd>H</kbd></td></tr>
+                  <tr><td>投げ縄ツール（範囲選択）</td><td><kbd>L</kbd></td></tr>
+                  <tr><td>スペースツール（要素間隔調整）</td><td><kbd>S</kbd></td></tr>
+                  <tr><td>ショートカット一覧を開く</td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="section3-4" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">3.4</span>初めてのBPMN図作成（要素の配置、接続、ラベル付け）</h3>
+            <p class="mt-2 lh-lg">簡単なBPMN図を作成する基本的な手順は以下の通りです。</p>
+            <ol class="list-decimal mt-3 space-y-3">
+              <li><strong>プールの配置：</strong>パレットから「プール」を選択し、キャンバスに配置します。</li>
+              <li><strong>開始イベントの配置：</strong>プールの左端の適切なレーンに「開始イベント」を配置します。</li>
+              <li><strong>タスクの配置：</strong>具体的な作業を表す「タスク」をパレットから選択し配置します。</li>
+              <li><strong>シーケンスフローでの接続：</strong>配置した要素をコンテキストパッドの矢印アイコンから「シーケンスフロー」でつなぎます。</li>
+              <li><strong>ゲートウェイの配置と分岐：</strong>条件分岐がある場合は、「ゲートウェイ」を配置します。</li>
+              <li><strong>終了イベントの配置：</strong>プロセスの右端に「終了イベント」を配置します。</li>
+              <li><strong>ラベル付け：</strong>要素を選択して <kbd>E</kbd> キー（またはダブルクリック）で、内容が明確にわかる名称を付けます。これが<strong class="hl">業務の可視化</strong>と理解促進の鍵です。</li>
+              <li><strong>保存：</strong> <kbd>Ctrl</kbd>+<kbd>S</kbd> または保存ボタンで、作成したBPMN図をBPMN形式（XML）で保存します。</li>
             </ol>
-            <img
-              src="./images/3.2.png"
-              alt="BPMN図作成ステップ"
-              class="bpmn-diagram my-4"
-            />
-            <p class="mt-2 leading-relaxed">
-              最初は簡単なプロセスから始め、徐々に慣れていくことが大切です。
+            <p class="mt-2 lh-lg">最初は簡単なプロセスから始め、徐々に慣れていくことが大切です。</p>
+          </div>
+        </section>
+
+        <section id="section4" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 04</span>実践！BPMN記載例</h2>
+
+          <div id="section4-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">4.1</span>記載例を読む上での注意点</h3>
+            <p class="mt-2 lh-lg">
+              ここに提示する記載例は、あくまでBPMNの理解を助けるための「一例」です。各組織の体制や規則によって実際のプロセスは異なります。これにより、<strong class="hl">業務の理解</strong>が進み、<strong class="hl">属人化の解消</strong>に繋がります。
+            </p>
+          </div>
+
+          <div id="section4-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">4.2</span>事例1：住民票の写し交付申請プロセス（窓口申請）</h3>
+            <p class="mt-2 lh-lg">市民が窓口で住民票の写しを申請し、職員が発行・交付する一般的な業務プロセスを例にします。</p>
+            <ul class="list-disc mt-2">
+              <li><strong>主な参加者（プール/レーン）：</strong>市民、市民課（窓口、バックヤード）</li>
+              <li><strong>主要タスク例：</strong>申請書受付、本人確認、対象者検索、住民票印刷、交付</li>
+              <li><strong>関連データ例：</strong>申請書、本人確認書類、住民記録システム</li>
+            </ul>
+            <div class="diagram-panel">
+              <div class="lane-wrap">
+                <div class="lane">
+                  <div class="lane-label">市民</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">申請書を
+提出する</div></div>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="lane-label">市民課
+（窓口）</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">申請書を
+受け付ける</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">本人確認を
+行う</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="16" y1="16" x2="28" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/><line x1="28" y1="16" x2="16" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/></svg><div class="lbl">確認
+OK？</div></div>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="lane-label">市民課
+（バックヤード）</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="19" r="4.5" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="19.5" y1="19.0" x2="21.6" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="18.181980515339465" y1="22.181980515339465" x2="19.66690475583121" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="23.5" x2="15.0" y2="25.6" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="22.181980515339465" x2="10.333095244168787" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="10.5" y1="19.0" x2="8.4" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="15.818019484660535" x2="10.333095244168785" y2="14.333095244168787" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="14.5" x2="14.999999999999998" y2="12.4" stroke="#495057" stroke-width="1.5"/><line x1="18.18198051533946" y1="15.818019484660535" x2="19.66690475583121" y2="14.333095244168785" stroke="#495057" stroke-width="1.5"/><circle cx="15" cy="19" r="1.6" fill="#ffffff" stroke="#495057" stroke-width="1"/></svg><div class="lbl">住民記録を
+検索する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><path d="M10 20 v6 a2 2 0 0 0 2 2 h6 a2 2 0 0 0 2-2 v-7 M12 19 v-3 a1.4 1.4 0 0 1 2.8 0 v3 M14.8 19 v-4 a1.4 1.4 0 0 1 2.8 0 v4 M17.6 19 v-3 a1.4 1.4 0 0 1 2.8 0 v3" fill="none" stroke="#495057" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,-2) scale(0.9) translate(1,2)"/></svg><div class="lbl">住民票を
+印刷する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">本人に
+交付する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg><div class="lbl">交付
+完了</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-caption">図4.2　住民票の写し交付申請プロセス（窓口申請）</div>
+            </div>
+            <p class="mt-2 lh-lg">この図により、申請から交付までの流れが明確になり、<strong class="hl">業務の可視化</strong>が実現されます。新人職員の<strong class="hl">研修資料</strong>としても有効です。</p>
+          </div>
+
+          <div id="section4-3" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">4.3</span>事例2：備品購入申請プロセス（並行処理と境界イベントの例）</h3>
+            <p class="mt-2 lh-lg">
+              職員が備品購入を申請し、上長の承認と会計担当の予算確認を<strong>並行して</strong>行い、両方がそろってから発注する業務プロセスを例にします。承認が期限内に得られない場合の督促も、境界タイマーイベントで表現します。
+            </p>
+            <ul class="list-disc mt-2">
+              <li><strong>主な参加者（プール/レーン）：</strong>申請職員、上長、会計担当</li>
+              <li><strong>主要タスク例：</strong>申請書起票、内容確認（承認）、予算確認、発注</li>
+              <li><strong>ポイント：</strong>並行ゲートウェイによる分岐・合流、境界タイマーイベントによる督促ルート</li>
+            </ul>
+            <div class="diagram-panel">
+              <div class="lane-wrap">
+                <div class="lane">
+                  <div class="lane-label">申請職員</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">購入申請を
+起票する</div></div>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="lane-label">上長</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#495057" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#495057" stroke-width="2.2"/></svg><div class="lbl">分岐</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">内容を
+確認・承認</div></div>
+                    <div class="flow-node" style="margin-left:-14px;margin-top:26px;"><svg viewBox="0 0 44 44" style="width:26px;height:26px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg><div class="lbl">2日超で
+督促</div></div>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="lane-label">会計担当</div>
+                  <div class="lane-body">
+                    <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="19" r="4.5" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="19.5" y1="19.0" x2="21.6" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="18.181980515339465" y1="22.181980515339465" x2="19.66690475583121" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="23.5" x2="15.0" y2="25.6" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="22.181980515339465" x2="10.333095244168787" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="10.5" y1="19.0" x2="8.4" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="15.818019484660535" x2="10.333095244168785" y2="14.333095244168787" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="14.5" x2="14.999999999999998" y2="12.4" stroke="#495057" stroke-width="1.5"/><line x1="18.18198051533946" y1="15.818019484660535" x2="19.66690475583121" y2="14.333095244168785" stroke="#495057" stroke-width="1.5"/><circle cx="15" cy="19" r="1.6" fill="#ffffff" stroke="#495057" stroke-width="1"/></svg><div class="lbl">予算を
+確認する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#495057" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#495057" stroke-width="2.2"/></svg><div class="lbl">合流</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg><div class="lbl">発注する</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg><div class="lbl">発注
+完了</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-caption">図4.3　並行ゲートウェイで「承認」と「予算確認」を同時進行し、境界タイマーイベントで督促ルートを表現する</div>
+            </div>
+            <p class="mt-2 lh-lg">
+              このように、直列に並べるだけでなく<strong class="hl">並行ゲートウェイ</strong>を使うことで、実際の業務にある「同時進行」の様子も正確に表現できます。また境界イベントを加えることで、期限超過などの<strong class="hl">例外対応まで含めた実務に近い図</strong>になります。
             </p>
           </div>
         </section>
 
-        <section id="section4" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第4章 実践！BPMN記載例
-          </h2>
-          <div id="section4-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              4.1 記載例を読む上での注意点
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              ここに提示する記載例は、あくまでBPMNの理解を助けるための「一例」です。各組織の体制や規則によって実際のプロセスは異なります。基本的な考え方や表現方法を参考に、自身の業務に合わせて修正・追記してください。
-              「分析レベル」での記述ができるようになると、マニュアルや引継ぎ資料として大変重宝します。これにより、<strong
-                class="text-red-600"
-                >業務の理解</strong
-              >が進み、<strong class="text-red-600">属人化の解消</strong
-              >に繋がります。
-            </p>
-          </div>
-          <div id="section4-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              4.2 事例：住民票の写し交付申請プロセス（窓口申請）
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              市民が窓口で住民票の写しを申請し、職員が発行・交付する一般的な業務プロセスを例にします。
-            </p>
-            <ul class="list-disc list-inside mt-2 pl-4">
-              <li>
-                <strong>主な参加者（プール/レーン）：</strong>
-                市民、市民課（窓口、バックヤード）
-              </li>
-              <li>
-                <strong>主要タスク例：</strong>
-                申請書受付、本人確認、対象者検索、住民票印刷、交付
-              </li>
-              <li>
-                <strong>関連データ例：</strong>
-                申請書、本人確認書類、住民記録システム、住基ネットCS
-              </li>
+        <section id="section5" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 05</span>分かりやすいBPMN図作成のためのヒント集</h2>
+
+          <div id="section5-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">5.1</span>初心者が陥りがちなワナと、その回避策</h3>
+            <ul class="list-disc mt-3 space-y-3">
+              <li><strong>ワナ1：複雑すぎる図</strong> &rarr; 回避策：基本要素から始め、できる限り1ページに収めるようにしましょう。収まらない場合はサブプロセスで折りたたむことを検討します。</li>
+              <li><strong>ワナ2：フローの方向がバラバラ</strong> &rarr; 回避策：左から右への流れで記載するルールを守りましょう。</li>
+              <li><strong>ワナ3：ゲートウェイによる混乱</strong> &rarr; 回避策：分岐条件やシーケンスはわかりやすく記述しましょう。条件分岐が続く場合には合流するゲートウェイを配置すると流れが明確になります。</li>
+              <li><strong>ワナ4：プールとレーンが曖昧</strong> &rarr; 回避策：「誰が」行うかを意識し設定しましょう。</li>
+              <li><strong>ワナ5：曖昧さ・命名規則の不統一</strong> &rarr; 回避策：「目的語＋動詞」でわかりやすく、処理や手順書のIDを補足するとより明確になります。</li>
+              <li><strong>ワナ6：境界イベントの中断／非中断の取り違え</strong> &rarr; 回避策：実線の二重丸は「中断」、破線の二重丸は「非中断」であることを都度確認しましょう。</li>
             </ul>
-            <a href="./images/4.2.png" target="_blank">
-              <img
-                src="./images/4.2.png"
-                alt="BPMN図：住民票交付申請プロセス"
-                class="bpmn-diagram my-4"
-              />
-            </a>
-            <p class="mt-2 leading-relaxed">
-              この図により、申請から交付までの流れ、担当者の役割、必要な条件判断などが明確になり、<strong
-                class="text-red-600"
-                >業務の可視化</strong
-              >が実現されます。新人職員の<strong class="text-red-600"
-                >研修資料</strong
-              >としても有効です。
-            </p>
+            <p class="mt-2 lh-lg">これらのワナを避けることで、BPMN図の可読性が向上し、<strong class="hl">業務の可視化</strong>の効果が高まります。</p>
+          </div>
+
+          <div id="section5-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">5.2</span>一目で伝わる図のルール</h3>
+            <ul class="list-disc mt-3 space-y-3">
+              <li><strong>レイアウトの工夫：</strong>1ページに収める、フローの方向を統一、適切な間隔と整列。</li>
+              <li><strong>命名規則の徹底：</strong>タスク名は「（目的語）を（動詞）する」、イベント名も具体的に。</li>
+              <li><strong>シンプル化の追求：</strong>使用する記号の種類を絞る、サブプロセスの利用、注釈の活用。</li>
+            </ul>
+            <div class="diagram-panel">
+              <div class="flow-row justify-content-center">
+                <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">詳細な
+手順A</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">詳細な
+手順B</div></div><span class="flow-arrow">&#10230;</span><div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg><div class="lbl">詳細な
+手順C</div></div>
+              </div>
+              <div class="diagram-caption" style="margin-bottom:.4rem">Before：手順をすべて並べると横に長くなりがち</div>
+              <div class="flow-row justify-content-center mt-3">
+                <div class="flow-node"><svg viewBox="0 0 44 44" style="width:44px;height:44px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="17.5" y="28" width="9" height="9" fill="#ffffff" stroke="#495057" stroke-width="1.2"/><line x1="19.4" y1="32.5" x2="24.6" y2="32.5" stroke="#495057" stroke-width="1.1"/><line x1="22" y1="29.9" x2="22" y2="35.1" stroke="#495057" stroke-width="1.1"/></svg><div class="lbl">一連の処理を
+まとめて実施</div></div>
+              </div>
+              <div class="diagram-caption">After：サブプロセスでまとめると全体が見渡しやすくなる（図5.2）</div>
+            </div>
+            <p class="mt-2 lh-lg">これらのルールを守ることで、誰にとっても理解しやすいBPMN図を作成でき、<strong class="hl">職員研修・引継ぎの効率化</strong>にも繋がります。</p>
           </div>
         </section>
 
-        <section id="section5" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第5章 分かりやすいBPMN図作成のためのヒント集
-          </h2>
-          <div id="section5-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              5.1 初心者が陥りがちなワナと、その回避策
-            </h3>
-            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong>ワナ1：複雑すぎる図</strong> →
-                回避策：基本要素から始め、できる限り1ページに収めるようにしましょう。
-              </li>
-              <li>
-                <strong>ワナ2：フローの方向がバラバラ</strong> →
-                回避策：左から右への流れで記載するルールを守りましょう。
-              </li>
-              <li>
-                <strong>ワナ3：ゲートウェイによる混乱</strong> →
-                回避策：分岐条件やシーケンスはわかりやすく記述するようにしましょう。<br>条件分岐が続く場合には合流するゲートウェイを配置すると流れが明確になります。
-              </li>
-              <li>
-                <strong>ワナ4：プールとレーンが曖昧</strong> →
-                回避策：「誰が」行うかを意識し、組織構造や業務に合わせて設定しましょう。
-              </li>
-              <li>
-                <strong>ワナ5：曖昧さ・命名規則の不統一</strong> →
-                回避策：「目的語＋動詞」でわかりやすく、処理や手順書のIDを補足するとより明確になります。
-              </li>
-            </ul>
-            <p class="mt-2 leading-relaxed">
-              これらのワナを避けることで、BPMN図の可読性が向上し、<strong
-                class="text-red-600"
-                >業務の可視化</strong
-              >の効果が高まります。
-            </p>
-          </div>
+        <section id="section6" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 06</span>組織内でのBPMN活用</h2>
 
-          <div id="section5-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              5.2 一目で伝わる図のルール：レイアウト、命名規則、シンプル化の秘訣
-            </h3>
-            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong>レイアウトの工夫：</strong>
-                1ページに収める、フローの方向を統一（左から右へ）、適切な間隔と整列、できるだけコネクタの交差を避ける。
-              </li>
-              <li>
-                <strong>命名規則の徹底：</strong>
-                タスク名は「（目的語）を（動詞）する」、イベント名も具体的に、ゲートウェイの分岐フローには条件を記載する。
-              </li>
-              <li>
-                <strong>シンプル化の追求：</strong>
-                使用する記号の種類を絞る、サブプロセス（折りたたみタスク）の利用、注釈の活用、対象プロセスの範囲を明確にする。
-              </li>
-            </ul>
-            <a href="./images/5.2.png" target="_blank">
-              <img
-                src="./images/5.2.png"
-                alt="サブプロセスの紹介"
-                class="bpmn-diagram my-4"
-              />
-            </a>
-            <p class="mt-2 leading-relaxed">
-              これらのルールを守ることで、誰にとっても理解しやすいBPMN図を作成でき、<strong
-                class="text-red-600"
-                >職員研修・引継ぎの効率化</strong
-              >にも繋がります。
-            </p>
-          </div>
-        </section>
-
-        <section id="section6" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            第6章 組織内でのBPMN活用
-          </h2>
-          <div id="section6-1" class="content-section mt-6">
-            <h3 class="text-2xl font-medium text-gray-700">
-              6.1 BPMNを組織内で活用するためのステップ
-            </h3>
-            <ol class="list-decimal list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong>目的の共有とリーダーシップ：</strong>
-                なぜBPMNを利用するのか目的を明確にし、経営層・管理職がコミットする。
-              </li>
-              <li>
-                <strong>スモールスタートと成功体験の共有：</strong>
-                単純業務、身近な業務、特定の部署などから試行し、成功事例を共有する。
-              </li>
-              <li>
-                <strong>支援体制の整備：</strong>
-                記載方法ついてのサポートや、ベテラン職員の業務知識を活かした支援体制を整える。
-              </li>
-              <li>
-                <strong>研修と学習機会の提供：</strong>
-                研修を実施し、理解とスキルアップを支援する。
-              </li>
-              <li>
-                <strong>ツール環境の整備：</strong>
-                アクセスしやすく使いやすいBPMNエディタ環境を提供する。
-              </li>
-              <li>
-                <strong>BPMN図の共有と日常的な活用：</strong>
-                作成した図を共有し、業務マニュアルや改善検討資料として日常的に活用する文化を醸成する。
-              </li>
-              <li>
-                <strong>評価とフィードバックによる継続的改善：</strong>
-                導入効果を定期的に評価し、改善サイクルを確立する。
-              </li>
+          <div id="section6-1" class="content-section mt-4">
+            <h3 class="h4"><span class="eyebrow">6.1</span>BPMNを組織内で活用するためのステップ</h3>
+            <ol class="list-decimal mt-3 space-y-3">
+              <li><strong>目的の共有とリーダーシップ：</strong>なぜBPMNを利用するのか目的を明確にし、経営層・管理職がコミットする。</li>
+              <li><strong>スモールスタートと成功体験の共有：</strong>単純業務、身近な業務から試行し、成功事例を共有する。</li>
+              <li><strong>支援体制の整備：</strong>記載方法についてのサポートや、ベテラン職員の業務知識を活かした支援体制を整える。</li>
+              <li><strong>研修と学習機会の提供：</strong>研修を実施し、理解とスキルアップを支援する。</li>
+              <li><strong>ツール環境の整備：</strong>アクセスしやすく使いやすいBPMNエディタ環境を提供する。</li>
+              <li><strong>BPMN図の共有と日常的な活用：</strong>作成した図を共有し、業務マニュアルや改善検討資料として日常的に活用する文化を醸成する。</li>
+              <li><strong>評価とフィードバックによる継続的改善：</strong>導入効果を定期的に評価し、改善サイクルを確立する。</li>
             </ol>
-            <p class="mt-2 leading-relaxed">
-              これらのステップを通じて、BPMNは組織内の<strong
-                class="text-red-600"
-                >業務改善</strong
-              >と<strong class="text-red-600">標準化</strong
-              >を推進する強力なツールとなります。
-            </p>
+            <p class="mt-2 lh-lg">これらのステップを通じて、BPMNは組織内の<strong class="hl">業務改善</strong>と<strong class="hl">標準化</strong>を推進する強力なツールとなります。</p>
           </div>
-          <div id="section6-2" class="content-section mt-8">
-            <h3 class="text-2xl font-medium text-gray-700">
-              6.2 研修の進め方と学習リソース
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              効果的な研修と学習リソースの提供は、BPMNスキルを組織全体に広める鍵です。
-            </p>
-            <ul class="list-disc list-inside mt-4 space-y-3 pl-4">
-              <li>
-                <strong>研修計画：</strong>
-                対象者と記載レベルに応じたプログラムを設計する。
-              </li>
-              <li>
-                <strong>研修内容：</strong>
-                BPMNの基本、エディタ操作、演習、分かりやすい図の作成ポイント、成功事例紹介など。
-              </li>
+
+          <div id="section6-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">6.2</span>研修の進め方と学習リソース</h3>
+            <p class="mt-2 lh-lg">効果的な研修と学習リソースの提供は、BPMNスキルを組織全体に広める鍵です。</p>
+            <ul class="list-disc mt-3 space-y-3">
+              <li><strong>研修計画：</strong>対象者と記載レベルに応じたプログラムを設計する。</li>
+              <li><strong>研修内容：</strong>BPMNの基本、エディタ操作、演習、分かりやすい図の作成ポイント、成功事例紹介など。</li>
+              <li><strong>演習の活用：</strong>本ハンドブック巻末の「理解度チェック」（付録D）を研修の理解度確認に活用できます。</li>
             </ul>
-            <p class="mt-2 leading-relaxed">
-              これにより、職員がBPMNを効果的に活用できるようになり、<strong
-                class="text-red-600"
-                >職員研修や引継ぎの効率化</strong
-              >が図られ、組織全体の<strong class="text-red-600">業務改善</strong
-              >能力が向上します。
-            </p>
+            <p class="mt-2 lh-lg">これにより、職員がBPMNを効果的に活用できるようになり、<strong class="hl">職員研修や引継ぎの効率化</strong>が図られ、組織全体の<strong class="hl">業務改善</strong>能力が向上します。</p>
           </div>
         </section>
 
-        <section id="section7" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">第7章 おわりに</h2>
-          <p class="mt-4 leading-relaxed">
-            本ハンドブックを通じて、BPMNの基本的な知識と活用方法を学んでいただけたことと思います。BPMNは、業務プロセスを「見える化」し、関係者間の共通理解を深め、継続的な業務改善を推進するための強力なツールです。
-          </p>
-          <p class="mt-4 leading-relaxed">
-            BPMNを習得し活用することで、以下のメリットが期待できます。
-          </p>
-          <ul
-            class="list-disc list-inside mt-4 space-y-2 pl-4 bg-blue-50 p-4 rounded-md"
-          >
-            <li>
-              <strong class="text-blue-700">業務の可視化：</strong>
-              複雑なプロセスも一目で理解。
-            </li>
-            <li>
-              <strong class="text-blue-700">業務改善：</strong>
-              ボトルネックや無駄を発見し、効率化。
-            </li>
-            <li>
-              <strong class="text-blue-700">標準化と属人化の解消：</strong>
-              誰でも同じ品質で業務を遂行。
-            </li>
-            <li>
-              <strong class="text-blue-700">職員研修・引継ぎの効率化：</strong>
-              スムーズな知識移転。
-            </li>
+        <section id="section7" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">CHAPTER 07</span>おわりに</h2>
+          <p class="mt-3 lh-lg">本ハンドブックを通じて、BPMNの基本的な知識と活用方法を学んでいただけたことと思います。</p>
+          <p class="mt-3 lh-lg">BPMNを習得し活用することで、以下のメリットが期待できます。</p>
+          <ul class="list-disc mt-3 space-y-2 p-4 point-box">
+            <li><strong class="hl">業務の可視化：</strong>複雑なプロセスも一目で理解。</li>
+            <li><strong class="hl">業務改善：</strong>ボトルネックや無駄を発見し、効率化。</li>
+            <li><strong class="hl">標準化と属人化の解消：</strong>誰でも同じ品質で業務を遂行。</li>
+            <li><strong class="hl">職員研修・引継ぎの効率化：</strong>スムーズな知識移転。</li>
           </ul>
-          <p class="mt-4 leading-relaxed">
-            BPMNのスキルは、個々の職員の能力向上だけでなく、組織全体の生産性向上とサービス品質の向上に大きく貢献します。ぜひ、本ハンドブックで得た知識を日々の業務に活かし、より良い業務プロセスの構築を目指してください。
-            さらなる学習を進め、BPMNを組織文化として根付かせることで、変化に強く、継続的に進化できる組織づくりに繋がることを願っています。
-          </p>
+          <p class="mt-3 lh-lg">BPMNのスキルは、個々の職員の能力向上だけでなく、組織全体の生産性向上とサービス品質の向上に大きく貢献します。まずは巻末の付録を参考に、身近な業務を1つ図にしてみましょう。</p>
         </section>
 
-        <section id="section8" class="content-section mb-12">
-          <h2 class="text-3xl font-semibold text-gray-700">
-            付録：タスクとゲートウェイの解説
-          </h2>
+        <section id="section8" class="content-section mb-5">
+          <h2 class="chapter-title"><span class="eyebrow">APPENDIX</span>付録：図形の早見表・演習・用語集</h2>
+
           <div id="section8-1" class="content-section mt-0">
-            <h3 class="text-2xl font-medium text-gray-700">
-              8.1 タスクの種類
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              タスクは角丸の四角形で表現します。タスクの種類はタスク内の左上に表示されるマーカーの種類で見分けることができます。<br>
-              手作業タスク、何かのルールに基づくタスク、別に定義済のタスクなどを表現することができます。
-            </p>
-            <div class="overflow-x-auto mt-4">
-              <table class="min-w-full">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
-                    <th class="px-4 py-2 text-left">名称</th>
-                    <th class="px-4 py-2 text-left">意味と利用例</th>
-                  </tr>
-                </thead>
+            <h3 class="h4"><span class="eyebrow">A</span>タスクの種類</h3>
+            <p class="mt-2 lh-lg">タスクは角丸の四角形で表現します。タスクの種類はタスク内の左上に表示されるマーカーの種類で見分けることができます。手作業タスク、何かのルールに基づくタスク、別に定義済のタスクなどを表現することができます。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>意味と利用例</th></tr></thead>
                 <tbody>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/abstract.png" alt="抽象タスク" />
-                    </td>
-                    <td class="border px-4 py-2">抽象タスク<br>(Abstract Task)</td>
-                    <td class="border px-4 py-2">
-                      汎用的なタスクです。特定のマーカーを持ちません。<br>
-                      難しく考えず、このタスクだけで業務フローを記載しても間違いではありません。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg></td>
+      <td class="name-cell">抽象タスク<small>Abstract Task</small></td>
+      <td>汎用的なタスクです。特定のマーカーを持ちません。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_manual.png" alt="手作業タスク" />
-                    </td>
-                    <td class="border px-4 py-2">手作業タスク<br>(Manual Task)</td>
-                    <td class="border px-4 py-2">
-                      システムを使用せずに人間が行う作業を表します。<br>
-                      例：宛名書き、物理的検査。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><path d="M10 20 v6 a2 2 0 0 0 2 2 h6 a2 2 0 0 0 2-2 v-7 M12 19 v-3 a1.4 1.4 0 0 1 2.8 0 v3 M14.8 19 v-4 a1.4 1.4 0 0 1 2.8 0 v4 M17.6 19 v-3 a1.4 1.4 0 0 1 2.8 0 v3" fill="none" stroke="#495057" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,-2) scale(0.9) translate(1,2)"/></svg></td>
+      <td class="name-cell">手作業タスク<small>Manual Task</small></td>
+      <td>システムを使用せずに人間が行う作業を表します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_user.png" alt="ユーザタスク" />
-                    </td>
-                    <td class="border px-4 py-2">ユーザタスク<br>(User Task)</td>
-                    <td class="border px-4 py-2">
-                      人間が行う作業です。システムを使用する場合もこれに含まれます。<br>
-                      例：システムへのデータ入力、承認作業。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="16" r="3.2" fill="none" stroke="#495057" stroke-width="1.3"/><path d="M9 25 c0-4 3-6 6-6 s6 2 6 6" fill="none" stroke="#495057" stroke-width="1.3" stroke-linecap="round"/></svg></td>
+      <td class="name-cell">ユーザタスク<small>User Task</small></td>
+      <td>人間が行う作業（システム使用を含む）を表します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_service.png" alt="サービスタスク" />
-                    </td>
-                    <td class="border px-4 py-2">サービスタスク<br>(Service Task)</td>
-                    <td class="border px-4 py-2">
-                      システムやアプリケーションが実行する処理を表します。この場合人の介在はありません。<br>
-                      例：データベースの更新、APIの呼び出しなど。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="15" cy="19" r="4.5" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="19.5" y1="19.0" x2="21.6" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="18.181980515339465" y1="22.181980515339465" x2="19.66690475583121" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="23.5" x2="15.0" y2="25.6" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="22.181980515339465" x2="10.333095244168787" y2="23.66690475583121" stroke="#495057" stroke-width="1.5"/><line x1="10.5" y1="19.0" x2="8.4" y2="19.0" stroke="#495057" stroke-width="1.5"/><line x1="11.818019484660535" y1="15.818019484660535" x2="10.333095244168785" y2="14.333095244168787" stroke="#495057" stroke-width="1.5"/><line x1="15.0" y1="14.5" x2="14.999999999999998" y2="12.4" stroke="#495057" stroke-width="1.5"/><line x1="18.18198051533946" y1="15.818019484660535" x2="19.66690475583121" y2="14.333095244168785" stroke="#495057" stroke-width="1.5"/><circle cx="15" cy="19" r="1.6" fill="#ffffff" stroke="#495057" stroke-width="1"/></svg></td>
+      <td class="name-cell">サービスタスク<small>Service Task</small></td>
+      <td>システムやアプリケーションが実行する処理を表します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_script.png" alt="スクリプトタスク" />
-                    </td>
-                    <td class="border px-4 py-2">スクリプトタスク<br>(Script Task)</td>
-                    <td class="border px-4 py-2">
-                      あまり業務担当部署で使うことはないかもしれませんが、プログラムやスクリプトを実行するタスクを表します。<br>
-                      例：文字コード変換ツール実行
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><path d="M10 14 h10 l3 3 v9 h-13 z" fill="#ffffff" stroke="#495057" stroke-width="1.2" stroke-linejoin="round"/><path d="M20 14 v3 h3" fill="none" stroke="#495057" stroke-width="1.1"/><line x1="12" y1="20" x2="20" y2="20" stroke="#495057" stroke-width="1"/><line x1="12" y1="23" x2="20" y2="23" stroke="#495057" stroke-width="1"/></svg></td>
+      <td class="name-cell">スクリプトタスク<small>Script Task</small></td>
+      <td>プログラムやスクリプトを実行するタスクを表します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/task_business_rule.png" alt="ビジネスルールタスク" />
-                    </td>
-                    <td class="border px-4 py-2">ビジネスルールタスク<br>(Business Rule Task)</td>
-                    <td class="border px-4 py-2">
-                      こちらも参考程度に、ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。<br>
-                      例：ローン審査の自動判定。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="9" y="14" width="16" height="12" fill="#ffffff" stroke="#495057" stroke-width="1.2"/><line x1="9" y1="18.5" x2="25" y2="18.5" stroke="#495057" stroke-width="1"/><line x1="15.5" y1="14" x2="15.5" y2="26" stroke="#495057" stroke-width="1"/></svg></td>
+      <td class="name-cell">ビジネスルールタスク<small>Business Rule Task</small></td>
+      <td>ビジネスルールエンジンを使用して判断や計算を行うタスクを表します。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="9" width="36" height="26" rx="5" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="17.5" y="28" width="9" height="9" fill="#ffffff" stroke="#495057" stroke-width="1.2"/><line x1="19.4" y1="32.5" x2="24.6" y2="32.5" stroke="#495057" stroke-width="1.1"/><line x1="22" y1="29.9" x2="22" y2="35.1" stroke="#495057" stroke-width="1.1"/></svg></td>
+      <td class="name-cell">サブプロセス<small>Sub-Process</small></td>
+      <td>複数の手順をひとまとまりに折りたたんで表現します。＋マークで展開できます（2.5節参照）。</td>
+    </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div id="section8-2" class="content-section mt-0">
-            <h3 class="text-2xl font-medium text-gray-700">
-              8.2 ゲートウェイの種類
-            </h3>
-            <p class="mt-2 leading-relaxed">
-              ゲートウェイを適切に記載することはBPMNの利用において非常に重要です。以下に解説します。
-            </p>
-            <div class="overflow-x-auto mt-4">
-              <table class="min-w-full">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 text-left">図形 (イメージ)</th>
-                    <th class="px-4 py-2 text-left">名称</th>
-                    <th class="px-4 py-2 text-left">意味と利用例</th>
-                  </tr>
-                </thead>
+
+          <div id="section8-2" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">B</span>ゲートウェイの種類</h3>
+            <p class="mt-2 lh-lg">ゲートウェイを適切に記載することはBPMNの利用において非常に重要です。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>意味と利用例</th></tr></thead>
                 <tbody>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/gateway_exclusive.png" alt="排他ゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">排他ゲートウェイ<br>(Exclusive Gateway)</td>
-                    <td class="border px-4 py-2">
-                      条件に基づいて唯一の経路を選択します。最も基本的なゲートウェイです。<br>
-                      例：YESかNO、承認済みか否かで分岐。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="16" y1="16" x2="28" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/><line x1="28" y1="16" x2="16" y2="28" stroke="#495057" stroke-width="2.2" stroke-linecap="round"/></svg></td>
+      <td class="name-cell">排他ゲートウェイ<small>Exclusive Gateway</small></td>
+      <td>条件に基づいて唯一の経路を選択します。最も基本的なゲートウェイです。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/gateway_parallel.png" alt="並行ゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">並行ゲートウェイ<br>(Parallel Gateway)</td>
-                    <td class="border px-4 py-2">
-                      複数の経路を同時に実行し、終了は同期しその後のに進みます。<br>
-                      例：複数部署への同時通知。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="14" y1="22" x2="30" y2="22" stroke="#495057" stroke-width="2.2"/><line x1="22" y1="14" x2="22" y2="30" stroke="#495057" stroke-width="2.2"/></svg></td>
+      <td class="name-cell">並行ゲートウェイ<small>Parallel Gateway</small></td>
+      <td>複数の経路を同時に実行し、終了は同期します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/gateway_inclusive.png" alt="包含ゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">包含ゲートウェイ<br>(Inclusive Gateway)</td>
-                    <td class="border px-4 py-2">
-                      条件に基づいて1つ以上の経路を選択します。排他ゲートウェイと並行ゲートウェイの中間の性質です。<br>
-                      例：複数の条件に基づく選択肢。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><circle cx="22" cy="22" r="8.5" fill="none" stroke="#495057" stroke-width="2.2"/></svg></td>
+      <td class="name-cell">包含ゲートウェイ<small>Inclusive Gateway</small></td>
+      <td>条件に基づいて1つ以上の経路を選択します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/gateway_event_based.png" alt="イベントベースゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">イベントベースゲートウェイ<br>(Event-Based Gateway)</td>
-                    <td class="border px-4 py-2">
-                      発生したイベントに基づいて経路を選択します。<br>
-                      例：ユーザーの応答待ち。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><circle cx="22" cy="22" r="9.5" fill="none" stroke="#495057" stroke-width="1.1"/><polygon points="22.0,14.0 29.60845213036123,19.52786404500042 26.702282018339787,28.47213595499958 17.297717981660217,28.47213595499958 14.39154786963877,19.52786404500042" fill="none" stroke="#495057" stroke-width="1.1"/></svg></td>
+      <td class="name-cell">イベントベースゲートウェイ<small>Event-Based Gateway</small></td>
+      <td>発生したイベントに基づいて経路を選択します。</td>
+    </tr>
                   <tr>
-                    <td class="border px-4 py-2">
-                      <img src="./images/gateway_complex.png" alt="複合ゲートウェイ" />
-                    </td>
-                    <td class="border px-4 py-2">複合ゲートウェイ<br>(Complex Gateway)</td>
-                    <td class="border px-4 py-2">
-                      複雑な条件に基づいて経路を制御します。<br>
-                      例：特定の条件を満たす経路の組み合わせ。
-                    </td>
-                  </tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="22,4 40,22 22,40 4,22" fill="#ffffff" stroke="#495057" stroke-width="1.6" stroke-linejoin="round"/><line x1="22" y1="22" x2="30.0" y2="22.0" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/><line x1="22" y1="22" x2="26.0" y2="28.928203230275507" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/><line x1="22" y1="22" x2="18.0" y2="28.92820323027551" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/><line x1="22" y1="22" x2="14.0" y2="22.0" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/><line x1="22" y1="22" x2="17.999999999999996" y2="15.071796769724493" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/><line x1="22" y1="22" x2="26.0" y2="15.071796769724491" stroke="#495057" stroke-width="1.8" stroke-linecap="round"/></svg></td>
+      <td class="name-cell">複合ゲートウェイ<small>Complex Gateway</small></td>
+      <td>複雑な条件に基づいて経路を制御します。</td>
+    </tr>
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <div id="section8-3" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">C</span>イベントの種類一覧</h3>
+            <p class="mt-2 lh-lg">第2.4節・2.5節で解説したイベントを、開始・中間・境界・終了の4カテゴリで一覧にまとめました。</p>
+            <div class="table-responsive mt-3">
+              <table class="table table-bordered icon-table mb-0">
+                <thead><tr><th style="width:76px">図形</th><th>名称</th><th>意味と利用例</th></tr></thead>
+                <tbody>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/></svg></td>
+      <td class="name-cell">開始イベント<small>None Start</small></td>
+      <td>トリガー指定のない標準的な開始点。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">メッセージ開始<small>Message Start</small></td>
+      <td>他者からのメッセージでプロセスが開始する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><circle cx="22" cy="22" r="9" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="15.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="27" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="30.0" y1="22.0" x2="32.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.92820323027551" y1="26.0" x2="31.17986928011505" y2="27.299999999999997" stroke="#495057" stroke-width="0.9"/><line x1="26.0" y1="28.928203230275507" x2="27.3" y2="31.17986928011505" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="30.0" x2="22.0" y2="32.6" stroke="#495057" stroke-width="0.9"/><line x1="18.0" y1="28.92820323027551" x2="16.700000000000003" y2="31.17986928011505" stroke="#495057" stroke-width="0.9"/><line x1="15.07179676972449" y1="26.0" x2="12.82013071988495" y2="27.299999999999997" stroke="#495057" stroke-width="0.9"/><line x1="14.0" y1="22.0" x2="11.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.071796769724491" y1="18.0" x2="12.82013071988495" y2="16.7" stroke="#495057" stroke-width="0.9"/><line x1="17.999999999999996" y1="15.071796769724493" x2="16.699999999999996" y2="12.820130719884954" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="14.0" x2="21.999999999999996" y2="11.4" stroke="#495057" stroke-width="0.9"/><line x1="26.0" y1="15.071796769724491" x2="27.3" y2="12.82013071988495" stroke="#495057" stroke-width="0.9"/><line x1="28.928203230275507" y1="17.999999999999996" x2="31.179869280115046" y2="16.699999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">タイマー開始<small>Timer Start</small></td>
+      <td>特定の日時・周期でプロセスが開始する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="1.6"/><rect x="15" y="15" width="14" height="14" fill="none" stroke="#495057" stroke-width="1.2"/><line x1="16" y1="18" x2="28" y2="18" stroke="#495057" stroke-width="1" /><line x1="16" y1="22" x2="28" y2="22" stroke="#495057" stroke-width="1" /><line x1="16" y1="26" x2="28" y2="26" stroke="#495057" stroke-width="1" /></svg></td>
+      <td class="name-cell">条件開始<small>Conditional Start</small></td>
+      <td>特定の条件が真になった時点でプロセスが開始する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/></svg></td>
+      <td class="name-cell">中間イベント（無印）<small>None Intermediate</small></td>
+      <td>特に条件を指定しない中間の目印。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">中間メッセージ受信<small>Intermediate Message</small></td>
+      <td>途中で他者からのメッセージを待って先に進む。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">中間タイマー<small>Intermediate Timer</small></td>
+      <td>一定時間・特定日時まで処理を待機させる。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="none" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">境界メッセージ<small>Boundary Message</small></td>
+      <td>タスク実行中のメッセージ割り込みで例外ルートへ分岐。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">境界タイマー（中断）<small>Boundary Timer（中断）</small></td>
+      <td>期限超過でタスクを中断し例外ルートへ分岐。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4" stroke-dasharray="3,2.4"/><circle cx="22" cy="22" r="8" fill="none" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="22" y2="16.5" stroke="#495057" stroke-width="1.3"/><line x1="22" y1="22" x2="26" y2="22" stroke="#495057" stroke-width="1.3"/><line x1="29.0" y1="22.0" x2="31.6" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="28.062177826491073" y1="25.5" x2="30.313843876330612" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="28.06217782649107" x2="26.8" y2="30.31384387633061" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="29.0" x2="22.0" y2="31.6" stroke="#495057" stroke-width="0.9"/><line x1="18.5" y1="28.062177826491073" x2="17.200000000000003" y2="30.313843876330612" stroke="#495057" stroke-width="0.9"/><line x1="15.937822173508929" y1="25.5" x2="13.686156123669388" y2="26.799999999999997" stroke="#495057" stroke-width="0.9"/><line x1="15.0" y1="22.0" x2="12.4" y2="22.0" stroke="#495057" stroke-width="0.9"/><line x1="15.93782217350893" y1="18.5" x2="13.68615612366939" y2="17.2" stroke="#495057" stroke-width="0.9"/><line x1="18.499999999999996" y1="15.93782217350893" x2="17.199999999999996" y2="13.686156123669392" stroke="#495057" stroke-width="0.9"/><line x1="22.0" y1="15.0" x2="22.0" y2="12.4" stroke="#495057" stroke-width="0.9"/><line x1="25.5" y1="15.93782217350893" x2="26.8" y2="13.68615612366939" stroke="#495057" stroke-width="0.9"/><line x1="28.06217782649107" y1="18.499999999999996" x2="30.31384387633061" y2="17.199999999999996" stroke="#495057" stroke-width="0.9"/></svg></td>
+      <td class="name-cell">境界タイマー（非中断）<small>Boundary Timer（非中断）</small></td>
+      <td>元のタスクを継続しつつ並行して例外ルートを開始。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="#ffffff" stroke="#495057" stroke-width="1.4"/><circle cx="22" cy="22" r="12.5" fill="none" stroke="#495057" stroke-width="1.4"/><polygon points="20,13 25,21 21,21 24,31 18,23 22,23" fill="#495057" stroke="#495057" stroke-width="0.6" stroke-linejoin="round"/></svg></td>
+      <td class="name-cell">境界エラー<small>Boundary Error</small></td>
+      <td>タスク内のエラー発生時に専用の処理ルートへ分岐。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/></svg></td>
+      <td class="name-cell">終了イベント<small>None End</small></td>
+      <td>結果を指定しない標準的な終了点。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><rect x="14.0" y="16.5" width="16" height="11" rx="1" fill="#495057" stroke="#495057" stroke-width="1.3"/><polyline points="14.0,16.5 22,23 30.0,16.5" fill="none" stroke="#495057" stroke-width="1.3"/></svg></td>
+      <td class="name-cell">メッセージ終了<small>Message End</small></td>
+      <td>終了とともに他者へメッセージを送信する。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><polygon points="20,13 25,21 21,21 24,31 18,23 22,23" fill="#495057" stroke="#495057" stroke-width="0.6" stroke-linejoin="round"/></svg></td>
+      <td class="name-cell">エラー終了<small>Error End</small></td>
+      <td>異常な状態でプロセスを終了させる。</td>
+    </tr>
+                  <tr>
+      <td class="icon-cell"><svg viewBox="0 0 44 44" style="width:40px;height:40px" class="bpmn-icon " xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#ffffff" stroke="#495057" stroke-width="2.6"/><circle cx="22" cy="22" r="8" fill="#495057"/></svg></td>
+      <td class="name-cell">強制終了<small>Terminate End</small></td>
+      <td>進行中の全活動を含め直ちにプロセスを終了させる。</td>
+    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="section8-4" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">D</span>理解度チェック</h3>
+            <p class="mt-2 lh-lg">図を見直す際のセルフチェックリストと、本ハンドブックの理解度を確認できる小テストです。ブラウザ上で完結し、結果は保存されません（ページを再読み込みするとリセットされます）。</p>
+
+            <h4 class="h6 fw-bold mt-4">D-1　自己点検チェックリスト</h4>
+            <div class="card-soft mt-2">
+              <div class="checklist-item" id="ci-0">
+          <input type="checkbox" id="chk-0" onchange="toggleCheck(0)">
+          <label for="chk-0">フローは左から右に流れているか</label>
+        </div><div class="checklist-item" id="ci-1">
+          <input type="checkbox" id="chk-1" onchange="toggleCheck(1)">
+          <label for="chk-1">全てのタスク・イベントに具体的な名称が付いているか（「対応する」等の曖昧な表現になっていないか）</label>
+        </div><div class="checklist-item" id="ci-2">
+          <input type="checkbox" id="chk-2" onchange="toggleCheck(2)">
+          <label for="chk-2">各レーンに「誰が」行うかが明確に割り当てられているか</label>
+        </div><div class="checklist-item" id="ci-3">
+          <input type="checkbox" id="chk-3" onchange="toggleCheck(3)">
+          <label for="chk-3">分岐したゲートウェイは、適切な場所で合流しているか</label>
+        </div><div class="checklist-item" id="ci-4">
+          <input type="checkbox" id="chk-4" onchange="toggleCheck(4)">
+          <label for="chk-4">境界イベントの中断／非中断（実線／破線）を正しく使い分けているか</label>
+        </div><div class="checklist-item" id="ci-5">
+          <input type="checkbox" id="chk-5" onchange="toggleCheck(5)">
+          <label for="chk-5">図が複雑になりすぎていないか（1ページに収まっているか、サブプロセス化を検討したか）</label>
+        </div><div class="checklist-item" id="ci-6">
+          <input type="checkbox" id="chk-6" onchange="toggleCheck(6)">
+          <label for="chk-6">開始イベントと終了イベントが過不足なく配置されているか</label>
+        </div>
+            </div>
+
+            <h4 class="h6 fw-bold mt-4">D-2　理解度クイズ（全7問）</h4>
+            <div class="card-soft quiz-score mb-3 py-2 px-3 d-flex justify-content-between align-items-center">
+              <span>正解数</span>
+              <strong><span id="quiz-score-val">0</span> / 7</strong>
+            </div>
+            <div class="quiz-card" id="quiz-0">
+          <div class="quiz-q">Q1. 「太い線の円」で表現されるBPMNの図形はどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(0,0,1)" id="opt-0-0"><span class="oc">A</span><span>開始イベント</span></div><div class="quiz-opt" onclick="answerQuiz(0,1,1)" id="opt-0-1"><span class="oc">B</span><span>終了イベント</span></div><div class="quiz-opt" onclick="answerQuiz(0,2,1)" id="opt-0-2"><span class="oc">C</span><span>中間イベント</span></div><div class="quiz-opt" onclick="answerQuiz(0,3,1)" id="opt-0-3"><span class="oc">D</span><span>境界イベント</span></div>
+          <div class="quiz-explain" id="exp-0">終了イベントは太い線の円で表現されます。細い線は開始イベント、二重の細い線は中間イベント・境界イベントです。</div>
+        </div><div class="quiz-card" id="quiz-1">
+          <div class="quiz-q">Q2. 「誰かからの連絡（回答）を待って処理を進める」場合に使うイベントはどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(1,0,1)" id="opt-1-0"><span class="oc">A</span><span>タイマーイベント</span></div><div class="quiz-opt" onclick="answerQuiz(1,1,1)" id="opt-1-1"><span class="oc">B</span><span>メッセージイベント</span></div><div class="quiz-opt" onclick="answerQuiz(1,2,1)" id="opt-1-2"><span class="oc">C</span><span>エラーイベント</span></div><div class="quiz-opt" onclick="answerQuiz(1,3,1)" id="opt-1-3"><span class="oc">D</span><span>終了（強制終了）イベント</span></div>
+          <div class="quiz-explain" id="exp-1">他者からの連絡・情報の到着を待つ場合はメッセージイベント（封筒アイコン）を使います。一定時間の経過を待つ場合はタイマーイベントです。</div>
+        </div><div class="quiz-card" id="quiz-2">
+          <div class="quiz-q">Q3. 境界イベントの外枠が「破線の二重丸」の場合、元のタスクはどうなりますか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(2,0,1)" id="opt-2-0"><span class="oc">A</span><span>直ちに中断される</span></div><div class="quiz-opt" onclick="answerQuiz(2,1,1)" id="opt-2-1"><span class="oc">B</span><span>中断せず、並行して例外ルートが開始する</span></div><div class="quiz-opt" onclick="answerQuiz(2,2,1)" id="opt-2-2"><span class="oc">C</span><span>自動的に削除される</span></div><div class="quiz-opt" onclick="answerQuiz(2,3,1)" id="opt-2-3"><span class="oc">D</span><span>無視される（意味を持たない）</span></div>
+          <div class="quiz-explain" id="exp-2">破線の二重丸は「非中断（Non-interrupting）」を表し、元のタスクは動いたまま並行して例外ルートが開始します。実線なら「中断」で元のタスクは止まります。</div>
+        </div><div class="quiz-card" id="quiz-3">
+          <div class="quiz-q">Q4. 複数の経路を「同時に」実行し、全て完了してから合流したい場合に使うゲートウェイはどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(3,0,2)" id="opt-3-0"><span class="oc">A</span><span>排他ゲートウェイ</span></div><div class="quiz-opt" onclick="answerQuiz(3,1,2)" id="opt-3-1"><span class="oc">B</span><span>包含ゲートウェイ</span></div><div class="quiz-opt" onclick="answerQuiz(3,2,2)" id="opt-3-2"><span class="oc">C</span><span>並行ゲートウェイ</span></div><div class="quiz-opt" onclick="answerQuiz(3,3,2)" id="opt-3-3"><span class="oc">D</span><span>イベントベースゲートウェイ</span></div>
+          <div class="quiz-explain" id="exp-3">並行ゲートウェイ（Parallel Gateway、＋マーク）は複数経路の同時実行と、その後の同期（全経路の完了待ち）を表現します。</div>
+        </div><div class="quiz-card" id="quiz-4">
+          <div class="quiz-q">Q5. 複数の手順をひとまとまりに折りたたんで表現し、クリックすると内部の詳細フローを展開できる図形はどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(4,0,1)" id="opt-4-0"><span class="oc">A</span><span>データオブジェクト</span></div><div class="quiz-opt" onclick="answerQuiz(4,1,1)" id="opt-4-1"><span class="oc">B</span><span>サブプロセス</span></div><div class="quiz-opt" onclick="answerQuiz(4,2,1)" id="opt-4-2"><span class="oc">C</span><span>プール</span></div><div class="quiz-opt" onclick="answerQuiz(4,3,1)" id="opt-4-3"><span class="oc">D</span><span>アノテーション</span></div>
+          <div class="quiz-explain" id="exp-4">下部中央に＋マークの付いた角丸四角形がサブプロセスです。クリックすると内部の詳細な図が展開されます。</div>
+        </div><div class="quiz-card" id="quiz-5">
+          <div class="quiz-q">Q6. 本エディタで、選択した要素にラベル（名称）を付けるショートカットキーはどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(5,0,2)" id="opt-5-0"><span class="oc">A</span><span>H</span></div><div class="quiz-opt" onclick="answerQuiz(5,1,2)" id="opt-5-1"><span class="oc">B</span><span>L</span></div><div class="quiz-opt" onclick="answerQuiz(5,2,2)" id="opt-5-2"><span class="oc">C</span><span>E</span></div><div class="quiz-opt" onclick="answerQuiz(5,3,2)" id="opt-5-3"><span class="oc">D</span><span>S</span></div>
+          <div class="quiz-explain" id="exp-5">要素を選択した状態で E キーを押すとラベル編集ができます。H はハンドツール、L は投げ縄ツール、S はスペースツールです。</div>
+        </div><div class="quiz-card" id="quiz-6">
+          <div class="quiz-q">Q7. 地方自治体で標準化や属人化の解消に繋がるとされる、事務の詳細や例外処理まで記載するBPMNのレベルはどれですか？</div>
+          <div class="quiz-opt" onclick="answerQuiz(6,0,1)" id="opt-6-0"><span class="oc">A</span><span>記述レベル</span></div><div class="quiz-opt" onclick="answerQuiz(6,1,1)" id="opt-6-1"><span class="oc">B</span><span>分析レベル</span></div><div class="quiz-opt" onclick="answerQuiz(6,2,1)" id="opt-6-2"><span class="oc">C</span><span>実行可能レベル</span></div><div class="quiz-opt" onclick="answerQuiz(6,3,1)" id="opt-6-3"><span class="oc">D</span><span>概要レベル</span></div>
+          <div class="quiz-explain" id="exp-6">分析レベルは記述レベルの内容に加え、事務の詳細や例外的な処理までを表記するレベルで、標準化・属人化の解消に繋がるとされています。</div>
+        </div>
+          </div>
+
+          <div id="section8-5" class="content-section mt-5">
+            <h3 class="h4"><span class="eyebrow">E</span>用語集</h3>
+            <dl class="glossary mt-2">
+              <dt class="glossary-term">BPMN</dt><dd>Business Process Model and Notation。業務プロセスを視覚的に記述するための国際標準の表記法。</dd><dt class="glossary-term">プール（Pool）</dt><dd>業務プロセス全体、または1つの組織・参加者を表す大きな枠。</dd><dt class="glossary-term">レーン（Lane）</dt><dd>プール内を役割や担当者ごとに分割する区画。</dd><dt class="glossary-term">シーケンスフロー</dt><dd>要素の実行順序を表す実線の矢印。同一プール内でのみ使用する。</dd><dt class="glossary-term">メッセージフロー</dt><dd>異なるプール間でのメッセージ・情報のやり取りを表す破線の矢印。</dd><dt class="glossary-term">ゲートウェイ</dt><dd>プロセスの分岐・合流を制御する菱形の図形。排他・並行・包含・イベントベース・複合の5種類がある。</dd><dt class="glossary-term">境界イベント</dt><dd>タスクやサブプロセスの外枠上に配置され、実行中に発生しうる例外（メッセージ・タイマー・エラーなど）を表現するイベント。</dd><dt class="glossary-term">サブプロセス</dt><dd>複数の手順をひとまとまりに折りたたんで表現する図形。詳細な内部フローを持つ。</dd><dt class="glossary-term">キャッチ／スロー</dt><dd>キャッチは「イベントの発生を受け取る（待つ）」、スローは「イベントを発生させる（送る）」動作。</dd><dt class="glossary-term">分析レベル</dt><dd>事務の詳細や例外処理まで記載するBPMNの記載レベル。標準化・属人化解消に有効。</dd><dt class="glossary-term">属人化</dt><dd>特定の担当者しか業務内容を詳細に把握していない状態。標準化により解消が期待される。</dd><dt class="glossary-term">BPMN 2.0</dt><dd>2011年にOMG（Object Management Group）によって標準化されたBPMNの最新版仕様。</dd>
+            </dl>
           </div>
         </section>
 
-        <footer
-          class="mt-12 pt-8 border-t border-gray-300 text-center text-gray-500"
-        >
-          <p>&copy; 2025 Masahiro ARAKANE</p>
+        <footer class="mt-5 pt-4 border-top text-center text-secondary">
+          <p>&copy; 2025-2026 Masahiro ARAKANE</p>
         </footer>
       </main>
     </div>
@@ -1094,22 +1081,12 @@
           const targetId = this.getAttribute("href");
           const targetElement = document.querySelector(targetId);
           if (targetElement) {
-            targetElement.scrollIntoView({
-              behavior: "smooth",
-            });
-
-            // Optional: Basic active link styling (can be enhanced)
-            document
-              .querySelectorAll(".toc a")
-              .forEach((link) =>
-                link.classList.remove("font-bold", "text-blue-600")
-              );
-            this.classList.add("font-bold", "text-blue-600");
+            targetElement.scrollIntoView({ behavior: "smooth" });
           }
         });
       });
 
-      // Highlight TOC link based on scroll position (basic implementation)
+      // Highlight TOC link based on scroll position
       const sections = document.querySelectorAll(".content-section[id]");
       const tocLinks = document.querySelectorAll(".toc a");
 
@@ -1117,30 +1094,45 @@
         let current = "";
         sections.forEach((section) => {
           const sectionTop = section.offsetTop;
-          if (pageYOffset >= sectionTop - 70) {
-            // 70 is an offset
+          if (window.pageYOffset >= sectionTop - 90) {
             current = section.getAttribute("id");
           }
         });
 
         tocLinks.forEach((link) => {
-          link.classList.remove("font-bold", "text-blue-600");
-          if (link.getAttribute("href").includes(current) && current !== "") {
-            // Find the exact link or parent link for sub-sections
-            if (
-              link.getAttribute("href") === `#${current}` ||
-              document.querySelector(`a[href="#${current}"]`).contains(link)
-            ) {
-              link.classList.add("font-bold", "text-blue-600");
-            }
+          link.classList.remove("active");
+          if (current !== "" && link.getAttribute("href") === `#${current}`) {
+            link.classList.add("active");
           }
         });
-        // If no section is "current" (e.g., at the very top or bottom), clear all active states or set a default
-        if (current === "") {
-          // Optionally, highlight the first link or clear all
-          // tocLinks[0].classList.add('font-bold', 'text-blue-600'); // Example: highlight first
-        }
       });
+
+      // ---- Checklist ----
+      function toggleCheck(i) {
+        const item = document.getElementById("ci-" + i);
+        const box = document.getElementById("chk-" + i);
+        item.classList.toggle("done", box.checked);
+      }
+
+      // ---- Quiz ----
+      const quizAnswered = {};
+      let quizScore = 0;
+      function answerQuiz(qIndex, optIndex, correctIndex) {
+        if (quizAnswered[qIndex] !== undefined) return; // already answered
+        quizAnswered[qIndex] = optIndex;
+        const card = document.getElementById("quiz-" + qIndex);
+        const opts = card.querySelectorAll(".quiz-opt");
+        opts.forEach((el, idx) => {
+          el.style.pointerEvents = "none";
+          if (idx === correctIndex) el.classList.add("correct");
+          if (idx === optIndex && optIndex !== correctIndex) el.classList.add("wrong");
+        });
+        document.getElementById("exp-" + qIndex).classList.add("show");
+        if (optIndex === correctIndex) {
+          quizScore++;
+          document.getElementById("quiz-score-val").textContent = quizScore;
+        }
+      }
     </script>
   </body>
 </html>
