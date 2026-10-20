@@ -1,0 +1,590 @@
+/**
+ * Flow Canvas - デジタル庁デザインシステム (DADS) コンポーネントスタイル
+ * Digital Agency Design System Components
+ */
+
+/* ==========================================================================
+   リセット & ベース (Reset & Base)
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--dads-font-family);
+  font-size: var(--dads-font-size-base);
+  line-height: var(--dads-line-height-normal);
+  color: var(--dads-color-text-main);
+  background-color: var(--dads-color-bg-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   フォーカススタイル (Accessibility Focus Ring)
+   JIS X 8341-3 / WCAG 2.1 AA 準拠
+   ========================================================================== */
+:focus-visible {
+  outline: var(--dads-focus-ring) !important;
+  outline-offset: var(--dads-focus-offset) !important;
+}
+
+/* ==========================================================================
+   ヘッダー (Global Header)
+   ========================================================================== */
+.dads-header {
+  height: 60px;
+  background-color: var(--dads-color-bg-white);
+  border-bottom: 1px solid var(--dads-color-border-divider);
+  box-shadow: var(--dads-shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--dads-space-4);
+  position: relative;
+  z-index: 100;
+}
+
+.dads-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--dads-space-3);
+}
+
+.dads-header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--dads-space-2);
+  text-decoration: none;
+  color: var(--dads-color-text-main);
+}
+
+.dads-header-logo svg {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.dads-header-title {
+  font-size: var(--dads-font-size-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.dads-header-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--dads-color-border-subtle);
+}
+
+/* ドキュメント状態表示 (Doc Info & Status) */
+.dads-doc-info {
+  display: flex;
+  align-items: center;
+  gap: var(--dads-space-2);
+}
+
+.dads-doc-filename {
+  font-size: var(--dads-font-size-sm);
+  font-weight: 500;
+  color: var(--dads-color-text-sub);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ヘッダー右側のアクションツールバー */
+.dads-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--dads-space-2);
+}
+
+/* ==========================================================================
+   ボタンコンポーネント (Button Component)
+   最小タッチターゲット44px確保
+   ========================================================================== */
+.dads-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dads-space-2);
+  min-height: var(--dads-min-touch-target);
+  padding: 0 var(--dads-space-4);
+  font-family: inherit;
+  font-size: var(--dads-font-size-sm);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--dads-radius-md);
+  transition: background-color var(--dads-transition-fast),
+              color var(--dads-transition-fast),
+              border-color var(--dads-transition-fast),
+              box-shadow var(--dads-transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dads-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* プライマリボタン (濃紺塗り) */
+.dads-btn--primary {
+  background-color: var(--dads-color-primary);
+  color: var(--dads-color-text-reverse);
+  border: 1px solid var(--dads-color-primary);
+}
+
+.dads-btn--primary:hover {
+  background-color: var(--dads-color-primary-hover);
+  border-color: var(--dads-color-primary-hover);
+}
+
+.dads-btn--primary:active {
+  background-color: var(--dads-color-primary-active);
+  border-color: var(--dads-color-primary-active);
+}
+
+/* セカンダリボタン (アウトライン) */
+.dads-btn--secondary {
+  background-color: var(--dads-color-bg-white);
+  color: var(--dads-color-primary);
+  border: 1px solid var(--dads-color-border-default);
+}
+
+.dads-btn--secondary:hover {
+  background-color: var(--dads-color-primary-light);
+  border-color: var(--dads-color-primary);
+}
+
+.dads-btn--secondary:active {
+  background-color: var(--dads-color-primary-light-hover);
+}
+
+/* ターシャリ / ゴーストボタン */
+.dads-btn--tertiary {
+  background-color: transparent;
+  color: var(--dads-color-text-main);
+  border: 1px solid transparent;
+}
+
+.dads-btn--tertiary:hover {
+  background-color: var(--dads-color-bg-subtle);
+}
+
+.dads-btn--tertiary:active {
+  background-color: var(--dads-color-border-divider);
+}
+
+/* デンジャーボタン (削除・破棄) */
+.dads-btn--danger {
+  background-color: var(--dads-color-error);
+  color: var(--dads-color-text-reverse);
+  border: 1px solid var(--dads-color-error);
+}
+
+.dads-btn--danger:hover {
+  background-color: #a61218;
+  border-color: #a61218;
+}
+
+/* アイコン専用ボタン */
+.dads-btn--icon {
+  width: var(--dads-min-touch-target);
+  height: var(--dads-min-touch-target);
+  padding: 0;
+  min-width: var(--dads-min-touch-target);
+}
+
+/* ボタンサイズバリエーション */
+.dads-btn--sm {
+  min-height: 36px;
+  padding: 0 var(--dads-space-3);
+  font-size: var(--dads-font-size-xs);
+}
+
+/* ==========================================================================
+   バッジ (Badges)
+   ========================================================================== */
+.dads-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dads-space-1);
+  padding: 2px 8px;
+  font-size: var(--dads-font-size-xs);
+  font-weight: 700;
+  border-radius: var(--dads-radius-pill);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.dads-badge--warning {
+  background-color: var(--dads-color-warning-bg);
+  color: var(--dads-color-warning);
+  border: 1px solid var(--dads-color-warning-border);
+}
+
+.dads-badge--success {
+  background-color: var(--dads-color-success-bg);
+  color: var(--dads-color-success);
+  border: 1px solid var(--dads-color-success-border);
+}
+
+.dads-badge--info {
+  background-color: var(--dads-color-info-bg);
+  color: var(--dads-color-info);
+  border: 1px solid var(--dads-color-info-border);
+}
+
+/* ==========================================================================
+   通知バナー / トースト (Notification Banner)
+   ========================================================================== */
+.dads-notification-banner {
+  position: fixed;
+  top: 76px;
+  right: var(--dads-space-5);
+  max-width: 480px;
+  min-width: 320px;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dads-space-3);
+  padding: var(--dads-space-4);
+  border-radius: var(--dads-radius-md);
+  border: 1px solid;
+  box-shadow: var(--dads-shadow-lg);
+  font-size: var(--dads-font-size-sm);
+  line-height: var(--dads-line-height-normal);
+  transition: transform var(--dads-transition-normal), opacity var(--dads-transition-normal);
+}
+
+.dads-notification-banner[hidden] {
+  display: none !important;
+}
+
+.dads-notification-banner--error {
+  background-color: var(--dads-color-error-bg);
+  border-color: var(--dads-color-error);
+  color: var(--dads-color-text-main);
+}
+.dads-notification-banner--error .dads-notification-icon {
+  color: var(--dads-color-error);
+}
+
+.dads-notification-banner--success {
+  background-color: var(--dads-color-success-bg);
+  border-color: var(--dads-color-success);
+  color: var(--dads-color-text-main);
+}
+.dads-notification-banner--success .dads-notification-icon {
+  color: var(--dads-color-success);
+}
+
+.dads-notification-banner--warning {
+  background-color: var(--dads-color-warning-bg);
+  border-color: var(--dads-color-warning);
+  color: var(--dads-color-text-main);
+}
+.dads-notification-banner--warning .dads-notification-icon {
+  color: var(--dads-color-warning);
+}
+
+.dads-notification-banner--info {
+  background-color: var(--dads-color-info-bg);
+  border-color: var(--dads-color-info);
+  color: var(--dads-color-text-main);
+}
+.dads-notification-banner--info .dads-notification-icon {
+  color: var(--dads-color-info);
+}
+
+.dads-notification-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.dads-notification-content {
+  flex-grow: 1;
+}
+
+.dads-notification-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.dads-notification-body {
+  margin: 0;
+  word-break: break-word;
+}
+
+.dads-notification-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px -4px 0 0;
+  color: var(--dads-color-text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--dads-radius-sm);
+}
+
+.dads-notification-close:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: var(--dads-color-text-main);
+}
+
+/* ==========================================================================
+   モーダルダイアログ (Native Dialog Component)
+   ========================================================================== */
+.dads-dialog {
+  border: none;
+  border-radius: var(--dads-radius-lg);
+  box-shadow: var(--dads-shadow-dialog);
+  padding: 0;
+  width: 90%;
+  max-width: 540px;
+  background-color: var(--dads-color-bg-white);
+  color: var(--dads-color-text-main);
+}
+
+.dads-dialog--wide {
+  max-width: 780px;
+}
+
+.dads-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.dads-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dads-space-4) var(--dads-space-6);
+  border-bottom: 1px solid var(--dads-color-border-divider);
+}
+
+.dads-dialog-title {
+  margin: 0;
+  font-size: var(--dads-font-size-xl);
+  font-weight: 700;
+}
+
+.dads-dialog-close {
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--dads-radius-md);
+  color: var(--dads-color-text-sub);
+}
+
+.dads-dialog-close:hover {
+  background-color: var(--dads-color-bg-subtle);
+  color: var(--dads-color-text-main);
+}
+
+.dads-dialog-body {
+  padding: var(--dads-space-6);
+  max-height: calc(85vh - 140px);
+  overflow-y: auto;
+}
+
+.dads-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--dads-space-3);
+  padding: var(--dads-space-4) var(--dads-space-6);
+  border-top: 1px solid var(--dads-color-border-divider);
+  background-color: var(--dads-color-bg-surface);
+  border-bottom-left-radius: var(--dads-radius-lg);
+  border-bottom-right-radius: var(--dads-radius-lg);
+}
+
+/* ==========================================================================
+   フォームコントロール (Form Controls)
+   ========================================================================== */
+.dads-form-group {
+  margin-bottom: var(--dads-space-4);
+}
+
+.dads-label {
+  display: block;
+  font-size: var(--dads-font-size-sm);
+  font-weight: 700;
+  margin-bottom: var(--dads-space-2);
+  color: var(--dads-color-text-main);
+}
+
+.dads-input-text {
+  width: 100%;
+  min-height: var(--dads-min-touch-target);
+  padding: var(--dads-space-2) var(--dads-space-3);
+  font-family: inherit;
+  font-size: var(--dads-font-size-base);
+  border: 1px solid var(--dads-color-border-default);
+  border-radius: var(--dads-radius-md);
+  background-color: var(--dads-color-bg-white);
+  color: var(--dads-color-text-main);
+  transition: border-color var(--dads-transition-fast), box-shadow var(--dads-transition-fast);
+}
+
+.dads-input-text:focus {
+  border-color: var(--dads-color-primary);
+}
+
+.dads-form-help {
+  display: block;
+  margin-top: var(--dads-space-1);
+  font-size: var(--dads-font-size-xs);
+  color: var(--dads-color-text-sub);
+}
+
+/* ==========================================================================
+   テンプレート選択グリッド (Template Grid)
+   ========================================================================== */
+.dads-template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--dads-space-4);
+}
+
+.dads-template-card {
+  border: 1px solid var(--dads-color-border-subtle);
+  border-radius: var(--dads-radius-md);
+  padding: var(--dads-space-4);
+  background-color: var(--dads-color-bg-white);
+  cursor: pointer;
+  transition: border-color var(--dads-transition-fast),
+              box-shadow var(--dads-transition-fast),
+              transform var(--dads-transition-fast);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.dads-template-card:hover {
+  border-color: var(--dads-color-primary);
+  box-shadow: var(--dads-shadow-md);
+  transform: translateY(-2px);
+}
+
+.dads-template-card.is-selected {
+  border: 2px solid var(--dads-color-primary);
+  background-color: var(--dads-color-primary-light);
+}
+
+.dads-template-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dads-radius-md);
+  background-color: var(--dads-color-primary-light);
+  color: var(--dads-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--dads-space-3);
+}
+
+.dads-template-card-title {
+  font-size: var(--dads-font-size-base);
+  font-weight: 700;
+  margin: 0 0 var(--dads-space-2) 0;
+  color: var(--dads-color-text-main);
+}
+
+.dads-template-card-desc {
+  font-size: var(--dads-font-size-sm);
+  color: var(--dads-color-text-sub);
+  margin: 0;
+  line-height: var(--dads-line-height-normal);
+  flex-grow: 1;
+}
+
+/* ==========================================================================
+   ショートカット一覧テーブル (Shortcuts Table)
+   ========================================================================== */
+.dads-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--dads-font-size-sm);
+}
+
+.dads-table th,
+.dads-table td {
+  padding: var(--dads-space-3) var(--dads-space-2);
+  text-align: left;
+  border-bottom: 1px solid var(--dads-color-border-divider);
+}
+
+.dads-table th {
+  font-weight: 700;
+  color: var(--dads-color-text-sub);
+  background-color: var(--dads-color-bg-surface);
+}
+
+.dads-kbd {
+  display: inline-block;
+  padding: 3px 6px;
+  font-family: var(--dads-font-mono);
+  font-size: var(--dads-font-size-xs);
+  font-weight: 700;
+  color: var(--dads-color-text-main);
+  background-color: var(--dads-color-bg-subtle);
+  border: 1px solid var(--dads-color-border-subtle);
+  border-radius: var(--dads-radius-sm);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 0 2px;
+}
+
+/* ==========================================================================
+   ズーム・ビュー操作コントロール (Canvas Zoom Controls)
+   ========================================================================== */
+.dads-canvas-controls {
+  position: fixed;
+  bottom: var(--dads-space-5);
+  right: var(--dads-space-5);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  background-color: var(--dads-color-bg-white);
+  border: 1px solid var(--dads-color-border-subtle);
+  border-radius: var(--dads-radius-lg);
+  box-shadow: var(--dads-shadow-md);
+  padding: var(--dads-space-1);
+  gap: var(--dads-space-1);
+}
+
+.dads-canvas-controls .dads-btn {
+  min-height: 38px;
+  height: 38px;
+  width: 38px;
+  padding: 0;
+  border-radius: var(--dads-radius-md);
+}
+
+.dads-canvas-controls-divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--dads-color-border-divider);
+  margin: 0 2px;
+}
+

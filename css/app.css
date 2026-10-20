@@ -1,0 +1,154 @@
+/**
+ * Flow Canvas - アプリケーションレイアウト & キャンバススタイル
+ * (c) 2025-2026 Masahiro ARAKANE
+ */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* スクロールバー非表示 */
+}
+
+/* メインアプリケーションコンテナ */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* BPMNキャンバス領域 */
+#bpmn-container {
+  flex-grow: 1;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background-color: var(--dads-color-bg-canvas);
+  position: relative;
+}
+
+/* エディタ背景のグリッドスタイル */
+#bpmn-container .djs-container {
+  background-image: linear-gradient(
+      to right,
+      #dcdfe3 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, #dcdfe3 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+#bpmn-container .djs-container .layer-djs-grid rect {
+  fill: none;
+}
+
+/* ドラッグ＆ドロップ時のアクティブ強調表示 */
+.drop-active {
+  outline: 3px dashed var(--dads-color-primary) !important;
+  outline-offset: -12px;
+  background-color: rgba(0, 41, 132, 0.08) !important;
+}
+
+/* ==========================================================================
+   パンくずリスト (Breadcrumbs)
+   サブプロセス展開時の階層表示
+   ========================================================================== */
+#bpmn-container .bjs-breadcrumbs {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--dads-color-bg-white);
+  border-bottom: 1px solid var(--dads-color-border-divider);
+  padding: 8px 16px;
+  list-style: none;
+  margin: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  font-size: var(--dads-font-size-sm);
+  font-weight: 500;
+  text-align: center;
+  box-shadow: var(--dads-shadow-sm);
+}
+
+#bpmn-container .bjs-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+}
+
+#bpmn-container .bjs-breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  margin: 0 var(--dads-space-2);
+  color: var(--dads-color-text-muted);
+}
+
+#bpmn-container .bjs-breadcrumbs li a,
+#bpmn-container .bjs-breadcrumbs li span.bjs-crumb {
+  color: var(--dads-color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--dads-radius-sm);
+  padding: 2px 4px;
+}
+
+#bpmn-container .bjs-breadcrumbs li a:hover {
+  text-decoration: underline;
+  background-color: var(--dads-color-primary-light);
+}
+
+#bpmn-container .bjs-breadcrumbs li:last-child span.bjs-crumb {
+  color: var(--dads-color-text-main);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   折りたたみタスク展開ボタン (Drilldown Overlay)
+   ========================================================================== */
+.djs-overlay-drilldown button.bjs-drilldown {
+  background-color: var(--dads-color-primary);
+  border: 1px solid var(--dads-color-primary);
+  border-radius: var(--dads-radius-md);
+  box-shadow: var(--dads-shadow-sm);
+  color: var(--dads-color-text-reverse);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--dads-transition-fast);
+}
+
+.djs-overlay-drilldown button.bjs-drilldown:hover {
+  background-color: var(--dads-color-primary-hover);
+  border-color: var(--dads-color-primary-hover);
+}
+
+.djs-overlay-drilldown button.bjs-drilldown svg {
+  fill: var(--dads-color-text-reverse);
+  width: 18px;
+  height: 18px;
+}
+
+.djs-overlay-drilldown {
+  left: 54px !important;
+}
+
+/* bpmn-js コンテキストパッド・パレットの微調整 */
+.djs-palette {
+  border-radius: var(--dads-radius-md);
+  border: 1px solid var(--dads-color-border-subtle);
+  box-shadow: var(--dads-shadow-md);
+  background-color: var(--dads-color-bg-white);
+}
+
+.djs-context-pad {
+  border-radius: var(--dads-radius-md);
+  box-shadow: var(--dads-shadow-md);
+}
+

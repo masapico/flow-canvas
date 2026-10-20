@@ -1,13 +1,46 @@
 # Flow Canvas
-- BPMN2.0エディター
-- [demo](https://masapico.github.io/flow-canvas/)
-- 作成したBPMNをファイル保存できる（xml）
-- ファイル保存したBPMNを読み込み再編集できる
-- BPMN図をSVGに変換し表示することができる
-- BPMN図をSVGファイルとして保存できる
-- BPMN2.0に対応
-  - BPMNの関連機能は、[bpmn-js](https://github.com/bpmn-io/bpmn-js) を利用しています
+
+BPMN 2.0 作図エディター（デジタル庁デザインシステム準拠）
+
+- [デモ (demo)](https://masapico.github.io/flow-canvas/)
+
+## 主な特徴
+- **デジタル庁デザインシステム（DADS）準拠のUI/UX**:
+  - JIS X 8341-3 / WCAG 2.1 AA 準拠のアクセシビリティ（44pxタッチターゲット、高コントラストフォーカスリング、スクリーンリーダー対応）
+  - グローバルヘッダー（編集中ファイル名・未保存ステータスバッジの表示）
+  - ネイティブ `<dialog>` によるモーダルダイアログと通知バナー（トースト）
+- **動的テンプレート機能**:
+  - 新規作成時に「空のプール」「申請・承認フロー（3レーン）」「障害・インシデント対応フロー（2レーン）」の雛形を即座に展開可能
+- **キャンバス操作**:
+  - 拡大・縮小・全体表示フィットのフローティングズームコントロール
+  - サブプロセス展開時のパンくずリストナビゲーション
+- **BPMN 2.0 準拠**:
+  - 作成したBPMNをファイル保存できる（`.bpmn` / `.xml`）
+  - 保存したBPMNファイルをドラッグ＆ドロップまたはファイル選択で読み込み再編集できる
+  - BPMN図をSVG画像として保存、または別タブで表示できる
+  - コア作図機能には [bpmn-js](https://github.com/bpmn-io/bpmn-js) を利用しています（日本語化対応）
+- **BPMN学習ハンドブック同梱**:
+  - 初心者向けの解説とクイズ付きガイド（`learn-bpmn.html`）
 
 ## 利用方法
-- 本リポジトリごとダウンロードしindex.htmlをブラウザで開くことで利用可能です。
-- Webサーバー上でも、ローカルでも動作します。
+- 本リポジトリをダウンロードし、`index.html` をブラウザで開くだけで利用可能です。
+- Webサーバー上（GitHub Pages 等）でも、ローカル環境（`file:///`）でも外部サーバー不要で動作します。
+
+## ディレクトリ構成
+```text
+flow-canvas/
+├── index.html            # メインアプリケーション（HTML）
+├── learn-bpmn.html       # BPMN学習ハンドブック
+├── css/
+│   ├── tokens.css          # デジタル庁デザインシステム トークン
+│   ├── dads-components.css # DADS コンポーネントスタイル (ヘッダー/ボタン/ダイアログ/通知)
+│   ├── diagram-js.css      # BPMN基盤スタイル
+│   ├── bpmn-embedded.css   # BPMNアイコン・フォント
+│   └── app.css             # キャンバス・固有レイアウト
+└── js/
+    ├── lib/
+    │   └── bpmn-modeler.development.js # bpmn-js ライブラリ
+    ├── translations.js     # 日本語翻訳辞書
+    ├── templates.js        # プリセットテンプレート集
+    └── app.js              # アプリケーションロジック
+```
