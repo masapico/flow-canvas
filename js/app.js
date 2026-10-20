@@ -433,15 +433,34 @@ function initializeModeler() {
   });
 
   // 初期ダイアグラム読み込み
-  const initialXML = BPMN_TEMPLATES.empty ? BPMN_TEMPLATES.empty.xml : "";
+  const urlParams = new URLSearchParams(window.location.search);
+  const templateParam = urlParams.get("template");
+  const targetTemplate = (templateParam && BPMN_TEMPLATES[templateParam])
+    ? BPMN_TEMPLATES[templateParam]
+    : BPMN_TEMPLATES.empty;
+
+  const initialXML = targetTemplate ? targetTemplate.xml : "";
+  const initialName = (templateParam && targetTemplate)
+    ? (targetTemplate.name.replace(/【.*?】/, "").trim() || "Flow Canvas")
+    : "Flow Canvas";
+
   modeler
     .importXML(initialXML)
     .then(() => {
-      updateDocumentInfo("Flow Canvas", false);
+      updateDocumentInfo(initialName, false);
       fitViewport();
       breadcrumbsShownProcessed = false;
       updateBreadcrumbsVisibility();
       setTimeout(manageAllDrilldownOverlaysVisibility, 0);
+
+      if (templateParam) {
+        showNotification(
+          "テンプレートを読み込みました",
+          `「${targetTemplate.name}」を開きました。自由に作図・編集してみましょう！`,
+          "info",
+          6000
+        );
+      }
 
       const canvasInternal = modeler.get("canvas");
       if (canvasInternal && canvasInternal._container) {

@@ -321,6 +321,125 @@ const BPMN_TEMPLATES = {
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>`
+  },
+
+  practice_cert: {
+    id: "practice_cert",
+    name: "【演習課題】証明書オンライン申請受付フロー",
+    description: "30分クイックコース用演習：未完成のフローに不備分岐を追加して完成させましょう。",
+    xml: `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_PracticeCert" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_PracticeCert">
+    <bpmn:participant id="Participant_Cert" name="証明書オンライン申請受付" processRef="Process_PracticeCert" />
+    <bpmn:textAnnotation id="Annotation_Mission">
+      <bpmn:text>【演習ミッション】
+1. ひし形（ゲートウェイ）から上に矢印を引く
+2. 「窓口担当課」に［不備連絡を送信する］タスクを配置
+3. 矢印に「不備あり」と条件名を入力して完成させよう！</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Mission" sourceRef="Gateway_Defect" targetRef="Annotation_Mission" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_PracticeCert" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Cert">
+      <bpmn:lane id="Lane_Citizen" name="住民（申請者）">
+        <bpmn:flowNodeRef>Start_Citizen</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Staff" name="窓口担当課">
+        <bpmn:flowNodeRef>Task_Check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Defect</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Issue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Success</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Citizen" name="証明書申請を送信">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Check" name="申請内容を確認する">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Defect" name="不備判定">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Pass</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Issue" name="証明書を発行・発送する">
+      <bpmn:incoming>Flow_Pass</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Success" name="交付完了">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_Citizen" targetRef="Task_Check" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Check" targetRef="Gateway_Defect" />
+    <bpmn:sequenceFlow id="Flow_Pass" name="不備なし" sourceRef="Gateway_Defect" targetRef="Task_Issue" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Issue" targetRef="End_Success" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Cert">
+    <bpmndi:BPMNPlane id="BPMNPlane_Cert" bpmnElement="Collaboration_PracticeCert">
+      <bpmndi:BPMNShape id="Participant_Cert_di" bpmnElement="Participant_Cert" isHorizontal="true">
+        <dc:Bounds x="100" y="60" width="820" height="360" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Staff_di" bpmnElement="Lane_Staff" isHorizontal="true">
+        <dc:Bounds x="130" y="220" width="790" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Citizen_di" bpmnElement="Lane_Citizen" isHorizontal="true">
+        <dc:Bounds x="130" y="60" width="790" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Citizen_di" bpmnElement="Start_Citizen">
+        <dc:Bounds x="182" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="155" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Check_di" bpmnElement="Task_Check">
+        <dc:Bounds x="260" y="270" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Defect_di" bpmnElement="Gateway_Defect" isMarkerVisible="true">
+        <dc:Bounds x="435" y="285" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="438" y="342" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Issue_di" bpmnElement="Task_Issue">
+        <dc:Bounds x="550" y="270" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Success_di" bpmnElement="End_Success">
+        <dc:Bounds x="742" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="738" y="335" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_Mission_di" bpmnElement="Annotation_Mission">
+        <dc:Bounds x="350" y="80" width="320" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="218" y="130" />
+        <di:waypoint x="239" y="130" />
+        <di:waypoint x="239" y="310" />
+        <di:waypoint x="260" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="380" y="310" />
+        <di:waypoint x="435" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Pass_di" bpmnElement="Flow_Pass">
+        <di:waypoint x="485" y="310" />
+        <di:waypoint x="550" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="495" y="292" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="680" y="310" />
+        <di:waypoint x="742" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Mission_di" bpmnElement="Assoc_Mission">
+        <di:waypoint x="454" y="291" />
+        <di:waypoint x="420" y="170" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`
   }
 };
 
