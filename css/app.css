@@ -152,3 +152,101 @@ body {
   box-shadow: var(--dads-shadow-md);
 }
 
+/* ==========================================================================
+   BPMN リプレイスメニュー（要素の変更ポップアップ）スタイル改善
+   - リスト黒丸マーカー（•）の除去
+   - ヘッダー右端へのアクティビティ特性ボタン（並列/順次/ループ）の横並び配置
+   - DADS準拠のボタンスタイル（ホバー・アクティブ表示）
+   ========================================================================== */
+.djs-popup {
+  border-radius: var(--dads-radius-md);
+  box-shadow: var(--dads-shadow-lg);
+  border: 1px solid var(--dads-color-border-subtle);
+  font-family: var(--dads-font-family);
+}
+
+.djs-popup-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  line-height: 24px;
+  margin: 10px 12px;
+}
+
+.djs-popup-title {
+  flex: 1;
+  font-size: var(--dads-font-size-base, 14px);
+  font-weight: 700;
+  color: var(--dads-color-text-main, #1a1a1c);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.djs-popup-header-group {
+  display: flex !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 4px;
+}
+
+.djs-popup-header-group li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.djs-popup-header .entry {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--dads-radius-sm, 4px) !important;
+  color: var(--dads-color-text-main, #1a1a1c) !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: background-color var(--dads-transition-fast, 0.15s ease),
+              border-color var(--dads-transition-fast, 0.15s ease),
+              color var(--dads-transition-fast, 0.15s ease);
+}
+
+.djs-popup-header .entry::before {
+  margin: 0 !important;
+}
+
+.djs-popup-header .entry:hover {
+  background-color: var(--dads-color-bg-hover, #f0f0f2) !important;
+  border-color: var(--dads-color-border-subtle, #dcdfe3) !important;
+}
+
+.djs-popup-header .entry.active {
+  color: var(--dads-color-primary, #002984) !important;
+  background-color: var(--dads-color-primary-light, #e6ecf8) !important;
+  border-color: var(--dads-color-primary, #002984) !important;
+}
+
+.djs-popup-header .entry.disabled {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+}
+
+/* 検索入力欄のスタイリング微調整 */
+.djs-popup-search input {
+  border-radius: var(--dads-radius-sm, 4px) !important;
+  font-family: var(--dads-font-family);
+  font-size: var(--dads-font-size-sm, 14px);
+}
+
+
